@@ -1,0 +1,602 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Computer Science & Engineering Association">
+  
+  <!-- 1. HERO SECTION -->
+  <section class="pt-24 pb-20 md:py-24 bg-canvas flex items-center min-h-[620px]">
+    <div class="max-w-[1280px] w-full mx-auto px-5 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      
+      <!-- Left Column: Typography & CTAs (6 Columns) -->
+      <div class="lg:col-span-6 flex flex-col justify-center">
+        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-4">
+          CSEA &middot; KITSW
+        </span>
+        
+        <h1 class="text-display-xl leading-[0.94] tracking-[-0.055em] text-foreground mb-8 text-balance">
+          Where computer science becomes <span class="text-brand">community</span>.
+        </h1>
+        
+        <p class="text-body-lg text-foreground-secondary mb-10 max-w-[600px]">
+          We are the official student department body at Kakatiya Institute of Technology & Science, Warangal. CSEA bridges academic study and industry-level software engineering through events, open source project squads, and technical publishing.
+        </p>
+        
+        <div class="flex flex-wrap gap-4">
+          <a href="/about" class="btn btn-primary px-7 py-3 rounded-lg font-semibold shadow-soft no-underline">
+            Explore CSEA
+          </a>
+          <a href="/events" class="btn btn-outline px-7 py-3 rounded-lg font-semibold hover:bg-surface no-underline">
+            View Upcoming Events
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Visual Collage (6 Columns) -->
+      <div class="lg:col-span-6 relative h-[360px] md:h-[400px] w-full flex items-center justify-center">
+        
+        <!-- Primary Visual Collage frame: A premium editorial photo/visual wrapper -->
+        <div class="w-full h-full rounded-[20px] overflow-hidden bg-surface-secondary border border-border shadow-soft p-3 relative flex items-center justify-center">
+          <!-- Branded graphical display frame representing CSEA summits -->
+          <div class="w-full h-full rounded-2xl bg-gradient-to-br from-brand/8 to-brand/3 flex flex-col justify-between p-6 border border-brand/5 select-none">
+            <div class="flex justify-between items-start">
+              <span class="text-[11px] font-sans font-bold tracking-widest text-brand/60 uppercase">CSEA // EVENT CORE</span>
+              <span class="text-[11px] font-sans text-foreground-muted font-medium">Department of CSE</span>
+            </div>
+            <div class="max-w-[320px]">
+              <h4 class="font-sans font-semibold text-[20px] leading-tight text-foreground mb-2">Technical Collaboration Sessions</h4>
+              <p class="text-[13px] text-foreground-secondary leading-relaxed">Students building and learning systems together in the Innovation Labs.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. HAPPENING NOW SECTION -->
+  <section class="py-24 bg-surface-subtle border-y border-border">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <div class="mb-12">
+        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+          What's happening
+        </span>
+        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
+          Happening now
+        </h2>
+        <p class="text-body text-foreground-secondary max-w-[640px]">
+          Track upcoming calendar events, platform announcements, and student projects.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        
+        <!-- Featured Event Card (7 Columns) -->
+        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] shadow-soft group hover:border-brand/40 transition-colors duration-200">
+          <div>
+            <div class="flex justify-between items-center text-[12px] font-sans text-foreground-muted mb-6">
+              <span class="badge badge-accent">Featured Upcoming Event</span>
+              <span class="font-semibold text-brand">Aug 15, 2026 &middot; 09:00 AM</span>
+            </div>
+            <h3 class="text-h2 leading-[1.1] tracking-[-0.035em] text-foreground group-hover:text-brand transition-colors mb-3">
+              CSEA Orientation 2026
+            </h3>
+            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-6 max-w-[540px]">
+              Meet the faculty advisors and student executive board to explore CSEA's roadmap for the upcoming academic year. Mandatory for all new CS students.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-border mt-4">
+            <span class="text-[13px] text-foreground-secondary">Venue: Main Auditorium</span>
+            <a href="/events/orientation-26" class="btn btn-outline text-[12.5px] px-5 py-2 no-underline">
+              Get Pass &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Sidebar Stack (5 Columns) -->
+        <div class="lg:col-span-5 flex flex-col gap-6 w-full">
+          
+          <!-- Announcement Card -->
+          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft flex flex-col justify-between min-h-[148px] hover:border-brand/20 transition-colors duration-200">
+            <div>
+              <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-2">
+                <span class="badge badge-muted">Latest Announcement</span>
+                <span>Aug 05</span>
+              </div>
+              <h4 class="font-sans font-semibold text-[15px] text-foreground leading-snug">
+                Orientation Registry Officially Open
+              </h4>
+            </div>
+            <a href="/journal/orientation" class="text-[13px] font-semibold text-brand hover:text-brand-hover no-underline mt-4 inline-flex items-center gap-1">
+              Read dispatch &rarr;
+            </a>
+          </div>
+
+          <!-- Project Recruit Card -->
+          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft flex flex-col justify-between min-h-[148px] hover:border-brand/20 transition-colors duration-200">
+            <div>
+              <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-2">
+                <span class="badge badge-success">Live Registry</span>
+                <span class="font-semibold text-brand">Recruiting</span>
+              </div>
+              <h4 class="font-sans font-semibold text-[15px] text-foreground leading-snug">
+                CSEA Digital Platform Squad
+              </h4>
+            </div>
+            <a href="/projects/platform" class="text-[13px] font-semibold text-brand hover:text-brand-hover no-underline mt-4 inline-flex items-center gap-1">
+              Apply for Squad &rarr;
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ABOUT CSEA SECTION -->
+  <section class="py-24 bg-white">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Top Statement Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16">
+        
+        <!-- Left: Statement -->
+        <div class="lg:col-span-7">
+          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-3 block">
+            About the Association
+          </span>
+          <h2 class="text-display-md leading-[1.05] tracking-[-0.045em] text-foreground text-balance">
+            Built by students.<br/>
+            Backed by a department.<br/>
+            Created for everyone.
+          </h2>
+        </div>
+        
+        <!-- Right: Supporting Details -->
+        <div class="lg:col-span-5 text-body text-foreground-secondary leading-relaxed pt-2">
+          <p>
+            CSEA connects classrooms with real-world development environments. We assemble student product squads to construct departmental systems, organize technical summits, and document architectures via editorial dispatches.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Bottom: Clean 3-Pillar Layout (No heavy cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10 border-t border-border">
+        
+        <!-- Pillar 1 -->
+        <div class="flex flex-col gap-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
+            L
+          </div>
+          <h3 class="font-sans font-semibold text-[16px] text-foreground">Learn</h3>
+          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            Gain production experience with modern tech stacks during weekly collaborative squads.
+          </p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="flex flex-col gap-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
+            B
+          </div>
+          <h3 class="font-sans font-semibold text-[16px] text-foreground">Build</h3>
+          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            Engineer real platform modules, lab logging systems, and web utilities used by campus.
+          </p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="flex flex-col gap-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
+            D
+          </div>
+          <h3 class="font-sans font-semibold text-[16px] text-foreground">Lead</h3>
+          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            Coordinate hackathons, mentor juniors, and direct operations across technical committees.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. EVENTS SECTION -->
+  <section class="py-24 bg-surface-subtle border-t border-border">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex items-end justify-between mb-12">
+        <div>
+          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+            Roadmap
+          </span>
+          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
+            Upcoming & Recent Events
+          </h2>
+        </div>
+        <a href="/events" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
+          View full timeline &rarr;
+        </a>
+      </div>
+
+      <!-- Grid layout: Featured + Stacked -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Large Featured Event Card (7 Columns) -->
+        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[340px] shadow-soft group hover:border-brand/40 transition-colors duration-200">
+          <div>
+            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
+              <span>AUG 15, 2026</span>
+              <span class="badge badge-accent">Featured orientation</span>
+            </div>
+            <h3 class="text-h2 font-bold leading-tight text-foreground group-hover:text-brand transition-colors mb-3">
+              CSEA Orientation 2026
+            </h3>
+            <p class="text-[14px] text-foreground-secondary leading-relaxed mb-6">
+              Welcoming ceremony, division allotments, and project roadmap previews.
+            </p>
+          </div>
+          <div class="pt-6 border-t border-border mt-4 flex items-center justify-between">
+            <span class="text-[13px] text-foreground-secondary">Venue: Main Auditorium</span>
+            <a href="/events/orientation-26" class="text-[13.5px] font-semibold text-brand no-underline">
+              Registration Page &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Stacked Secondary Events (5 Columns) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          
+          <!-- Event item 2 -->
+          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft group hover:border-brand/20 transition-all duration-200">
+            <div class="flex justify-between items-center text-[11.5px] text-foreground-muted mb-2 font-mono">
+              <span>AUG 22, 2026</span>
+              <span class="font-semibold text-brand">Seminar Hall</span>
+            </div>
+            <h4 class="font-sans font-semibold text-[15.5px] text-foreground leading-snug group-hover:text-brand transition-colors">
+              Tech Talk: Distributed Systems
+            </h4>
+            <p class="text-[13px] text-foreground-secondary leading-relaxed mt-2">
+              Panel talks regarding database sharding and serverless deployments.
+            </p>
+            <a href="/events/tech-talk-1" class="text-[12.5px] font-semibold text-brand no-underline mt-4 inline-block">
+              Details &rarr;
+            </a>
+          </div>
+
+          <!-- Event item 3 -->
+          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft group hover:border-brand/20 transition-all duration-200">
+            <div class="flex justify-between items-center text-[11.5px] text-foreground-muted mb-2 font-mono">
+              <span>SEP 10, 2026</span>
+              <span class="font-semibold text-brand">Innovation Lab</span>
+            </div>
+            <h4 class="font-sans font-semibold text-[15.5px] text-foreground leading-snug group-hover:text-brand transition-colors">
+              Autumn Hackathon 2026
+            </h4>
+            <p class="text-[13px] text-foreground-secondary leading-relaxed mt-2">
+              24-hour building sprint for local departmental utility modules.
+            </p>
+            <a href="/events/hackathon" class="text-[12.5px] font-semibold text-brand no-underline mt-4 inline-block">
+              Details &rarr;
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PROJECTS / STUDENT WORK -->
+  <section class="py-24 bg-white">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="mb-16">
+        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+          Student Innovation
+        </span>
+        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
+          Built at CSEA
+        </h2>
+        <p class="text-body text-foreground-secondary max-w-[640px]">
+          Factual technical specifications of tools developed and maintained by students.
+        </p>
+      </div>
+
+      <!-- 2-Column Grid Projects -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        
+        <!-- Project 1 -->
+        <div class="bg-surface border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] hover:border-brand/35 transition-colors duration-300">
+          <div>
+            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
+              <span class="badge badge-accent">ACTIVE BUILD</span>
+              <span>Web Platform</span>
+            </div>
+            <h3 class="text-h3 font-bold text-foreground mb-3">CSEA Digital Platform</h3>
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-6">
+              Engineering the official portal dashboards, event registries, and technical dispatches.
+            </p>
+            <div class="text-[12px] text-foreground-secondary font-mono bg-white border border-border px-3 py-1.5 rounded-lg inline-block">
+              Stack: Astro, React, Fastify, PostgreSQL
+            </div>
+          </div>
+          <div class="pt-6 border-t border-border mt-8">
+            <a href="/projects/platform" class="text-[13px] font-semibold text-brand no-underline flex items-center gap-1">
+              <span>View technical specs</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="bg-surface border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] hover:border-brand/35 transition-colors duration-300">
+          <div>
+            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
+              <span class="badge badge-success">TESTING GATEWAYS</span>
+              <span>Embedded Labs</span>
+            </div>
+            <h3 class="text-h3 font-bold text-foreground mb-3">Automated Attendance System</h3>
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-6">
+              Integrating RFID scanners and local Raspberry Pi caching registers for departmental lab operations.
+            </p>
+            <div class="text-[12px] text-foreground-secondary font-mono bg-white border border-border px-3 py-1.5 rounded-lg inline-block">
+              Stack: Python, Raspberry Pi, Go, SQLite
+            </div>
+          </div>
+          <div class="pt-6 border-t border-border mt-8">
+            <a href="/projects/attendance-system" class="text-[13px] font-semibold text-brand no-underline flex items-center gap-1">
+              <span>View technical specs</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. JOURNAL SECTION -->
+  <section class="py-24 bg-surface-subtle border-t border-border">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Header -->
+      <div class="flex items-end justify-between mb-16">
+        <div>
+          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+            Publications
+          </span>
+          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
+            The CSEA Journal
+          </h2>
+        </div>
+        <a href="/journal" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
+          Browse dispatches &rarr;
+        </a>
+      </div>
+
+      <!-- Asymmetric Editorial Grid (7 / 5 Layout) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left: Featured Article (7 Columns) -->
+        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-5 shadow-soft group hover:border-brand/30 transition-colors duration-200">
+          <a href="/journal/tech-stack" class="no-underline text-foreground block">
+            <!-- 16:9 visual cover frame -->
+            <div class="w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-secondary border border-border mb-6 flex items-center justify-center font-sans font-semibold text-foreground-muted text-sm select-none">
+              Featured Dispatch Architecture Cover
+            </div>
+            
+            <div class="flex items-center gap-4 text-[12px] text-foreground-muted font-mono mb-3.5">
+              <span class="text-brand font-semibold">TECHNICAL</span>
+              <span>Aug 12, 2026</span>
+            </div>
+            
+            <h3 class="text-h2 leading-[1.1] text-foreground group-hover:text-brand transition-colors mb-3">
+              Architecting the New CSEA Platform
+            </h3>
+            
+            <p class="text-[14px] text-foreground-secondary leading-relaxed mb-6">
+              A detailed overview of database caching, build bundles, and REST interface logic selected to rewrite our public and portal networks.
+            </p>
+            
+            <div class="flex items-center gap-3 pt-6 border-t border-border mt-4">
+              <span class="text-[13px] font-bold text-foreground">Technical Architecture Team</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Right: Supporting Articles (5 Columns, no big cards, separated with subtle borders) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          <div class="text-[11px] font-sans font-bold tracking-widest text-foreground-muted uppercase">// OTHER READS</div>
+          
+          <div class="flex flex-col gap-8 divide-y divide-border">
+            
+            <!-- Article 2 -->
+            <div class="pt-0 group">
+              <a href="/journal/orientation" class="no-underline block">
+                <div class="text-[12px] text-foreground-muted mb-2 font-mono">Aug 05 &middot; Announcements</div>
+                <h4 class="font-sans font-semibold text-[15.5px] text-foreground group-hover:text-brand transition-colors">
+                  Registration Open for Orientation '26
+                </h4>
+                <p class="text-[13px] text-foreground-secondary leading-relaxed mt-1.5">
+                  Securing entry passes and checking agendas for our department meet.
+                </p>
+              </a>
+            </div>
+
+            <!-- Article 3 -->
+            <div class="pt-6 group">
+              <a href="/journal/hackathon" class="no-underline block">
+                <div class="text-[12px] text-foreground-muted mb-2 font-mono">Jul 28 &middot; Reports</div>
+                <h4 class="font-sans font-semibold text-[15.5px] text-foreground group-hover:text-brand transition-colors">
+                  Lessons from the Summer Hackathon
+                </h4>
+                <p class="text-[13px] text-foreground-secondary leading-relaxed mt-1.5">
+                  Analyzing student prototypes, deployment speeds, and tech alignments.
+                </p>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. GALLERY SECTION -->
+  <section class="py-24 bg-white border-t border-border">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex items-end justify-between mb-12">
+        <div>
+          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+            Photography-first
+          </span>
+          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
+            Moments
+          </h2>
+        </div>
+        <a href="/gallery" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
+          View full archive &rarr;
+        </a>
+      </div>
+
+      <!-- Asymmetric Collage: 8 columns / 4 columns -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        <!-- Large visual cover (8 Columns) -->
+        <a href="/gallery/hackathon" class="lg:col-span-8 group relative rounded-2xl overflow-hidden aspect-[16/10] border border-border shadow-soft no-underline flex items-center justify-center bg-surface-secondary">
+          <div class="w-full h-full flex items-center justify-center font-sans font-semibold text-foreground-secondary text-sm group-hover:scale-[1.025] transition-transform duration-500 ease-out select-none">
+            Summer Hackathon Photo Frame
+          </div>
+          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/60 to-transparent text-white">
+            <h3 class="font-sans font-bold text-[16px]">Summer Hackathon 2026</h3>
+            <p class="text-[12px] text-white/80">342 Photos &middot; July 2026</p>
+          </div>
+        </a>
+
+        <!-- Stacked visual frames (4 Columns) -->
+        <a href="/gallery/hackathon" class="lg:col-span-4 group relative rounded-2xl overflow-hidden aspect-square lg:aspect-auto border border-border shadow-soft no-underline flex items-center justify-center bg-surface-secondary">
+          <div class="w-full h-full flex items-center justify-center font-sans font-semibold text-foreground-secondary text-sm group-hover:scale-[1.025] transition-transform duration-500 ease-out select-none">
+            Orientation Photos Frame
+          </div>
+          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/60 to-transparent text-white">
+            <h3 class="font-sans font-bold text-[15px]">CSEA Orientation</h3>
+            <p class="text-[11.5px] text-white/80">August 2026</p>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. LEADERSHIP SECTION (Faculty Coordinator, President, Vice President) -->
+  <section class="py-24 bg-surface-subtle border-t border-border">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="mb-16">
+        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
+          People
+        </span>
+        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
+          Our Leadership
+        </h2>
+        <p class="text-body text-foreground-secondary max-w-[640px]">
+          Department coordination and student representations steering the association.
+        </p>
+      </div>
+
+      <!-- 3-Column Profile Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Advisor Profile -->
+        <div class="flex flex-col gap-4">
+          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
+            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+              VS
+            </div>
+          </div>
+          <div>
+            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">Dr. V. Shankar</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Faculty Coordinator & Head, CSE</p>
+          </div>
+        </div>
+
+        <!-- President Profile -->
+        <div class="flex flex-col gap-4">
+          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
+            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+              AS
+            </div>
+          </div>
+          <div>
+            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">A. Sathvik</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Student President</p>
+          </div>
+        </div>
+
+        <!-- Vice President Profile -->
+        <div class="flex flex-col gap-4">
+          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
+            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+              KS
+            </div>
+          </div>
+          <div>
+            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">K. Shruti</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Student Vice President</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/team" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
+          Meet all committee board members &rarr;
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 9. FINAL CTA SECTION -->
+  <section class="py-24 bg-white border-t border-border text-center relative overflow-hidden">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8 relative z-10">
+      
+      <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent text-white font-bold text-sm mx-auto mb-8 shadow-sm">
+        CS
+      </div>
+      
+      <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-3 block">
+        Be part of CSEA
+      </span>
+      
+      <h2 class="text-display-md leading-[1.05] tracking-[-0.045em] text-foreground mb-6">
+        Learn. Build. Lead. Together.
+      </h2>
+      
+      <p class="text-body text-foreground-secondary max-w-[540px] mx-auto mb-10 leading-relaxed">
+        Access student resources, check events chronology, or submit applications to join project squads.
+      </p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="/events" class="btn btn-primary px-7 py-3 rounded-lg font-semibold shadow-soft no-underline">
+          Explore Events
+        </a>
+        <a href="/portal/login" class="btn btn-outline px-7 py-3 rounded-lg font-semibold hover:bg-surface no-underline">
+          Student Portal
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

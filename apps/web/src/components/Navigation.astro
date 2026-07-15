@@ -1,0 +1,148 @@
+---
+const currentPath = Astro.url.pathname;
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Events', href: '/events' },
+  { label: 'Journal', href: '/journal' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Team', href: '/team' },
+];
+---
+
+<header id="main-nav" class="sticky top-0 z-50 h-[72px] border-b border-border bg-white/88 backdrop-blur-[16px] transition-all duration-200">
+  <div class="max-w-[1280px] h-full mx-auto px-5 md:px-6 lg:px-8 flex items-center justify-between gap-4">
+    
+    <!-- LEFT: CSEA Official Brand Identity -->
+    <a href="/" class="flex items-center gap-3 group no-underline text-foreground flex-shrink-0">
+      <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-accent text-white font-bold text-[14px] tracking-tighter flex-shrink-0">
+        CS
+      </div>
+      <div class="flex flex-col">
+        <span class="font-sans font-semibold text-[13.5px] tracking-tight leading-none text-foreground group-hover:text-accent transition-colors">
+          Computer Science & Engineering Association
+        </span>
+        <span class="text-[9.5px] font-medium tracking-[0.08em] text-foreground-muted uppercase mt-1 leading-none">
+          KITSW &middot; Department of CSE
+        </span>
+      </div>
+    </a>
+
+    <!-- CENTER: Desktop Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-1.5 h-full relative">
+      {navItems.map(item => {
+        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <a 
+            href={item.href} 
+            class={`relative h-full px-3.5 flex items-center text-[13.5px] font-medium transition-colors hover:text-foreground
+              ${isActive ? 'text-accent font-semibold' : 'text-foreground-secondary'}
+            `}
+          >
+            <span>{item.label}</span>
+            {isActive && (
+              <div class="absolute bottom-0 inset-x-3.5 h-[2px] bg-accent rounded-full"></div>
+            )}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- RIGHT: Actions -->
+    <div class="flex items-center gap-3 lg:gap-4 flex-shrink-0">
+      
+      <!-- Search link trigger -->
+      <a 
+        href="/search" 
+        class="flex items-center justify-center p-2 rounded-lg text-foreground-secondary hover:text-foreground hover:bg-surface transition-all duration-200"
+        aria-label="Search"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+
+      <!-- Student Portal primary button -->
+      <a 
+        href="/portal/login" 
+        class="hidden sm:inline-flex text-[13px] font-semibold text-white bg-accent hover:bg-accent-hover px-4.5 py-2 rounded-lg transition-all duration-200 shadow-soft h-[36px] items-center justify-center no-underline"
+      >
+        Student Portal
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button 
+        id="mobile-menu-btn" 
+        class="lg:hidden p-2 text-foreground-secondary hover:text-foreground focus:outline-none"
+        aria-label="Toggle Menu"
+      >
+        <svg id="menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg id="menu-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Menu -->
+  <div 
+    id="mobile-menu" 
+    class="fixed inset-x-0 top-[72px] bottom-0 bg-white/98 backdrop-blur-xl z-40 hidden flex-col border-t border-border transform transition-all duration-300 translate-x-full lg:hidden"
+  >
+    <div class="flex-1 overflow-y-auto px-6 py-8 flex flex-col justify-between">
+      <nav class="flex flex-col gap-1">
+        <div class="text-[10px] font-semibold text-foreground-muted tracking-widest uppercase mb-4 pl-3">Navigation Menu</div>
+        {navItems.map(item => {
+          const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+          return (
+            <a 
+              href={item.href} 
+              class={`flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 no-underline
+                ${isActive ? 'bg-accent/5 text-accent font-semibold' : 'text-foreground hover:bg-surface'}
+              `}
+            >
+              <span class="text-[16px] tracking-tight">{item.label}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="opacity-45"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          );
+        })}
+      </nav>
+
+      <div class="border-t border-border pt-8 mt-8 flex flex-col gap-4">
+        <a 
+          href="/portal/login" 
+          class="w-full text-center text-[13.5px] font-semibold text-white bg-accent hover:bg-accent-hover py-3.5 rounded-xl transition-all duration-200 shadow-soft no-underline block"
+        >
+          Enter Student Portal
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Mobile Menu Navigation Drawer Actions
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  if (menuBtn && mobileMenu && iconOpen && iconClose) {
+    menuBtn.addEventListener('click', () => {
+      const isOpen = !mobileMenu.classList.contains('translate-x-full');
+      
+      if (isOpen) {
+        mobileMenu.classList.add('translate-x-full');
+        setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+        document.body.style.overflow = '';
+      } else {
+        mobileMenu.classList.remove('hidden');
+        void mobileMenu.offsetWidth; // force reflow
+        mobileMenu.classList.remove('translate-x-full');
+        iconOpen.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  }
+</script>

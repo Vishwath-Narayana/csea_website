@@ -1,0 +1,86 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'hackathon' } },
+  ];
+}
+---
+
+<Layout title="Autumn Hackathon 2026 Photos | Gallery | CSEA">
+  
+  <div class="bg-canvas bg-grid-blueprint min-h-screen relative pt-28 pb-32">
+    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    
+    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10">
+      
+      <!-- Header -->
+      <header class="mb-16 text-center reveal">
+        <div class="inline-flex items-center justify-center gap-3.5 mb-4 text-[12px] font-mono text-foreground-muted uppercase">
+          <a href="/gallery" class="hover:text-accent transition-colors no-underline">Gallery</a>
+          <span>/</span>
+          <span class="text-accent font-semibold">2026-2027</span>
+        </div>
+        <h1 class="text-display-md mb-4 text-balance text-foreground leading-tight">Autumn Hackathon 2026</h1>
+        <p class="text-body text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
+          A visual report capturing the 24-hour coding sprint inside the Innovation Lab.
+        </p>
+        <div class="text-[12px] text-foreground-muted font-mono mt-6 flex items-center justify-center gap-4">
+          <span>DATE // SEP 10, 2026</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+          <span>ENTRIES // 342 IMAGES</span>
+        </div>
+      </header>
+
+      <!-- Advanced Mosaic Grid Layout -->
+      <div class="reveal" style="transition-delay: 100ms;">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[150px] sm:auto-rows-[250px] lg:auto-rows-[300px]">
+          
+          <!-- Large Feature photo -->
+          <div class="col-span-2 row-span-2 border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Team Working Sprint // Hero Media</div>
+          </div>
+
+          <!-- Standard Photo -->
+          <div class="border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Hardware setup log</div>
+          </div>
+
+          <!-- Standard Photo -->
+          <div class="border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Whiteboard drafts</div>
+          </div>
+
+          <!-- Wide Photo -->
+          <div class="col-span-2 border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Mentoring evaluations</div>
+          </div>
+
+          <!-- Tall Photo -->
+          <div class="row-span-2 border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Code review screen</div>
+          </div>
+
+          <!-- Standard Photo -->
+          <div class="border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Snack bar timeline</div>
+          </div>
+
+          <!-- Standard Photo -->
+          <div class="border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Closing award pass</div>
+          </div>
+
+          <!-- Wide Photo -->
+          <div class="col-span-2 border border-border-strong/60 rounded-2xl overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
+            <div class="img-placeholder w-full h-full rounded-xl transition-transform duration-700 group-hover:scale-102">Final presentation grid</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</Layout>

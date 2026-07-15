@@ -1,0 +1,163 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'platform' } },
+    { params: { slug: 'attendance-system' } },
+    { params: { slug: 'alumni-portal' } },
+  ];
+}
+---
+
+<Layout title="CSEA Digital Platform Specs | CSEA">
+  
+  <div class="dark-env bg-canvas bg-grid-blueprint-dark min-h-screen text-foreground pt-28 pb-32 relative">
+    <div class="absolute inset-0 glow-ambient-dark opacity-30 pointer-events-none"></div>
+    
+    <!-- Project Header -->
+    <header class="max-w-content mx-auto px-4 lg:px-8 mb-20 relative z-10 reveal">
+      <div class="flex items-center gap-3.5 mb-6 text-[12px] font-mono text-foreground-muted uppercase">
+        <a href="/projects" class="hover:text-accent transition-colors no-underline">Projects</a>
+        <span>/</span>
+        <span class="text-accent font-semibold">RECRUITING</span>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8">
+          <h1 class="text-display-lg mb-6 leading-tight text-foreground">CSEA Digital Platform</h1>
+          <p class="text-body-lg text-foreground-secondary max-w-2xl leading-relaxed">
+            Building the core digital backbone for the association. A unified platform for event management, journal publishing, and student portal access.
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a href="#apply" class="btn btn-primary bg-foreground text-canvas border border-border hover:bg-surface hover:text-foreground px-8 py-3.5 rounded-lg font-semibold w-full sm:w-auto shadow-medium no-underline">
+            Apply to Join Squad &darr;
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Project Data Grid Specs -->
+    <div class="border-y border-border bg-surface/35 backdrop-blur-sm relative z-10 reveal" style="transition-delay: 50ms;">
+      <div class="max-w-content mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 py-8 gap-8">
+          <div>
+            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">BUILD DURATION</div>
+            <div class="text-[14px] font-bold text-foreground">Aug 2026 - Dec 2026</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">SQUAD ALLOCATION</div>
+            <div class="text-[14px] font-bold text-foreground">6 Engineers</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">TECH ARCHITECTURE</div>
+            <div class="text-[14px] font-bold text-foreground">Astro, React, Fastify</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">ENGINEERING LEAD</div>
+            <div class="text-[14px] font-bold text-foreground flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-[9px] font-bold text-accent">OC</span>
+              Core Committee
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editorial Layout details and Sidebar Application form -->
+    <div class="max-w-content mx-auto px-4 lg:px-8 mt-20 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      
+      <!-- Left Column: Scope & Mission details -->
+      <div class="lg:col-span-7 text-body text-foreground-secondary leading-relaxed flex flex-col gap-8 reveal" style="transition-delay: 100ms;">
+        <div>
+          <h2 class="text-h2 text-foreground mb-4">The Mission</h2>
+          <p class="mb-4">
+            The Computer Science & Engineering Association requires a digital backbone. Currently, event registrations happen on scattered Google Forms, projects lack a unified discovery platform, and our technical publishing has no home.
+          </p>
+          <p>
+            This project aims to build the official digital platform for CSEA. It's not just a website; it's a full-stack application with a public marketing presence, an authenticated student portal, and a robust administrative control center (CSEA Control) built specifically for the core committee.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-h3 text-foreground mb-4">System Scope</h3>
+          <ul class="flex flex-col gap-4 list-none p-0">
+            <li class="flex gap-4">
+              <div class="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
+              <div>
+                <strong class="text-foreground">Interactive Frontend:</strong> Develop responsive, accessible UI components using Astro and React, following a strict design system.
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <div class="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
+              <div>
+                <strong class="text-foreground">Secure Backend:</strong> Implement REST APIs with Fastify to handle event registrations, gallery uploads, and role-based authentication.
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <div class="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
+              <div>
+                <strong class="text-foreground">Data Architecture:</strong> Design PostgreSQL schemas using Drizzle ORM for robust data integrity.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-h3 text-foreground mb-4">Skill Outcomes</h3>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="px-3.5 py-1.5 rounded-lg border border-border bg-surface text-[12.5px] font-medium text-foreground">Monorepos (Turborepo)</span>
+            <span class="px-3.5 py-1.5 rounded-lg border border-border bg-surface text-[12.5px] font-medium text-foreground">TypeScript Strictest</span>
+            <span class="px-3.5 py-1.5 rounded-lg border border-border bg-surface text-[12.5px] font-medium text-foreground">Drizzle ORM SQL Engines</span>
+            <span class="px-3.5 py-1.5 rounded-lg border border-border bg-surface text-[12.5px] font-medium text-foreground">Authentication Systems</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Sidebar Position Details & Applications -->
+      <div id="apply" class="lg:col-span-5 reveal" style="transition-delay: 150ms;">
+        <div class="bg-surface border border-border rounded-2xl p-6 lg:p-8 sticky top-24 shadow-medium flex flex-col gap-8">
+          <div>
+            <h3 class="text-h3 text-foreground leading-none mb-2">Open Positions</h3>
+            <p class="text-[13px] text-foreground-secondary">Read qualifications before submitting applications.</p>
+          </div>
+
+          <div class="flex flex-col gap-6 divide-y divide-border">
+            
+            <!-- Role 1 -->
+            <div class="pt-6 first:pt-0">
+              <div class="flex justify-between items-center mb-2">
+                <h4 class="font-bold text-foreground text-[14.5px]">Frontend Developer</h4>
+                <span class="text-[11.5px] font-mono text-accent font-semibold uppercase">3 Openings</span>
+              </div>
+              <p class="text-[13px] text-foreground-secondary leading-relaxed mb-4">
+                Coding responsive layouts, client interactions, state components, and styling integrations.
+              </p>
+              <a href="/portal/login?apply=frontend" class="btn btn-outline border-border hover:bg-canvas/50 w-full text-center text-[12px] py-2">
+                Apply for Frontend Role
+              </a>
+            </div>
+
+            <!-- Role 2 -->
+            <div class="pt-6">
+              <div class="flex justify-between items-center mb-2">
+                <h4 class="font-bold text-foreground text-[14.5px]">Backend Developer</h4>
+                <span class="text-[11.5px] font-mono text-accent font-semibold uppercase">1 Opening</span>
+              </div>
+              <p class="text-[13px] text-foreground-secondary leading-relaxed mb-4">
+                Drafting REST endpoints, routing plugins, database queries, and unit test suites.
+              </p>
+              <a href="/portal/login?apply=backend" class="btn btn-outline border-border hover:bg-canvas/50 w-full text-center text-[12px] py-2">
+                Apply for Backend Role
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</Layout>

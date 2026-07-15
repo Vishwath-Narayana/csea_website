@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const advisors = [
+  { name: 'Dr. V. Shankar', role: 'Professor & Head, CSE', details: 'Faculty Advisor' },
+  { name: 'Dr. S. Narasimha Reddy', role: 'Associate Professor, CSE', details: 'Co-coordinator' }
+];
+
+const committee = [
+  { name: 'A. Sathvik', role: 'President', year: 'IV/IV B.Tech', bio: 'Directing overall executive strategy and external coordination.' },
+  { name: 'K. Shruti', role: 'Vice President', year: 'IV/IV B.Tech', bio: 'Managing student outreach programs and internal operational synergy.' },
+  { name: 'P. Rohit', role: 'General Secretary', year: 'IV/IV B.Tech', bio: 'Overseeing all event planning and treasury audit procedures.' },
+  { name: 'M. Nihal', role: 'Joint Secretary', year: 'III/IV B.Tech', bio: 'Assisting in operations and coordinating execution teams.' }
+];
+
+const leads = [
+  { name: 'Technical Operations', lead: 'G. Sharan', details: 'Full-stack developments & core infra' },
+  { name: 'Editorial Board', lead: 'S. Neha', details: 'Technical publishing & documentation' },
+  { name: 'Public Relations', lead: 'V. Rithvik', details: 'Alumni networks & company outreach' }
+];
+---
+
+<Layout title="Executive Board & Team | CSEA">
+  
+  <!-- Header -->
+  <section class="pt-28 pb-16 bg-canvas bg-grid-blueprint relative border-b border-border">
+    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10">
+      <div class="text-[11px] font-mono text-accent font-semibold tracking-widest uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> STAFF & LEADER ROSTER
+      </div>
+      <h1 class="text-display-lg mb-4">The Committee.</h1>
+      <p class="text-body-lg text-foreground-secondary max-w-2xl">
+        Meet the faculty advisors, student executive board, and technical division leads guiding CSEA operations at KITSW.
+      </p>
+    </div>
+  </section>
+
+  <!-- Advisors Section -->
+  <section class="py-20 bg-surface">
+    <div class="max-w-content mx-auto px-4 lg:px-8">
+      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-10 border-b border-border pb-2">
+        Advisory Panel //
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {advisors.map(member => (
+          <div class="flex items-center gap-6 p-6 rounded-2xl border border-border bg-canvas/30">
+            <div class="w-16 h-16 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-bold text-accent text-lg flex-shrink-0">
+              {member.name.split(' ').slice(-1)[0][0]}
+            </div>
+            <div>
+              <h3 class="text-[16px] font-bold text-foreground leading-tight">{member.name}</h3>
+              <p class="text-[13px] text-accent font-medium mt-1">{member.role}</p>
+              <p class="text-[12px] text-foreground-muted mt-0.5">{member.details}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Executive Board Section -->
+  <section class="py-24 bg-surface-secondary/40 border-t border-border">
+    <div class="max-w-content mx-auto px-4 lg:px-8">
+      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-12 border-b border-border pb-2">
+        Student Executive Committee //
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {committee.map(member => (
+          <div class="card bg-surface p-6 flex flex-col justify-between group hover:border-accent">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-bold text-accent mb-6">
+                {member.name[0]}
+              </div>
+              <h3 class="text-[16px] font-bold text-foreground group-hover:text-accent transition-colors leading-none mb-1.5">{member.name}</h3>
+              <div class="text-[12.5px] font-semibold text-foreground-secondary">{member.role}</div>
+              <div class="text-[11px] font-mono text-foreground-muted mt-0.5">{member.year}</div>
+              
+              <p class="text-[13px] text-foreground-secondary leading-relaxed mt-4">
+                {member.bio}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Leads & Divisions -->
+  <section class="py-24 bg-surface border-t border-border">
+    <div class="max-w-content mx-auto px-4 lg:px-8">
+      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-12 border-b border-border pb-2">
+        Technical & Creative Divisions //
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {leads.map(div => (
+          <div class="p-6 rounded-2xl border border-dashed border-border-strong/60 bg-surface">
+            <h3 class="text-h3 text-foreground mb-1">{div.name}</h3>
+            <p class="text-[13px] text-foreground-muted mb-6">{div.details}</p>
+            
+            <div class="flex items-center gap-3 pt-4 border-t border-border bg-canvas/30 -mx-6 -mb-6 p-6 rounded-b-2xl">
+              <div class="w-8 h-8 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-bold text-accent">
+                {div.lead[0]}
+              </div>
+              <div>
+                <div class="text-[13.5px] font-bold text-foreground">{div.lead}</div>
+                <div class="text-[11px] text-foreground-muted">Division Lead</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>

@@ -1,0 +1,14 @@
+{
+  "name": "@csea/auth",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "better-auth": "^0.8.2",
+    "@csea/database": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@csea/config": "workspace:*"
+  }
+}

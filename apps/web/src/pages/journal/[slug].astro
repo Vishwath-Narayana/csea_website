@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'tech-stack' } },
+    { params: { slug: 'orientation' } },
+    { params: { slug: 'hackathon' } },
+  ];
+}
+---
+
+<Layout title="Architecting the New CSEA Platform | CSEA">
+  
+  <article class="relative bg-canvas bg-grid-blueprint min-h-screen pt-28 pb-32">
+    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    
+    <div class="max-w-editorial mx-auto px-4 lg:px-8 relative z-10">
+      
+      <!-- Article Meta Eyebrow -->
+      <div class="text-center reveal mb-8">
+        <div class="inline-flex items-center gap-3 text-[12px] text-foreground-muted font-mono uppercase">
+          <a href="/journal" class="hover:text-accent transition-colors no-underline">Journal</a>
+          <span>/</span>
+          <span class="text-accent font-semibold">Technical</span>
+          <span>/</span>
+          <span>Aug 12, 2026</span>
+        </div>
+      </div>
+
+      <!-- Main Title & Lead Paragraph -->
+      <header class="text-center reveal mb-16">
+        <h1 class="text-display-md text-balance leading-tight text-foreground mb-6">
+          Architecting the New CSEA Platform
+        </h1>
+        <p class="text-body-lg text-foreground-secondary leading-relaxed max-w-2xl mx-auto">
+          A deep dive into why we chose an Astro frontend, Fastify backend, and PostgreSQL database to power the next generation of our technical community infrastructure.
+        </p>
+
+        <div class="flex items-center justify-center gap-3 mt-10">
+          <div class="w-10 h-10 rounded-full bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-bold text-accent">TA</div>
+          <div class="text-left leading-tight">
+            <div class="text-[14px] font-bold text-foreground">Technical Architecture Team</div>
+            <div class="text-[11.5px] text-foreground-muted">CSEA Platform Builders</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero Visual Blueprint -->
+      <div class="reveal mb-16" style="transition-delay: 50ms;">
+        <div class="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-surface border border-border-strong/60 p-3 shadow-soft">
+          <div class="img-placeholder w-full h-full rounded-xl flex-col">
+            <span class="font-mono text-xs opacity-50 mb-1">// STRUCT_GRID_v1.0.svg</span>
+            <span class="font-bold">SYSTEM INFRASTRUCTURE BLUEPRINT</span>
+          </div>
+        </div>
+        <div class="text-center mt-3 text-[12.5px] text-foreground-muted font-mono">
+          Fig 1. High-level architecture map of the CSEA platform.
+        </div>
+      </div>
+
+      <!-- Rich Text Content -->
+      <div class="text-body text-foreground-secondary leading-relaxed flex flex-col gap-6 reveal" style="transition-delay: 100ms;">
+        <p>
+          When we set out to rebuild the CSEA digital presence, we knew we weren't just building a marketing website. We needed a comprehensive platform capable of managing events, projects, user registrations, and heavy editorial content.
+        </p>
+        
+        <p>
+          The previous system had outgrown its monolithic architecture. We needed something that was statically fast for public users, but highly dynamic for administrators and students.
+        </p>
+
+        <h2 class="text-h2 text-foreground mt-10 mb-2">The Frontend: Why Astro?</h2>
+        
+        <p>
+          The public-facing website is heavily content-driven. Articles, event details, and project listings don't change by the second. Shipping hundreds of kilobytes of React to the client just to render static text was actively harming our performance scores.
+        </p>
+        
+        <p>
+          By adopting <strong>Astro</strong>, we achieved an architecture known as "Islands." The core page is rendered as pure HTML, and we only hydrate specific interactive components (like the mobile menu or a search palette) using zero-JS by default.
+        </p>
+
+        <blockquote class="border-l-4 border-accent pl-5 my-8 italic text-foreground text-[18px] leading-relaxed">
+          "We reduced our public site JS bundle size by 94% simply by removing the SPA architecture from routes that didn't need it."
+        </blockquote>
+
+        <h2 class="text-h2 text-foreground mt-10 mb-2">The Backend: Fastify & Drizzle</h2>
+        
+        <p>
+          For the backend API, which powers both the Student Portal and the CSEA Control Admin dashboard, we required high throughput and strict type safety.
+        </p>
+        
+        <p>
+          We selected <strong>Fastify</strong> over Express due to its superior performance characteristics and modern plugin ecosystem. For database interactions, we replaced Prisma with <strong>Drizzle ORM</strong>. Drizzle's SQL-like syntax and lack of a massive query engine binary made our serverless deployments significantly lighter.
+        </p>
+
+        <!-- Technical Code Block -->
+        <div class="bg-surface border border-border-strong/60 rounded-xl p-5 my-8 overflow-x-auto shadow-sm">
+          <pre is:raw class="text-mono text-[12.5px] text-foreground leading-normal"><code>// Example Fastify Route
+fastify.get('/api/v1/health', async (request, reply) => {
+  return { 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    service: 'csea-core-api'
+  };
+});</code></pre>
+        </div>
+
+        <h2 class="text-h2 text-foreground mt-10 mb-2">Looking Forward</h2>
+        
+        <p>
+          This architecture provides the foundation we need for the next three years of CSEA operations. In the coming weeks, we will be opening up the repository for student contributions. If you're interested in building scalable systems, keep an eye on the Projects page.
+        </p>
+      </div>
+
+      <!-- Share Block -->
+      <div class="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4 reveal">
+        <div class="text-[13px] text-foreground-muted font-mono">// SHARE THIS ARTICLE</div>
+        <div class="flex items-center gap-3">
+          <button 
+            class="btn btn-outline text-[12px] px-4.5 py-2"
+            onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!');"
+          >
+            Copy Article Link
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+</Layout>

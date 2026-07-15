@@ -1,0 +1,119 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="The Technical Journal | CSEA">
+  
+  <div class="bg-canvas bg-grid-blueprint min-h-screen relative pt-28 pb-32">
+    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    
+    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10">
+      
+      <!-- Header block -->
+      <div class="mb-16 reveal">
+        <div class="text-[11px] font-mono text-accent font-semibold tracking-widest uppercase mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> DISPATCHES & DOCUMENTATION
+        </div>
+        <h1 class="text-display-lg mb-4 text-balance text-foreground">The Journal.</h1>
+        <p class="text-body-lg text-foreground-secondary max-w-2xl leading-relaxed">
+          Architectural breakdowns, event logs, and engineering articles written by CSEA developers and builders.
+        </p>
+      </div>
+
+      <!-- Categories filter -->
+      <div class="flex items-center gap-3 border-b border-border pb-6 mb-16 overflow-x-auto hide-scrollbar reveal" style="transition-delay: 50ms;">
+        <span class="text-[11.5px] font-mono text-foreground-subtle tracking-wider uppercase mr-2">// FILTER</span>
+        <a href="#" class="text-[13px] font-semibold text-white bg-accent px-4 py-1.5 rounded-lg whitespace-nowrap shadow-soft no-underline">All dispatches</a>
+        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface/50 border border-border px-4 py-1.5 rounded-lg whitespace-nowrap transition-colors no-underline">Technical</a>
+        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface/50 border border-border px-4 py-1.5 rounded-lg whitespace-nowrap transition-colors no-underline">Reports</a>
+        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface/50 border border-border px-4 py-1.5 rounded-lg whitespace-nowrap transition-colors no-underline">Announcements</a>
+      </div>
+
+      <!-- Asymmetric Featured Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 reveal" style="transition-delay: 100ms;">
+        
+        <!-- Large Left Featured Article Card -->
+        <a href="/journal/tech-stack" class="lg:col-span-7 group no-underline text-foreground block">
+          <div class="bg-surface border border-border-strong/60 rounded-2xl p-4 shadow-soft hover:shadow-medium hover:border-accent transition-all duration-300">
+            <div class="w-full aspect-[16/10] rounded-xl overflow-hidden bg-surface-secondary mb-6 relative">
+              <div class="img-placeholder w-full h-full">Featured Article Cover Graphic</div>
+            </div>
+            
+            <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-3.5 font-mono">
+              <span class="text-accent font-semibold uppercase tracking-wider">Technical</span>
+              <span>Aug 12, 2026</span>
+              <span>4 min read</span>
+            </div>
+            
+            <h2 class="text-display-md group-hover:text-accent transition-colors leading-tight mb-4">
+              Architecting the New CSEA Platform
+            </h2>
+            
+            <p class="text-body text-foreground-secondary leading-relaxed mb-6">
+              A deep dive into why we chose an Astro frontend, Fastify backend, and PostgreSQL database to power the next generation of our technical community infrastructure.
+            </p>
+            
+            <div class="flex items-center gap-3 border-t border-border pt-4 mt-6">
+              <div class="w-7 h-7 rounded-full bg-accent/5 border border-accent/20 flex items-center justify-center text-[10px] font-bold text-accent">TA</div>
+              <span class="text-[13.5px] font-bold text-foreground">Technical Architecture Team</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Right Side: Secondary Grid of Dispatches -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          
+          <!-- Dispatch 2 -->
+          <a href="/journal/orientation" class="group no-underline text-foreground card p-6 bg-surface hover:border-accent transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+              <span class="badge badge-accent">Announcements</span>
+              <span class="text-[11.5px] font-mono text-foreground-muted">Aug 05</span>
+            </div>
+            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Registration Open for Orientation '26</h3>
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+              Secure your spot for the opening ceremony of the academic year. Meet the committee and discover our roadmap.
+            </p>
+          </a>
+
+          <!-- Dispatch 3 -->
+          <a href="/journal/hackathon" class="group no-underline text-foreground card p-6 bg-surface hover:border-accent transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+              <span class="badge badge-accent">Reports</span>
+              <span class="text-[11.5px] font-mono text-foreground-muted">Jul 28</span>
+            </div>
+            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Lessons from the Summer Hackathon</h3>
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+              What we learned organizing a 48-hour continuous building session, tech stack reviews, and winning prototype submissions.
+            </p>
+          </a>
+
+          <!-- Dispatch 4 -->
+          <a href="#" class="group no-underline text-foreground card p-6 bg-surface hover:border-accent transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+              <span class="badge badge-accent">Community</span>
+              <span class="text-[11.5px] font-mono text-foreground-muted">Jul 10</span>
+            </div>
+            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Connecting with the Class of 2024</h3>
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+              Insights from our recent alumni panel on breaking into big tech and open-source contributions.
+            </p>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

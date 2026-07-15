@@ -1,0 +1,153 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Systems & Open Source Projects | CSEA">
+  
+  <div class="dark-env bg-canvas bg-grid-blueprint-dark min-h-screen text-foreground pt-28 pb-32 relative">
+    <div class="absolute inset-0 glow-ambient-dark opacity-30 pointer-events-none"></div>
+    
+    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10">
+      
+      <!-- Header -->
+      <div class="mb-20 reveal">
+        <div class="text-[11px] font-mono text-accent font-semibold tracking-widest uppercase mb-3 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> SYSTEM LABS & MONOREPOS
+        </div>
+        <h1 class="text-display-lg mb-4 text-foreground">Projects.</h1>
+        <p class="text-body-lg text-foreground-secondary max-w-2xl leading-relaxed">
+          Build systems that solve real problems. Join an engineering squad, write production-grade code, and deploy campus services.
+        </p>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex gap-3 border-b border-border pb-6 mb-20 overflow-x-auto hide-scrollbar reveal" style="transition-delay: 50ms;">
+        <span class="text-[11.5px] font-mono text-foreground-subtle tracking-wider uppercase mr-2">// REGISTRY_STATUS</span>
+        <a href="#" class="text-[13px] font-semibold text-white bg-accent px-4 py-1.5 rounded-lg whitespace-nowrap shadow-soft no-underline">Open Positions</a>
+        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface/50 border border-border px-4 py-1.5 rounded-lg whitespace-nowrap transition-colors no-underline">Active Builds</a>
+        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface/50 border border-border px-4 py-1.5 rounded-lg whitespace-nowrap transition-colors no-underline">Shipped & Legacy</a>
+      </div>
+
+      <!-- Projects Grid Layout -->
+      <div class="grid grid-cols-1 gap-8 reveal" style="transition-delay: 100ms;">
+        
+        <!-- Project 1 (Recruiting) -->
+        <a href="/projects/platform" class="group no-underline bg-surface border border-border hover:border-accent rounded-2xl p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 shadow-soft">
+          <!-- Spotlight hover effect -->
+          <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+          <div class="flex-1 z-10">
+            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-foreground-muted uppercase">
+              <span class="badge badge-accent bg-accent/15 px-2.5 py-0.5 font-bold tracking-wider">Recruiting</span>
+              <span class="flex items-center gap-1.5">// Web Systems</span>
+            </div>
+            
+            <h2 class="text-display-md text-foreground mb-4 group-hover:text-accent transition-colors leading-tight">
+              CSEA Digital Platform
+            </h2>
+            
+            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
+              Building the core digital backbone for the association. Features a public Astro web engine, custom React administrative console, Fastify REST APIs, and PostgreSQL database migrations.
+            </p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-border mt-4">
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">TECH STACK</div>
+                <div class="text-[13.5px] font-medium text-foreground">Astro, React, Fastify, PG</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">SQUAD SIZE</div>
+                <div class="text-[13.5px] font-medium text-foreground">6 Engineers</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">OPEN ROLES</div>
+                <div class="text-[13.5px] font-medium text-accent font-semibold">3 Frontend, 1 Backend</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex-shrink-0 z-10 w-full lg:w-auto mt-6 lg:mt-0">
+            <button class="btn btn-primary bg-foreground text-canvas border border-border hover:bg-surface hover:text-foreground w-full lg:w-auto font-semibold px-8 py-3 rounded-lg shadow-medium">
+              View Roles &rarr;
+            </button>
+          </div>
+        </a>
+
+        <!-- Project 2 (Active Building) -->
+        <a href="/projects/attendance-system" class="group no-underline bg-surface border border-border hover:border-border-strong rounded-2xl p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 shadow-soft">
+          <div class="flex-1 z-10">
+            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-foreground-muted uppercase">
+              <span class="badge badge-success bg-success/15 px-2.5 py-0.5 font-bold tracking-wider">Active Building</span>
+              <span class="flex items-center gap-1.5">// Embedded Gateways</span>
+            </div>
+            
+            <h2 class="text-display-md text-foreground mb-4 group-hover:text-foreground-secondary transition-colors leading-tight">
+              Automated Attendance System
+            </h2>
+            
+            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
+              An RFID and biometric integrated attendance logging system for department labs. Direct interface to localized SQLite registers and campus synchronization hooks.
+            </p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-border mt-4">
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">TECH STACK</div>
+                <div class="text-[13.5px] font-medium text-foreground">Python, Raspberry Pi, Go</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">SQUAD SIZE</div>
+                <div class="text-[13.5px] font-medium text-foreground">4 Hardware Devs</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">DEV_STAGE</div>
+                <div class="text-[13.5px] font-medium text-foreground">Beta testing gateway</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Project 3 (Shipped) -->
+        <a href="/projects/alumni-portal" class="group no-underline bg-surface border border-border rounded-2xl p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 opacity-60 hover:opacity-100 shadow-soft">
+          <div class="flex-1 z-10">
+            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-foreground-muted uppercase">
+              <span class="badge badge-muted bg-surface-secondary px-2.5 py-0.5 font-bold tracking-wider text-foreground-muted">Shipped & Legacy</span>
+              <span class="flex items-center gap-1.5">// Networking</span>
+            </div>
+            
+            <h2 class="text-display-md text-foreground mb-4 leading-tight">
+              Alumni Network Portal
+            </h2>
+            
+            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
+              A directory and networking platform connecting current students with KITSW CSE alumni across the globe. Built, verified, and shipped to core alumni server.
+            </p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-border mt-4">
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">SHIPPED DATE</div>
+                <div class="text-[13.5px] font-medium text-foreground">May 2025</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono uppercase text-foreground-subtle mb-1">LIFETIME USERS</div>
+                <div class="text-[13.5px] font-medium text-foreground">800+ Members</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
