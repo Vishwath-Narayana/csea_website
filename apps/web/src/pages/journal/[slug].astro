@@ -13,9 +13,13 @@ export function getStaticPaths() {
 <Layout title="Architecting the New CSEA Platform | CSEA">
   
   <article class="relative bg-canvas bg-grid-blueprint min-h-screen pt-28 pb-32">
-    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    <div class="absolute inset-0 pointer-events-none select-none opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="15" y1="0" x2="85" y2="100" stroke="var(--accent)" stroke-width="0.3" stroke-dasharray="2 2" />
+      </svg>
+    </div>
     
-    <div class="max-w-editorial mx-auto px-4 lg:px-8 relative z-10">
+    <div class="max-w-[720px] mx-auto px-4 relative z-10">
       
       <!-- Article Meta Eyebrow -->
       <div class="text-center reveal mb-8">
@@ -38,7 +42,7 @@ export function getStaticPaths() {
         </p>
 
         <div class="flex items-center justify-center gap-3 mt-10">
-          <div class="w-10 h-10 rounded-full bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-bold text-accent">TA</div>
+          <div class="w-10 h-10 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-bold text-accent select-none">TA</div>
           <div class="text-left leading-tight">
             <div class="text-[14px] font-bold text-foreground">Technical Architecture Team</div>
             <div class="text-[11.5px] text-foreground-muted">CSEA Platform Builders</div>
@@ -48,14 +52,20 @@ export function getStaticPaths() {
 
       <!-- Hero Visual Blueprint -->
       <div class="reveal mb-16" style="transition-delay: 50ms;">
-        <div class="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-surface border border-border-strong/60 p-3 shadow-soft">
-          <div class="img-placeholder w-full h-full rounded-xl flex-col">
-            <span class="font-mono text-xs opacity-50 mb-1">// STRUCT_GRID_v1.0.svg</span>
-            <span class="font-bold">SYSTEM INFRASTRUCTURE BLUEPRINT</span>
+        <div class="w-full aspect-[21/9] rounded-lg overflow-hidden bg-surface border border-border p-3 shadow-soft">
+          <!-- Styled visual cover -->
+          <div class="w-full h-full rounded bg-gradient-to-tr from-accent/15 to-accent-blue/15 flex flex-col justify-between p-5 select-none font-mono text-[10px] text-foreground-secondary border border-accent/10">
+            <div class="flex justify-between">
+              <span>RE_DISPATCH // PLATFORM_ARCHITECTURE</span>
+              <span>VER 4.1</span>
+            </div>
+            <div class="flex justify-center">
+              <svg class="w-16 h-16 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 17 22 12"></polyline></svg>
+            </div>
+            <div class="text-[9px] text-accent/80 font-bold uppercase">
+              Fig 1. High-level architecture map of the CSEA platform.
+            </div>
           </div>
-        </div>
-        <div class="text-center mt-3 text-[12.5px] text-foreground-muted font-mono">
-          Fig 1. High-level architecture map of the CSEA platform.
         </div>
       </div>
 
@@ -94,8 +104,8 @@ export function getStaticPaths() {
         </p>
 
         <!-- Technical Code Block -->
-        <div class="bg-surface border border-border-strong/60 rounded-xl p-5 my-8 overflow-x-auto shadow-sm">
-          <pre is:raw class="text-mono text-[12.5px] text-foreground leading-normal"><code>// Example Fastify Route
+        <div class="bg-surface border border-border rounded-lg p-5 my-8 overflow-x-auto shadow-sm">
+          <pre is:raw class="text-mono text-[13px] text-foreground leading-normal"><code>// Example Fastify Route
 fastify.get('/api/v1/health', async (request, reply) => {
   return { 
     status: 'ok', 
@@ -117,7 +127,7 @@ fastify.get('/api/v1/health', async (request, reply) => {
         <div class="text-[13px] text-foreground-muted font-mono">// SHARE THIS ARTICLE</div>
         <div class="flex items-center gap-3">
           <button 
-            class="btn btn-outline text-[12px] px-4.5 py-2"
+            class="btn btn-outline text-[12.5px] px-5 py-2.5 rounded-md"
             onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!');"
           >
             Copy Article Link

@@ -5,24 +5,28 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Contact & Office Coordinates | CSEA">
   
   <div class="min-h-screen pt-28 pb-32 bg-canvas bg-grid-blueprint relative">
-    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
+    <div class="absolute inset-0 pointer-events-none select-none opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="10" y1="0" x2="90" y2="100" stroke="var(--accent)" stroke-width="0.3" />
+      </svg>
+    </div>
     
-    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
       
-      <!-- Left Column: Address, Geolocation Coordinates, Info -->
+      <!-- Left Column: Address, Geolocation Coordinates, Info (5 Columns) -->
       <div class="lg:col-span-5 reveal">
-        <div class="text-[11px] font-mono text-accent font-semibold tracking-widest uppercase mb-4 flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> REACH OUT
+        <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-4 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> // REACH OUT
         </div>
         <h1 class="text-display-md mb-6 leading-tight">Get in touch.</h1>
         <p class="text-body text-foreground-secondary mb-12">
-          Have an inquiry about partnership, event scheduling, project registrations, or technical publications? Drop us a message.
+          Have an inquiry about partnerships, event scheduling, project registrations, or technical publications? Drop us a message.
         </p>
-
+ 
         <!-- Technical Address Card -->
-        <div class="bg-surface border border-border-strong/60 rounded-2xl p-6 lg:p-8 flex flex-col gap-6 shadow-soft">
+        <div class="bg-surface border border-border rounded-lg p-6 lg:p-8 flex flex-col gap-6 shadow-soft">
           <div>
-            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">OFFICE LOCATION</div>
+            <div class="text-[10px] font-mono text-foreground-muted tracking-wider uppercase mb-1.5">OFFICE LOCATION</div>
             <p class="text-[14px] text-foreground font-semibold leading-relaxed">
               CSEA Office, Block-II,<br/>
               Kakatiya Institute of Technology & Science,<br/>
@@ -30,83 +34,83 @@ import Layout from '../layouts/Layout.astro';
               Warangal, Telangana — 506015
             </p>
           </div>
-
+ 
           <div class="border-t border-border pt-4">
-            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">GEOLOCATION COORDS</div>
-            <p class="text-[13px] font-mono text-accent font-semibold">
+            <div class="text-[10px] font-mono text-foreground-muted tracking-wider uppercase mb-1.5">GEOLOCATION COORDS</div>
+            <p class="text-[13.5px] font-mono text-accent font-semibold">
               18.0075° N, 79.5645° E
             </p>
           </div>
-
+ 
           <div class="border-t border-border pt-4">
-            <div class="text-[10px] font-mono text-foreground-subtle tracking-wider uppercase mb-1">COMMUNICATION</div>
+            <div class="text-[10px] font-mono text-foreground-muted tracking-wider uppercase mb-1.5">COMMUNICATION</div>
             <p class="text-[13.5px] text-foreground-secondary">
-              Email: <span class="text-foreground font-semibold">csea@kitsw.ac.in</span>
+              Email: <a href="mailto:csea@kitsw.ac.in" class="text-accent hover:underline no-underline font-semibold">csea@kitsw.ac.in</a>
             </p>
           </div>
         </div>
       </div>
-
-      <!-- Right Column: Premium Inquiry Form -->
+ 
+      <!-- Right Column: Inquiry Form (7 Columns) -->
       <div class="lg:col-span-7 reveal" style="transition-delay: 100ms;">
-        <div class="bg-surface border border-border-strong/80 rounded-2xl p-6 lg:p-10 shadow-medium">
+        <div class="bg-surface border border-border rounded-lg p-6 lg:p-10 shadow-medium">
           <h2 class="text-h2 mb-2">Submit an Inquiry</h2>
           <p class="text-[14px] text-foreground-secondary mb-8">We will review your submission and reply within 48 business hours.</p>
           
           <form class="space-y-6" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label for="first-name" class="block text-[12.5px] font-mono text-foreground-muted mb-1.5 uppercase">First Name</label>
+                <label for="first-name" class="block text-[11px] font-mono text-foreground-muted mb-2 uppercase">First Name</label>
                 <input 
                   type="text" 
                   id="first-name" 
                   required 
-                  class="w-full bg-canvas/30 border border-border-strong rounded-lg px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-shadow shadow-sm"
+                  class="w-full bg-canvas/30 border border-border-strong rounded-md px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm"
                   placeholder="John"
                 />
               </div>
               <div>
-                <label for="last-name" class="block text-[12.5px] font-mono text-foreground-muted mb-1.5 uppercase">Last Name</label>
+                <label for="last-name" class="block text-[11px] font-mono text-foreground-muted mb-2 uppercase">Last Name</label>
                 <input 
                   type="text" 
                   id="last-name" 
                   required 
-                  class="w-full bg-canvas/30 border border-border-strong rounded-lg px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-shadow shadow-sm"
+                  class="w-full bg-canvas/30 border border-border-strong rounded-md px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm"
                   placeholder="Doe"
                 />
               </div>
             </div>
-
+ 
             <div>
-              <label for="email" class="block text-[12.5px] font-mono text-foreground-muted mb-1.5 uppercase">Email Address</label>
+              <label for="email" class="block text-[11px] font-mono text-foreground-muted mb-2 uppercase">Email Address</label>
               <input 
                 type="email" 
                 id="email" 
                 required 
-                class="w-full bg-canvas/30 border border-border-strong rounded-lg px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-shadow shadow-sm"
+                class="w-full bg-canvas/30 border border-border-strong rounded-md px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm"
                 placeholder="john.doe@gmail.com"
               />
             </div>
-
+ 
             <div>
-              <label for="message" class="block text-[12.5px] font-mono text-foreground-muted mb-1.5 uppercase">Message Description</label>
+              <label for="message" class="block text-[11px] font-mono text-foreground-muted mb-2 uppercase">Message Description</label>
               <textarea 
                 id="message" 
                 rows="5" 
                 required 
-                class="w-full bg-canvas/30 border border-border-strong rounded-lg px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-shadow shadow-sm"
+                class="w-full bg-canvas/30 border border-border-strong rounded-md px-4 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm"
                 placeholder="Details of your inquiry..."
               ></textarea>
             </div>
-
-            <button type="submit" class="btn btn-primary w-full py-3.5 rounded-lg font-semibold text-[14px]">
+ 
+            <button type="submit" class="btn btn-primary w-full py-3.5 rounded-lg font-semibold text-[14.5px]">
               Send Inquiry Message
             </button>
           </form>
         </div>
       </div>
-
+ 
     </div>
   </div>
-
+ 
 </Layout>

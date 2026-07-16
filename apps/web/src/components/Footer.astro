@@ -2,76 +2,92 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-surface border-t border-border pt-20 pb-12">
-  <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+<footer class="bg-dark-canvas text-dark-foreground border-t border-dark-border pt-24 pb-12 dark-env">
+  <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
       
-      <!-- Column 1: CSEA Identity and Description (span 5) -->
-      <div class="lg:col-span-5">
-        <a href="/" class="flex items-center gap-3 no-underline text-foreground mb-4">
-          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-accent text-white font-bold text-sm tracking-tighter">
+      <!-- Column 1: CSEA Identity and Description (span 4) -->
+      <div class="lg:col-span-4">
+        <a href="/" class="flex items-center gap-3 no-underline text-dark-foreground mb-6">
+          <div class="flex items-center justify-center w-8 h-8 rounded-[8px] bg-accent text-white font-bold text-sm tracking-tighter">
             CS
           </div>
           <div class="flex flex-col">
-            <span class="font-sans font-semibold text-[14px] tracking-tight leading-none text-foreground">
+            <span class="font-sans font-semibold text-[14px] tracking-tight leading-none">
               Computer Science & Engineering Association
             </span>
-            <span class="text-[9.5px] font-medium tracking-[0.08em] text-foreground-muted uppercase mt-1 leading-none">
+            <span class="text-[9px] font-medium tracking-[0.08em] text-dark-foreground-muted uppercase mt-1 leading-none">
               KITSW &middot; Department of CSE
             </span>
           </div>
         </a>
-        <p class="text-[14px] leading-relaxed text-foreground-secondary max-w-[360px] mt-4">
-          The Computer Science & Engineering Association (CSEA) is the official student body of the CSE department at Kakatiya Institute of Technology & Science, Warangal. We bridge the gap between academic study and real-world engineering.
+        <p class="text-[14px] leading-relaxed text-dark-foreground-muted max-w-[320px]">
+          CSEA is the student-led software development, learning, and publishing body for Computer Science at Kakatiya Institute of Technology & Science, Warangal.
         </p>
       </div>
 
-      <!-- Column 2: Explore Links (span 2.5) -->
-      <div class="lg:col-span-2.5">
-        <h4 class="text-[12px] font-semibold text-foreground tracking-[0.08em] uppercase mb-5 leading-none">Explore</h4>
-        <ul class="flex flex-col gap-3.5 list-none p-0 m-0 text-[13.5px]">
-          <li><a href="/" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Home</a></li>
-          <li><a href="/events" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Events</a></li>
-          <li><a href="/projects" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Projects</a></li>
-          <li><a href="/gallery" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Gallery</a></li>
-        </ul>
-      </div>
-
-      <!-- Column 3: Association Links (span 2.5) -->
-      <div class="lg:col-span-2.5">
-        <h4 class="text-[12px] font-semibold text-foreground tracking-[0.08em] uppercase mb-5 leading-none">Association</h4>
-        <ul class="flex flex-col gap-3.5 list-none p-0 m-0 text-[13.5px]">
-          <li><a href="/about" class="text-foreground-secondary hover:text-accent transition-colors no-underline">About CSEA</a></li>
-          <li><a href="/journal" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Technical Journal</a></li>
-          <li><a href="/team" class="text-foreground-secondary hover:text-accent transition-colors no-underline">Core Team</a></li>
-        </ul>
-      </div>
-
-      <!-- Column 4: Contact details (span 2) -->
+      <!-- Column 2: Explore Links (span 2) -->
       <div class="lg:col-span-2">
-        <h4 class="text-[12px] font-semibold text-foreground tracking-[0.08em] uppercase mb-5 leading-none">Contact</h4>
-        <p class="text-[13px] leading-relaxed text-foreground-secondary mb-4">
+        <h4 class="text-[11px] font-semibold text-dark-foreground tracking-[0.08em] uppercase mb-5 leading-none">// Explore</h4>
+        <ul class="flex flex-col gap-3.5 list-none p-0 m-0 text-[13.5px]">
+          <li><a href="/" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Home</a></li>
+          <li><a href="/events" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Events Roadmap</a></li>
+          <li><a href="/projects" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Student Builds</a></li>
+          <li><a href="/gallery" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Moments Archive</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Association Links (span 2) -->
+      <div class="lg:col-span-2">
+        <h4 class="text-[11px] font-semibold text-dark-foreground tracking-[0.08em] uppercase mb-5 leading-none">// Association</h4>
+        <ul class="flex flex-col gap-3.5 list-none p-0 m-0 text-[13.5px]">
+          <li><a href="/about" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">About CSEA</a></li>
+          <li><a href="/journal" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Technical Journal</a></li>
+          <li><a href="/team" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Executive Team</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Resources (span 2) -->
+      <div class="lg:col-span-2">
+        <h4 class="text-[11px] font-semibold text-dark-foreground tracking-[0.08em] uppercase mb-5 leading-none">// Resources</h4>
+        <ul class="flex flex-col gap-3.5 list-none p-0 m-0 text-[13.5px]">
+          <li><a href="/portal/login" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">Student Portal</a></li>
+          <li><a href="https://kitsw.ac.in" target="_blank" rel="noopener noreferrer" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline font-mono text-[12.5px]">kitsw.ac.in &rarr;</a></li>
+          <li><a href="#" class="text-dark-foreground-muted hover:text-accent transition-colors no-underline">CSE Department</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 5: Contact details (span 2) -->
+      <div class="lg:col-span-2">
+        <h4 class="text-[11px] font-semibold text-dark-foreground tracking-[0.08em] uppercase mb-5 leading-none">// Contact</h4>
+        <p class="text-[13px] leading-relaxed text-dark-foreground-muted mb-4 font-sans">
           Block-II, KITSW Campus,<br/>
-          Warangal, Telangana — 506015
+          Yerragattu Gutta, Warangal,<br/>
+          Telangana — 560015
         </p>
-        <div class="text-[13px] font-medium text-foreground">
-          Email: <a href="mailto:csea@kitsw.ac.in" class="text-accent hover:underline no-underline">csea@kitsw.ac.in</a>
+        <div class="text-[13.5px] font-medium">
+          <a href="mailto:csea@kitsw.ac.in" class="text-accent hover:underline no-underline">csea@kitsw.ac.in</a>
         </div>
       </div>
 
     </div>
 
     <!-- Bottom copyright and links -->
-    <div class="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="text-[12.5px] text-foreground-muted font-medium">
+    <div class="pt-8 border-t border-dark-border flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-[12.5px] text-dark-foreground-muted font-medium">
         &copy; {currentYear} Computer Science & Engineering Association, KITSW. All rights reserved.
       </div>
       <div class="flex items-center gap-6">
-        <a href="#" class="text-[13px] text-foreground-secondary hover:text-accent transition-colors no-underline">Instagram</a>
-        <a href="#" class="text-[13px] text-foreground-secondary hover:text-accent transition-colors no-underline">LinkedIn</a>
-        <a href="https://github.com" class="text-[13px] text-foreground-secondary hover:text-accent transition-colors no-underline">GitHub</a>
+        <a href="#" class="text-[13px] text-dark-foreground-muted hover:text-accent transition-colors no-underline">Instagram</a>
+        <a href="#" class="text-[13px] text-dark-foreground-muted hover:text-accent transition-colors no-underline">LinkedIn</a>
+        <a href="https://github.com" class="text-[13px] text-dark-foreground-muted hover:text-accent transition-colors no-underline">GitHub</a>
       </div>
+    </div>
+
+    <!-- Giant background branding text -->
+    <div class="mt-16 pt-4 text-center select-none opacity-[0.02] pointer-events-none">
+      <div class="text-[12vw] font-bold tracking-tight uppercase leading-none font-sans">CSEA KITSW</div>
     </div>
 
   </div>

@@ -8,73 +8,73 @@ import Layout from '../../layouts/Layout.astro';
     
     <!-- Portal Header -->
     <div class="bg-surface border-b border-border">
-      <div class="max-w-content mx-auto px-4 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 class="text-h1 mb-1">Student Portal</h1>
-          <p class="text-[14px] text-foreground-secondary">Welcome back, Student.</p>
+          <h1 class="text-h2 font-semibold text-foreground">Student Portal</h1>
+          <p class="text-[14px] text-foreground-secondary mt-1">Welcome back, Student.</p>
         </div>
         <div class="flex items-center gap-4">
-          <a href="/portal/login" class="btn btn-outline text-[13px] px-4 py-1.5">Sign Out</a>
+          <a href="/portal/login" class="btn btn-outline text-[13px] px-4 py-2 rounded-md no-underline">Sign Out</a>
         </div>
       </div>
     </div>
 
     <!-- Portal Content -->
-    <div class="max-w-content mx-auto px-4 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- Sidebar Navigation -->
+      <!-- Sidebar Navigation (3 Columns) -->
       <aside class="lg:col-span-3">
-        <nav class="flex flex-col gap-1">
-          <a href="/portal/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-surface border border-border text-[14px] font-medium text-foreground">
+        <nav class="flex flex-col gap-1.5">
+          <a href="/portal/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface border border-border text-[14px] font-semibold text-foreground no-underline">
             <span class="text-accent">●</span> Overview
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors">
+          <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors no-underline">
             <span class="opacity-0">●</span> My Registrations
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors">
+          <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors no-underline">
             <span class="opacity-0">●</span> Project Applications
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors">
+          <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors no-underline">
             <span class="opacity-0">●</span> Certificates
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors">
+          <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-[14px] font-medium text-foreground-secondary hover:bg-surface hover:border-border transition-colors no-underline">
             <span class="opacity-0">●</span> Profile
           </a>
         </nav>
       </aside>
 
-      <!-- Main Panel -->
+      <!-- Main Panel (9 Columns) -->
       <main class="lg:col-span-9 flex flex-col gap-8">
         
         <!-- Registration Card -->
-        <section class="bg-surface border border-border rounded-xl p-6 lg:p-8 shadow-sm">
+        <section class="bg-surface border border-border rounded-lg p-6 lg:p-8 shadow-soft">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-h3">Upcoming Registrations</h2>
+            <h2 class="text-h3 font-semibold text-foreground">Upcoming Registrations</h2>
           </div>
           
-          <div class="border border-border rounded-lg p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div class="border border-border rounded-lg p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-canvas/30">
             <div>
-              <div class="badge badge-accent mb-2">Registered</div>
-              <h3 class="text-[16px] font-medium text-foreground">CSEA Orientation 2026</h3>
-              <div class="text-[13px] text-foreground-secondary mt-1">Aug 15, 2026 · Main Auditorium</div>
+              <div class="badge bg-accent-muted text-accent font-semibold rounded-md border border-accent/15 mb-2">Registered</div>
+              <h3 class="text-[16px] font-semibold text-foreground">CSEA Orientation 2026</h3>
+              <div class="text-[13.5px] text-foreground-secondary mt-1">Aug 15, 2026 &middot; Main Auditorium</div>
             </div>
-            <button class="btn btn-outline text-[13px]">View Ticket</button>
+            <button class="btn btn-outline text-[13px] px-4.5 py-2">View Ticket</button>
           </div>
         </section>
 
         <!-- Project Applications Card -->
-        <section class="bg-surface border border-border rounded-xl p-6 lg:p-8 shadow-sm">
+        <section class="bg-surface border border-border rounded-lg p-6 lg:p-8 shadow-soft">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-h3">Active Applications</h2>
+            <h2 class="text-h3 font-semibold text-foreground">Active Applications</h2>
           </div>
           
-          <div class="border border-border rounded-lg p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div class="border border-border rounded-lg p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-canvas/30">
             <div>
-              <div class="badge badge-muted mb-2 bg-surface-secondary text-foreground-muted">Under Review</div>
-              <h3 class="text-[16px] font-medium text-foreground">CSEA Digital Platform</h3>
-              <div class="text-[13px] text-foreground-secondary mt-1">Role: Frontend Engineer</div>
+              <div class="badge bg-surface-secondary text-foreground-muted rounded-md border border-border mb-2 font-medium">Under Review</div>
+              <h3 class="text-[16px] font-semibold text-foreground">CSEA Digital Platform</h3>
+              <div class="text-[13.5px] text-foreground-secondary mt-1">Role: Frontend Engineer</div>
             </div>
-            <button class="btn btn-ghost text-[13px]">Withdraw</button>
+            <button class="btn btn-ghost text-[13px] px-4.5 py-2 text-foreground-muted hover:text-foreground">Withdraw</button>
           </div>
         </section>
 

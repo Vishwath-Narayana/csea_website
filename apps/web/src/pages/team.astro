@@ -24,10 +24,15 @@ const leads = [
   
   <!-- Header -->
   <section class="pt-28 pb-16 bg-canvas bg-grid-blueprint relative border-b border-border">
-    <div class="absolute inset-0 glow-ambient opacity-20 pointer-events-none"></div>
-    <div class="max-w-content mx-auto px-4 lg:px-8 relative z-10">
-      <div class="text-[11px] font-mono text-accent font-semibold tracking-widest uppercase mb-3 flex items-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> STAFF & LEADER ROSTER
+    <div class="absolute inset-0 z-0 pointer-events-none select-none opacity-20">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="0" y1="55" x2="100" y2="45" stroke="var(--accent)" stroke-width="0.3" />
+      </svg>
+    </div>
+    
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 relative z-10">
+      <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> // STAFF & LEADER ROSTER
       </div>
       <h1 class="text-display-lg mb-4">The Committee.</h1>
       <p class="text-body-lg text-foreground-secondary max-w-2xl">
@@ -38,20 +43,20 @@ const leads = [
 
   <!-- Advisors Section -->
   <section class="py-20 bg-surface">
-    <div class="max-w-content mx-auto px-4 lg:px-8">
-      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-10 border-b border-border pb-2">
-        Advisory Panel //
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
+      <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-10 border-b border-border pb-3">
+        // Advisory Panel
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {advisors.map(member => (
-          <div class="flex items-center gap-6 p-6 rounded-2xl border border-border bg-canvas/30">
-            <div class="w-16 h-16 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-bold text-accent text-lg flex-shrink-0">
+          <div class="flex items-center gap-6 p-6 rounded-lg border border-border bg-surface-secondary/40 hover:border-accent/25 transition-colors duration-300">
+            <div class="w-16 h-16 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-semibold text-accent text-xl flex-shrink-0 select-none">
               {member.name.split(' ').slice(-1)[0][0]}
             </div>
             <div>
-              <h3 class="text-[16px] font-bold text-foreground leading-tight">{member.name}</h3>
-              <p class="text-[13px] text-accent font-medium mt-1">{member.role}</p>
+              <h3 class="text-[17px] font-bold text-foreground leading-tight">{member.name}</h3>
+              <p class="text-[13.5px] text-accent font-medium mt-1">{member.role}</p>
               <p class="text-[12px] text-foreground-muted mt-0.5">{member.details}</p>
             </div>
           </div>
@@ -61,24 +66,24 @@ const leads = [
   </section>
 
   <!-- Executive Board Section -->
-  <section class="py-24 bg-surface-secondary/40 border-t border-border">
-    <div class="max-w-content mx-auto px-4 lg:px-8">
-      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-12 border-b border-border pb-2">
-        Student Executive Committee //
+  <section class="py-24 bg-surface-secondary border-t border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
+      <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-12 border-b border-border pb-3">
+        // Student Executive Committee
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {committee.map(member => (
-          <div class="card bg-surface p-6 flex flex-col justify-between group hover:border-accent">
+          <div class="bg-surface border border-border rounded-lg p-6 flex flex-col justify-between group hover:border-accent/40 transition-colors duration-300">
             <div>
-              <div class="w-12 h-12 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-bold text-accent mb-6">
+              <div class="w-12 h-12 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-semibold text-accent mb-6 select-none group-hover:scale-105 transition-transform">
                 {member.name[0]}
               </div>
-              <h3 class="text-[16px] font-bold text-foreground group-hover:text-accent transition-colors leading-none mb-1.5">{member.name}</h3>
-              <div class="text-[12.5px] font-semibold text-foreground-secondary">{member.role}</div>
+              <h3 class="text-[17px] font-bold text-foreground group-hover:text-accent transition-colors leading-none mb-2">{member.name}</h3>
+              <div class="text-[13px] font-semibold text-foreground-secondary">{member.role}</div>
               <div class="text-[11px] font-mono text-foreground-muted mt-0.5">{member.year}</div>
               
-              <p class="text-[13px] text-foreground-secondary leading-relaxed mt-4">
+              <p class="text-[13.5px] text-foreground-secondary leading-relaxed mt-4">
                 {member.bio}
               </p>
             </div>
@@ -90,23 +95,25 @@ const leads = [
 
   <!-- Leads & Divisions -->
   <section class="py-24 bg-surface border-t border-border">
-    <div class="max-w-content mx-auto px-4 lg:px-8">
-      <div class="text-[10px] font-mono text-foreground-muted tracking-widest uppercase mb-12 border-b border-border pb-2">
-        Technical & Creative Divisions //
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
+      <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-12 border-b border-border pb-3">
+        // Technical & Creative Divisions
       </div>
       
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {leads.map(div => (
-          <div class="p-6 rounded-2xl border border-dashed border-border-strong/60 bg-surface">
-            <h3 class="text-h3 text-foreground mb-1">{div.name}</h3>
-            <p class="text-[13px] text-foreground-muted mb-6">{div.details}</p>
+          <div class="p-6 rounded-lg border border-dashed border-border-strong/60 bg-surface flex flex-col justify-between">
+            <div>
+              <h3 class="text-[19px] font-semibold text-foreground mb-1">{div.name}</h3>
+              <p class="text-[13.5px] text-foreground-muted mb-6">{div.details}</p>
+            </div>
             
-            <div class="flex items-center gap-3 pt-4 border-t border-border bg-canvas/30 -mx-6 -mb-6 p-6 rounded-b-2xl">
-              <div class="w-8 h-8 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-bold text-accent">
+            <div class="flex items-center gap-3 pt-4 border-t border-border bg-surface-secondary/40 -mx-6 -mb-6 p-6 rounded-b-lg mt-4">
+              <div class="w-8 h-8 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center text-xs font-semibold text-accent select-none">
                 {div.lead[0]}
               </div>
               <div>
-                <div class="text-[13.5px] font-bold text-foreground">{div.lead}</div>
+                <div class="text-[14px] font-bold text-foreground">{div.lead}</div>
                 <div class="text-[11px] text-foreground-muted">Division Lead</div>
               </div>
             </div>

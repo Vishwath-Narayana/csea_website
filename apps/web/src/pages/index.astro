@@ -4,199 +4,273 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Computer Science & Engineering Association">
   
-  <!-- 1. HERO SECTION -->
-  <section class="pt-24 pb-20 md:py-24 bg-canvas flex items-center min-h-[620px]">
-    <div class="max-w-[1280px] w-full mx-auto px-5 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-      
-      <!-- Left Column: Typography & CTAs (6 Columns) -->
-      <div class="lg:col-span-6 flex flex-col justify-center">
-        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-4">
-          CSEA &middot; KITSW
-        </span>
+  <!-- 1. LIVE ANNOUNCEMENT STRIP -->
+  <div class="bg-accent text-white py-3 overflow-hidden border-b border-accent-hover relative z-20 mt-[-64px]">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 flex items-center justify-between text-xs font-mono tracking-wider">
+      <div class="flex items-center gap-3 animate-pulse">
+        <span class="inline-block w-2 h-2 rounded-full bg-white"></span>
+        <span class="font-bold">NEXT EVENT //</span>
+        <span>CSEA Orientation 2026 &middot; August 15, 2026</span>
+      </div>
+      <a href="/events/orientation-26" class="hover:underline flex items-center gap-1 font-bold">
+        REGISTER NOW <span class="text-sm leading-none">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 2. HERO SECTION -->
+  <section class="relative pt-32 pb-24 lg:pt-40 lg:pb-36 bg-canvas flex items-center overflow-hidden min-h-[85vh]">
+    <!-- Network graphic backdrop (Subtle thread vectors) -->
+    <div class="absolute inset-0 z-0 pointer-events-none select-none opacity-40">
+      <svg class="w-full h-full" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- SVG Paths representing CSEA Thread -->
+        <path id="hero-thread-1" d="M100,200 Q400,100 700,450 T1300,300" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="8 8" class="animate-thread-pulse" />
+        <path id="hero-thread-2" d="M200,600 Q600,750 900,400 T1200,700" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3" stroke-linecap="round" />
         
-        <h1 class="text-display-xl leading-[0.94] tracking-[-0.055em] text-foreground mb-8 text-balance">
-          Where computer science becomes <span class="text-brand">community</span>.
+        <!-- Node Coordinates & Labels -->
+        <g transform="translate(700, 450)">
+          <circle r="4" fill="var(--accent)" class="animate-ping" />
+          <circle r="3" fill="var(--accent)" />
+          <text x="12" y="4" fill="var(--foreground-muted)" font-family="monospace" font-size="10" tracking="0.1em">SYS_NODE_01 // WARANGAL</text>
+        </g>
+        <g transform="translate(100, 200)">
+          <circle r="3" fill="var(--foreground-subtle)" />
+        </g>
+        <g transform="translate(1300, 300)">
+          <circle r="3" fill="var(--accent)" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hero container -->
+    <div class="max-w-[1400px] w-full mx-auto px-5 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
+      
+      <!-- Left Column: Typography & CTAs (7 Columns) -->
+      <div class="lg:col-span-7 flex flex-col justify-center reveal">
+        <div class="inline-flex items-center gap-2 mb-5">
+          <span class="text-[11px] font-mono tracking-[0.15em] text-accent font-bold uppercase bg-accent-muted px-2.5 py-1 rounded-md">
+            ESTD. 1998
+          </span>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-foreground-muted uppercase">
+            KITSW &middot; Dept of CSE
+          </span>
+        </div>
+        
+        <h1 class="text-display-xl text-foreground mb-8 text-balance">
+          Where computer science becomes <span class="relative inline-block text-accent">community.<svg class="absolute left-0 bottom-[-4px] w-full h-[6px]" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0,5 Q50,9 100,5" stroke="var(--accent)" stroke-width="4" fill="none" stroke-linecap="round"></path></svg></span>
         </h1>
         
-        <p class="text-body-lg text-foreground-secondary mb-10 max-w-[600px]">
-          We are the official student department body at Kakatiya Institute of Technology & Science, Warangal. CSEA bridges academic study and industry-level software engineering through events, open source project squads, and technical publishing.
+        <p class="text-body-lg text-foreground-secondary mb-10 max-w-[620px] leading-relaxed">
+          We are the official student department body at Kakatiya Institute of Technology & Science, Warangal. CSEA bridges academic study and industry-level software engineering through collaborative squads, summits, and technical publishing.
         </p>
         
-        <div class="flex flex-wrap gap-4">
-          <a href="/about" class="btn btn-primary px-7 py-3 rounded-lg font-semibold shadow-soft no-underline">
+        <div class="flex flex-wrap gap-4 items-center">
+          <a href="/about" class="btn btn-primary px-8 py-3.5 shadow-soft no-underline text-center">
             Explore CSEA
           </a>
-          <a href="/events" class="btn btn-outline px-7 py-3 rounded-lg font-semibold hover:bg-surface no-underline">
-            View Upcoming Events
+          <a href="/events" class="btn btn-outline px-8 py-3.5 hover:bg-surface-secondary no-underline text-center">
+            View Roadmaps &rarr;
           </a>
         </div>
+
+        <!-- Network indicators -->
+        <div class="grid grid-cols-4 gap-4 mt-16 pt-8 border-t border-border max-w-[500px]">
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-accent font-bold tracking-widest uppercase mb-1">01 / LEARN</span>
+            <span class="text-xs text-foreground-secondary">Peer Cohorts</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-accent font-bold tracking-widest uppercase mb-1">02 / BUILD</span>
+            <span class="text-xs text-foreground-secondary">Local Squads</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-accent font-bold tracking-widest uppercase mb-1">03 / CREATE</span>
+            <span class="text-xs text-foreground-secondary">Tech Journals</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono text-accent font-bold tracking-widest uppercase mb-1">04 / LEAD</span>
+            <span class="text-xs text-foreground-secondary">Summits</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Right Column: Visual Collage (6 Columns) -->
-      <div class="lg:col-span-6 relative h-[360px] md:h-[400px] w-full flex items-center justify-center">
-        
-        <!-- Primary Visual Collage frame: A premium editorial photo/visual wrapper -->
-        <div class="w-full h-full rounded-[20px] overflow-hidden bg-surface-secondary border border-border shadow-soft p-3 relative flex items-center justify-center">
-          <!-- Branded graphical display frame representing CSEA summits -->
-          <div class="w-full h-full rounded-2xl bg-gradient-to-br from-brand/8 to-brand/3 flex flex-col justify-between p-6 border border-brand/5 select-none">
+      <!-- Right Column: Asymmetric Visual collage of styled student active frames (5 Columns) -->
+      <div class="lg:col-span-5 relative flex items-center justify-center w-full min-h-[380px] lg:min-h-[440px] reveal" style="transition-delay: 150ms;">
+        <!-- Frame 1: Main Styled Collage Graphic -->
+        <div class="absolute w-[80%] h-[260px] rounded-lg overflow-hidden bg-surface-secondary border border-border-strong/60 shadow-medium p-4 rotate-[-3deg] z-10 transition-transform hover:rotate-0 hover:scale-[1.02] duration-300">
+          <div class="w-full h-full rounded-md bg-gradient-to-br from-accent/10 to-accent-blue/10 flex flex-col justify-between p-5 border border-accent/10 select-none">
             <div class="flex justify-between items-start">
-              <span class="text-[11px] font-sans font-bold tracking-widest text-brand/60 uppercase">CSEA // EVENT CORE</span>
-              <span class="text-[11px] font-sans text-foreground-muted font-medium">Department of CSE</span>
+              <span class="text-[9px] font-mono font-bold tracking-widest text-accent uppercase">CSEA // DEV_SQUAD</span>
+              <span class="text-[9px] font-mono text-foreground-muted font-medium">SYS_INIT_VER_3.5</span>
             </div>
-            <div class="max-w-[320px]">
-              <h4 class="font-sans font-semibold text-[20px] leading-tight text-foreground mb-2">Technical Collaboration Sessions</h4>
-              <p class="text-[13px] text-foreground-secondary leading-relaxed">Students building and learning systems together in the Innovation Labs.</p>
+            <div class="font-mono text-[12px] text-foreground-secondary leading-normal">
+              <span class="text-accent">&gt;_</span> npm install @csea/core<br/>
+              <span class="text-foreground-muted">// Linking nodes...</span><br/>
+              <span class="text-success">Connected: KITSW_AUDITORIUM</span>
+            </div>
+            <div>
+              <h4 class="font-sans font-semibold text-[17px] leading-tight text-foreground mb-1">Innovation Lab Operations</h4>
+              <p class="text-[12px] text-foreground-secondary">Students designing interface architectures and routing systems together.</p>
             </div>
           </div>
         </div>
 
+        <!-- Frame 2: Back Accent graphic (Offset offset-x, offset-y) -->
+        <div class="absolute w-[75%] h-[240px] rounded-lg bg-dark-canvas border border-dark-border shadow-strong p-4 rotate-[6deg] translate-y-8 translate-x-12 z-0 opacity-80 hover:scale-[1.02] transition-transform duration-300">
+          <div class="w-full h-full flex flex-col justify-between font-mono text-[11px] text-dark-foreground-muted leading-relaxed select-none">
+            <div class="flex justify-between border-b border-dark-border pb-2">
+              <span class="text-accent font-bold">NODE_02 // WORKSHOP</span>
+              <span>15 AUG '26</span>
+            </div>
+            <div class="flex-1 flex items-center justify-center py-4">
+              <svg class="w-16 h-16 opacity-30 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="text-[10px] text-accent/80">
+              STATUS: PREPARING STAGE_01
+            </div>
+          </div>
+        </div>
+
+        <!-- Frame 3: Small Overlay coordinate sticker -->
+        <div class="absolute bottom-2 left-6 bg-surface border border-accent rounded-md px-3 py-1.5 shadow-soft z-20 rotate-[-12deg] font-mono text-[10px] text-foreground font-semibold flex items-center gap-1.5 animate-bounce">
+          <span class="w-2 h-2 rounded-full bg-accent inline-block"></span>
+          <span>158 NEW MEMBERS REACHED</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. HAPPENING NOW SECTION -->
-  <section class="py-24 bg-surface-subtle border-y border-border">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
-      
-      <div class="mb-12">
-        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-          What's happening
-        </span>
-        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
-          Happening now
-        </h2>
-        <p class="text-body text-foreground-secondary max-w-[640px]">
-          Track upcoming calendar events, platform announcements, and student projects.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        
-        <!-- Featured Event Card (7 Columns) -->
-        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] shadow-soft group hover:border-brand/40 transition-colors duration-200">
-          <div>
-            <div class="flex justify-between items-center text-[12px] font-sans text-foreground-muted mb-6">
-              <span class="badge badge-accent">Featured Upcoming Event</span>
-              <span class="font-semibold text-brand">Aug 15, 2026 &middot; 09:00 AM</span>
-            </div>
-            <h3 class="text-h2 leading-[1.1] tracking-[-0.035em] text-foreground group-hover:text-brand transition-colors mb-3">
-              CSEA Orientation 2026
-            </h3>
-            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-6 max-w-[540px]">
-              Meet the faculty advisors and student executive board to explore CSEA's roadmap for the upcoming academic year. Mandatory for all new CS students.
-            </p>
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-border mt-4">
-            <span class="text-[13px] text-foreground-secondary">Venue: Main Auditorium</span>
-            <a href="/events/orientation-26" class="btn btn-outline text-[12.5px] px-5 py-2 no-underline">
-              Get Pass &rarr;
-            </a>
-          </div>
-        </div>
-
-        <!-- Sidebar Stack (5 Columns) -->
-        <div class="lg:col-span-5 flex flex-col gap-6 w-full">
-          
-          <!-- Announcement Card -->
-          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft flex flex-col justify-between min-h-[148px] hover:border-brand/20 transition-colors duration-200">
-            <div>
-              <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-2">
-                <span class="badge badge-muted">Latest Announcement</span>
-                <span>Aug 05</span>
-              </div>
-              <h4 class="font-sans font-semibold text-[15px] text-foreground leading-snug">
-                Orientation Registry Officially Open
-              </h4>
-            </div>
-            <a href="/journal/orientation" class="text-[13px] font-semibold text-brand hover:text-brand-hover no-underline mt-4 inline-flex items-center gap-1">
-              Read dispatch &rarr;
-            </a>
-          </div>
-
-          <!-- Project Recruit Card -->
-          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft flex flex-col justify-between min-h-[148px] hover:border-brand/20 transition-colors duration-200">
-            <div>
-              <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-2">
-                <span class="badge badge-success">Live Registry</span>
-                <span class="font-semibold text-brand">Recruiting</span>
-              </div>
-              <h4 class="font-sans font-semibold text-[15px] text-foreground leading-snug">
-                CSEA Digital Platform Squad
-              </h4>
-            </div>
-            <a href="/projects/platform" class="text-[13px] font-semibold text-brand hover:text-brand-hover no-underline mt-4 inline-flex items-center gap-1">
-              Apply for Squad &rarr;
-            </a>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. ABOUT CSEA SECTION -->
-  <section class="py-24 bg-white">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- 3. ABOUT / STATEMENT SECTION -->
+  <section class="py-24 bg-surface-secondary border-y border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Top Statement Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start mb-20 reveal">
         
-        <!-- Left: Statement -->
+        <!-- Left: Statement (7 Columns) -->
         <div class="lg:col-span-7">
-          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-3 block">
-            About the Association
-          </span>
-          <h2 class="text-display-md leading-[1.05] tracking-[-0.045em] text-foreground text-balance">
-            Built by students.<br/>
-            Backed by a department.<br/>
-            Created for everyone.
+          <span class="text-[11px] font-mono tracking-[0.12em] text-accent font-bold uppercase mb-4 block">// Editorial Manifesto</span>
+          <h2 class="text-display-lg text-foreground text-balance">
+            Built by students. Backed by a department. Created for everyone.
           </h2>
         </div>
         
-        <!-- Right: Supporting Details -->
+        <!-- Right: Supporting Details (5 Columns) -->
         <div class="lg:col-span-5 text-body text-foreground-secondary leading-relaxed pt-2">
+          <p class="mb-4">
+            CSEA connects classrooms with real-world development environments. We assemble student product squads to construct departmental systems, organize technical summits, and publish student architectures.
+          </p>
           <p>
-            CSEA connects classrooms with real-world development environments. We assemble student product squads to construct departmental systems, organize technical summits, and document architectures via editorial dispatches.
+            We operate transparently to train students in industry standards of collaborative version control, modular system design, and database architectures.
           </p>
         </div>
-
       </div>
 
-      <!-- Bottom: Clean 3-Pillar Layout (No heavy cards) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10 border-t border-border">
+      <!-- Bottom: Large Typographic Grid (No cards, thin dividers) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-border-strong/60 reveal" style="transition-delay: 100ms;">
+        <div class="flex flex-col pr-4 border-r border-border last:border-none">
+          <span class="text-[64px] font-bold tracking-tight leading-none text-foreground font-sans">28+</span>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-foreground-muted uppercase mt-3">Years of Heritage</span>
+        </div>
+        <div class="flex flex-col pr-4 border-r border-border last:border-none">
+          <span class="text-[64px] font-bold tracking-tight leading-none text-foreground font-sans">150+</span>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-foreground-muted uppercase mt-3">Events Conducted</span>
+        </div>
+        <div class="flex flex-col pr-4 border-r border-border last:border-none">
+          <span class="text-[64px] font-bold tracking-tight leading-none text-foreground font-sans">800+</span>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-foreground-muted uppercase mt-3">Students Enrolled</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[64px] font-bold tracking-tight leading-none text-foreground font-sans">20+</span>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-foreground-muted uppercase mt-3">Active Projects</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. WHAT WE DO — INTERACTIVE SECTION -->
+  <section class="py-24 bg-canvas overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
+      
+      <div class="mb-16 reveal">
+        <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Core Programs</span>
+        <h2 class="text-display-lg text-foreground">What We Do.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         
-        <!-- Pillar 1 -->
-        <div class="flex flex-col gap-3">
-          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
-            L
+        <!-- Left: Interactive Visual Display (6 Columns) -->
+        <div class="lg:col-span-6 relative aspect-[4/3] rounded-lg overflow-hidden bg-surface-secondary border border-border shadow-soft p-3 reveal">
+          <div id="interactive-display-bg" class="w-full h-full rounded-md bg-gradient-to-br from-accent/5 to-accent-blue/10 flex flex-col justify-between p-6 transition-all duration-300 select-none">
+            <div class="flex justify-between items-start">
+              <span id="display-label" class="text-[10px] font-mono text-accent font-bold tracking-widest">PROGRAM // TECHNICAL EVENTS</span>
+              <span class="text-[10px] font-mono text-foreground-muted">CSEA KITSW</span>
+            </div>
+            
+            <div class="flex-1 flex items-center justify-center py-6">
+              <div id="display-graphic" class="text-foreground opacity-90 w-full max-w-[280px]">
+                <!-- Dynamic SVG will render here -->
+                <svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="50,15 90,85 10,85" />
+                  <circle cx="50" cy="50" r="15" />
+                </svg>
+              </div>
+            </div>
+
+            <div>
+              <p id="display-description" class="text-[14px] text-foreground-secondary leading-relaxed font-sans">
+                Annual code summits, debug hackathons, and algorithm contests where students challenge each other.
+              </p>
+            </div>
           </div>
-          <h3 class="font-sans font-semibold text-[16px] text-foreground">Learn</h3>
-          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
-            Gain production experience with modern tech stacks during weekly collaborative squads.
-          </p>
         </div>
 
-        <!-- Pillar 2 -->
-        <div class="flex flex-col gap-3">
-          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
-            B
-          </div>
-          <h3 class="font-sans font-semibold text-[16px] text-foreground">Build</h3>
-          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
-            Engineer real platform modules, lab logging systems, and web utilities used by campus.
-          </p>
-        </div>
+        <!-- Right: Interactive Navigation Tabs List (6 Columns) -->
+        <div class="lg:col-span-6 flex flex-col gap-2 reveal" style="transition-delay: 100ms;">
+          
+          <button class="interactive-tab text-left p-6 rounded-lg border border-border hover:border-border-strong bg-surface hover:bg-surface-secondary transition-all group" data-category="tech-events">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Technical Events</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">01 / CONTESTS</span>
+            </div>
+          </button>
 
-        <!-- Pillar 3 -->
-        <div class="flex flex-col gap-3">
-          <div class="w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center text-brand font-bold text-sm">
-            D
-          </div>
-          <h3 class="font-sans font-semibold text-[16px] text-foreground">Lead</h3>
-          <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
-            Coordinate hackathons, mentor juniors, and direct operations across technical committees.
-          </p>
+          <button class="interactive-tab text-left p-6 rounded-lg border border-transparent bg-transparent hover:bg-surface-secondary transition-all group" data-category="workshops">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Workshops & Learning</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">02 / EDUCATION</span>
+            </div>
+          </button>
+
+          <button class="interactive-tab text-left p-6 rounded-lg border border-transparent bg-transparent hover:bg-surface-secondary transition-all group" data-category="projects">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Projects & Innovation</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">03 / SQUADS</span>
+            </div>
+          </button>
+
+          <button class="interactive-tab text-left p-6 rounded-lg border border-transparent bg-transparent hover:bg-surface-secondary transition-all group" data-category="community">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Community Collaboration</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">04 / NETWORK</span>
+            </div>
+          </button>
+
+          <button class="interactive-tab text-left p-6 rounded-lg border border-transparent bg-transparent hover:bg-surface-secondary transition-all group" data-category="publications">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Publications</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">05 / JOURNAL</span>
+            </div>
+          </button>
+
+          <button class="interactive-tab text-left p-6 rounded-lg border border-transparent bg-transparent hover:bg-surface-secondary transition-all group" data-category="leadership">
+            <div class="flex items-center justify-between">
+              <h3 class="text-[20px] font-semibold text-foreground group-hover:text-accent transition-colors leading-none">Student Leadership</h3>
+              <span class="font-mono text-xs text-foreground-muted group-hover:text-accent">06 / BOARD</span>
+            </div>
+          </button>
+
         </div>
 
       </div>
@@ -204,84 +278,183 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- 4. EVENTS SECTION -->
-  <section class="py-24 bg-surface-subtle border-t border-border">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- Script for Interactive Program Selector -->
+  <script>
+    const data = {
+      "tech-events": {
+        label: "PROGRAM // TECHNICAL EVENTS",
+        desc: "Annual code summits, debug hackathons, and algorithm contests where students challenge each other.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="50,15 90,85 10,85" stroke="var(--accent)" />
+                <circle cx="50" cy="50" r="15" stroke="var(--accent)" />
+              </svg>`
+      },
+      "workshops": {
+        label: "PROGRAM // WORKSHOPS & TRAINING",
+        desc: "Regular developer bootcamps covering Full Stack, Machine Learning, and cloud technologies led by alumni and core members.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="20" y="20" width="60" height="60" rx="4" stroke="var(--accent)" />
+                <line x1="20" y1="50" x2="80" y2="50" stroke="var(--accent)" />
+                <circle cx="50" cy="35" r="6" stroke="var(--accent)" />
+              </svg>`
+      },
+      "projects": {
+        label: "PROGRAM // PROJECTS & SQUADS",
+        desc: "Structured development squads that build actual departmental applications, dashboard platforms, and local lab automations.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20,30 L50,15 L80,30 L50,45 Z" stroke="var(--accent)" />
+                <path d="M20,60 L50,75 L80,60" stroke="var(--accent)" />
+                <path d="M50,45 L50,75" stroke="var(--accent)" />
+              </svg>`
+      },
+      "community": {
+        label: "PROGRAM // COMMUNITY COLLABORATION",
+        desc: "Social network and peer mentorship channels linking juniors with board seniors and academic faculty guides.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="30" cy="30" r="10" stroke="var(--accent)" />
+                <circle cx="70" cy="30" r="10" stroke="var(--accent)" />
+                <circle cx="50" cy="70" r="10" stroke="var(--accent)" />
+                <line x1="38" y1="36" x2="44" y2="61" stroke="var(--accent)" />
+                <line x1="62" y1="36" x2="56" y2="61" stroke="var(--accent)" />
+                <line x1="40" y1="30" x2="60" y2="30" stroke="var(--accent)" />
+              </svg>`
+      },
+      "publications": {
+        label: "PROGRAM // JOURNAL & PUBLISHING",
+        desc: "Writing design case studies, architecture summaries, and event dispatches on our editorial technical publication platform.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="25" y="15" width="50" height="70" rx="2" stroke="var(--accent)" />
+                <line x1="35" y1="30" x2="65" y2="30" stroke="var(--accent)" />
+                <line x1="35" y1="45" x2="65" y2="45" stroke="var(--accent)" />
+                <line x1="35" y1="60" x2="55" y2="60" stroke="var(--accent)" />
+              </svg>`
+      },
+      "leadership": {
+        label: "PROGRAM // STUDENT LEADERSHIP",
+        desc: "Developing organizational, communication, and event execution capabilities through core administrative committees.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto text-accent" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="50,15 63,40 91,44 70,64 75,92 50,79 25,92 30,64 9,44 37,40" stroke="var(--accent)" />
+              </svg>`
+      }
+    };
+
+    const tabs = document.querySelectorAll('.interactive-tab');
+    const displayBg = document.getElementById('interactive-display-bg');
+    const displayLabel = document.getElementById('display-label');
+    const displayDesc = document.getElementById('display-description');
+    const displayGraphic = document.getElementById('display-graphic');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Toggle selected state border and background styles
+        tabs.forEach(t => {
+          t.classList.remove('border-border', 'bg-surface');
+          t.classList.add('border-transparent', 'bg-transparent');
+        });
+        tab.classList.add('border-border', 'bg-surface');
+        tab.classList.remove('border-transparent', 'bg-transparent');
+
+        const cat = tab.getAttribute('data-category');
+        if (cat && data[cat]) {
+          // Trigger animations
+          if (displayBg) {
+            displayBg.style.opacity = '0.5';
+            setTimeout(() => {
+              if (displayLabel) displayLabel.textContent = data[cat].label;
+              if (displayDesc) displayDesc.textContent = data[cat].desc;
+              if (displayGraphic) displayGraphic.innerHTML = data[cat].svg;
+              displayBg.style.opacity = '1';
+            }, 150);
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- 5. EVENTS TIMELINE SECTION -->
+  <section class="py-24 bg-surface-secondary border-t border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="flex items-end justify-between mb-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
         <div>
-          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-            Roadmap
-          </span>
-          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
-            Upcoming & Recent Events
-          </h2>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Roadmaps & summits</span>
+          <h2 class="text-display-lg text-foreground">Summits & Events.</h2>
         </div>
-        <a href="/events" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
-          View full timeline &rarr;
+        <a href="/events" class="text-[14px] font-semibold text-accent hover:underline no-underline mt-4 md:mt-0 inline-flex items-center gap-1">
+          View all scheduled dispatches &rarr;
         </a>
       </div>
 
       <!-- Grid layout: Featured + Stacked -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
         <!-- Large Featured Event Card (7 Columns) -->
-        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[340px] shadow-soft group hover:border-brand/40 transition-colors duration-200">
+        <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[420px] shadow-soft group hover:border-accent/40 transition-colors duration-300 reveal">
           <div>
-            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
-              <span>AUG 15, 2026</span>
-              <span class="badge badge-accent">Featured orientation</span>
+            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-6 font-mono">
+              <span>AUG 15, 2026 // 09:00 AM</span>
+              <span class="badge badge-accent bg-accent-muted text-accent font-semibold">Featured Orientation</span>
             </div>
-            <h3 class="text-h2 font-bold leading-tight text-foreground group-hover:text-brand transition-colors mb-3">
+            
+            <!-- Graphic inside event card -->
+            <div class="w-full aspect-[21/9] rounded-md bg-canvas border border-border flex items-center justify-center font-mono text-[11px] text-foreground-muted mb-8 select-none p-4">
+              <svg class="w-12 h-12 text-accent opacity-20 mr-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              <div>
+                <span class="text-foreground font-bold">EVENT_SPACE // MAIN_AUDITORIUM</span><br/>
+                <span class="text-[10px]">COORDS: 17.9712 N, 79.5318 E</span>
+              </div>
+            </div>
+
+            <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
               CSEA Orientation 2026
             </h3>
-            <p class="text-[14px] text-foreground-secondary leading-relaxed mb-6">
-              Welcoming ceremony, division allotments, and project roadmap previews.
+            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-8 max-w-[580px]">
+              Meet the faculty advisors and student executive board to explore CSEA's roadmap for the upcoming academic year. Mandatory for all new CS students.
             </p>
           </div>
-          <div class="pt-6 border-t border-border mt-4 flex items-center justify-between">
-            <span class="text-[13px] text-foreground-secondary">Venue: Main Auditorium</span>
-            <a href="/events/orientation-26" class="text-[13.5px] font-semibold text-brand no-underline">
-              Registration Page &rarr;
+          <div class="pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4 mt-auto">
+            <span class="text-xs font-mono text-foreground-secondary">VENUE / AUDITORIUM CAMPUS</span>
+            <a href="/events/orientation-26" class="btn btn-outline text-xs px-5 py-2.5">
+              Registration Pass &rarr;
             </a>
           </div>
         </div>
 
         <!-- Stacked Secondary Events (5 Columns) -->
-        <div class="lg:col-span-5 flex flex-col gap-6">
+        <div class="lg:col-span-5 flex flex-col gap-6 reveal" style="transition-delay: 100ms;">
           
           <!-- Event item 2 -->
-          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft group hover:border-brand/20 transition-all duration-200">
-            <div class="flex justify-between items-center text-[11.5px] text-foreground-muted mb-2 font-mono">
-              <span>AUG 22, 2026</span>
-              <span class="font-semibold text-brand">Seminar Hall</span>
+          <div class="bg-surface border border-border rounded-lg p-6 hover:border-accent/25 transition-all duration-300 group">
+            <div class="flex justify-between items-center text-[11px] text-foreground-muted mb-3 font-mono">
+              <span>AUG 22, 2026 // SEMINAR HALL</span>
+              <span class="text-accent font-semibold uppercase">SPECS DISPATCH</span>
             </div>
-            <h4 class="font-sans font-semibold text-[15.5px] text-foreground leading-snug group-hover:text-brand transition-colors">
+            <h4 class="font-sans font-semibold text-[19px] text-foreground group-hover:text-accent transition-colors leading-snug">
               Tech Talk: Distributed Systems
             </h4>
-            <p class="text-[13px] text-foreground-secondary leading-relaxed mt-2">
-              Panel talks regarding database sharding and serverless deployments.
+            <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2.5">
+              Panel talks regarding database sharding, caching architectures, and serverless operations.
             </p>
-            <a href="/events/tech-talk-1" class="text-[12.5px] font-semibold text-brand no-underline mt-4 inline-block">
-              Details &rarr;
+            <a href="/events/tech-talk-1" class="text-[13px] font-semibold text-accent hover:underline no-underline mt-4 inline-block">
+              View event specifications &rarr;
             </a>
           </div>
 
           <!-- Event item 3 -->
-          <div class="bg-white border border-border rounded-2xl p-6 shadow-soft group hover:border-brand/20 transition-all duration-200">
-            <div class="flex justify-between items-center text-[11.5px] text-foreground-muted mb-2 font-mono">
-              <span>SEP 10, 2026</span>
-              <span class="font-semibold text-brand">Innovation Lab</span>
+          <div class="bg-surface border border-border rounded-lg p-6 hover:border-accent/25 transition-all duration-300 group">
+            <div class="flex justify-between items-center text-[11px] text-foreground-muted mb-3 font-mono">
+              <span>SEP 10, 2026 // INNOVATION LAB</span>
+              <span class="text-accent font-semibold uppercase">24HR BUILDING SPRINT</span>
             </div>
-            <h4 class="font-sans font-semibold text-[15.5px] text-foreground leading-snug group-hover:text-brand transition-colors">
+            <h4 class="font-sans font-semibold text-[19px] text-foreground group-hover:text-accent transition-colors leading-snug">
               Autumn Hackathon 2026
             </h4>
-            <p class="text-[13px] text-foreground-secondary leading-relaxed mt-2">
-              24-hour building sprint for local departmental utility modules.
+            <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2.5">
+              24-hour building sprint focused on writing local utility modules and lab systems.
             </p>
-            <a href="/events/hackathon" class="text-[12.5px] font-semibold text-brand no-underline mt-4 inline-block">
-              Details &rarr;
+            <a href="/events/hackathon" class="text-[13px] font-semibold text-accent hover:underline no-underline mt-4 inline-block">
+              View event specifications &rarr;
             </a>
           </div>
 
@@ -291,152 +464,184 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- 5. PROJECTS / STUDENT WORK -->
-  <section class="py-24 bg-white">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- 6. PROJECTS / BUILT AT CSEA SECTION (Cinematic Dark Section) -->
+  <section class="py-28 bg-dark-canvas text-dark-foreground dark-env border-t border-dark-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="mb-16">
-        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-          Student Innovation
-        </span>
-        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
-          Built at CSEA
-        </h2>
-        <p class="text-body text-foreground-secondary max-w-[640px]">
-          Factual technical specifications of tools developed and maintained by students.
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 reveal">
+        <div>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Student Technology Lab</span>
+          <h2 class="text-display-lg text-dark-foreground">Built at CSEA.</h2>
+        </div>
+        <p class="text-body text-dark-foreground-muted max-w-[420px] mt-4 md:mt-0">
+          Factual technical specifications of tools and applications constructed and maintained by CSEA product squads.
         </p>
       </div>
 
-      <!-- 2-Column Grid Projects -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+      <!-- 2-Column Grid Projects (Linear/Composio inspired) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 reveal">
         
         <!-- Project 1 -->
-        <div class="bg-surface border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] hover:border-brand/35 transition-colors duration-300">
+        <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[360px] hover:border-accent/40 transition-colors duration-300">
           <div>
-            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
-              <span class="badge badge-accent">ACTIVE BUILD</span>
-              <span>Web Platform</span>
+            <div class="flex justify-between items-center text-[11px] text-dark-foreground-muted mb-6 font-mono">
+              <span class="badge badge-accent bg-accent-muted text-accent font-semibold">ACTIVE SYSTEM</span>
+              <span>DEPLOYED &middot; LIVE</span>
             </div>
-            <h3 class="text-h3 font-bold text-foreground mb-3">CSEA Digital Platform</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-6">
-              Engineering the official portal dashboards, event registries, and technical dispatches.
+            
+            <h3 class="text-[24px] font-semibold text-dark-foreground mb-3">CSEA Digital Platform</h3>
+            <p class="text-body-sm text-dark-foreground-muted leading-relaxed mb-8 max-w-[500px]">
+              Engineering the official portal dashboards, event attendance registries, and technical publishing pipelines.
             </p>
-            <div class="text-[12px] text-foreground-secondary font-mono bg-white border border-border px-3 py-1.5 rounded-lg inline-block">
-              Stack: Astro, React, Fastify, PostgreSQL
+            
+            <!-- Code stack spec -->
+            <div class="grid grid-cols-2 gap-4 border-y border-dark-border py-4 mb-6 text-[12px] font-mono">
+              <div>
+                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Environment</span>
+                <span class="text-dark-foreground">Astro &middot; React &middot; Tailwind</span>
+              </div>
+              <div>
+                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Data & API</span>
+                <span class="text-dark-foreground">Node.js &middot; Fastify &middot; Postgres</span>
+              </div>
             </div>
           </div>
-          <div class="pt-6 border-t border-border mt-8">
-            <a href="/projects/platform" class="text-[13px] font-semibold text-brand no-underline flex items-center gap-1">
-              <span>View technical specs</span>
-              <span>&rarr;</span>
+          
+          <div class="flex items-center justify-between pt-2">
+            <span class="font-mono text-xs text-accent">TEAM // CSEA DIGITAL</span>
+            <a href="/projects/platform" class="text-[13px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
+              View technical architecture &rarr;
             </a>
           </div>
         </div>
 
         <!-- Project 2 -->
-        <div class="bg-surface border border-border rounded-2xl p-6 lg:p-8 flex flex-col justify-between min-h-[300px] hover:border-brand/35 transition-colors duration-300">
+        <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[360px] hover:border-accent/40 transition-colors duration-300">
           <div>
-            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-4 font-mono">
-              <span class="badge badge-success">TESTING GATEWAYS</span>
-              <span>Embedded Labs</span>
+            <div class="flex justify-between items-center text-[11px] text-dark-foreground-muted mb-6 font-mono">
+              <span class="badge bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] rounded-md font-semibold uppercase">INTEGRATING</span>
+              <span>TESTING STAGE</span>
             </div>
-            <h3 class="text-h3 font-bold text-foreground mb-3">Automated Attendance System</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-6">
-              Integrating RFID scanners and local Raspberry Pi caching registers for departmental lab operations.
+            
+            <h3 class="text-[24px] font-semibold text-dark-foreground mb-3">Automated Attendance System</h3>
+            <p class="text-body-sm text-dark-foreground-muted leading-relaxed mb-8 max-w-[500px]">
+              Integrating RFID scanners and local Raspberry Pi caching registers for departmental lab operations and logins.
             </p>
-            <div class="text-[12px] text-foreground-secondary font-mono bg-white border border-border px-3 py-1.5 rounded-lg inline-block">
-              Stack: Python, Raspberry Pi, Go, SQLite
+            
+            <!-- Code stack spec -->
+            <div class="grid grid-cols-2 gap-4 border-y border-dark-border py-4 mb-6 text-[12px] font-mono">
+              <div>
+                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Architecture</span>
+                <span class="text-dark-foreground">Raspberry Pi &middot; MQTT</span>
+              </div>
+              <div>
+                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Backend Stack</span>
+                <span class="text-dark-foreground">Go &middot; SQLite &middot; Docker</span>
+              </div>
             </div>
           </div>
-          <div class="pt-6 border-t border-border mt-8">
-            <a href="/projects/attendance-system" class="text-[13px] font-semibold text-brand no-underline flex items-center gap-1">
-              <span>View technical specs</span>
-              <span>&rarr;</span>
+          
+          <div class="flex items-center justify-between pt-2">
+            <span class="font-mono text-xs text-accent">TEAM // HARDWARE LAB</span>
+            <a href="/projects/attendance-system" class="text-[13px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
+              View technical architecture &rarr;
             </a>
           </div>
         </div>
 
       </div>
+
+      <div class="mt-16 text-center reveal">
+        <a href="/projects" class="text-[14px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
+          Browse complete systems directory &rarr;
+        </a>
+      </div>
+
     </div>
   </section>
 
-  <!-- 6. JOURNAL SECTION -->
-  <section class="py-24 bg-surface-subtle border-t border-border">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- 7. JOURNAL SECTION -->
+  <section class="py-24 bg-canvas border-t border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Header -->
-      <div class="flex items-end justify-between mb-16">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
         <div>
-          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-            Publications
-          </span>
-          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
-            The CSEA Journal
-          </h2>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Core Publications</span>
+          <h2 class="text-display-lg text-foreground">The CSEA Journal.</h2>
         </div>
-        <a href="/journal" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
-          Browse dispatches &rarr;
+        <a href="/journal" class="text-[14px] font-semibold text-accent hover:underline no-underline mt-4 md:mt-0 inline-flex items-center gap-1">
+          Browse dispatch logs &rarr;
         </a>
       </div>
 
       <!-- Asymmetric Editorial Grid (7 / 5 Layout) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         
         <!-- Left: Featured Article (7 Columns) -->
-        <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-5 shadow-soft group hover:border-brand/30 transition-colors duration-200">
+        <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-5 shadow-soft group hover:border-accent/30 transition-colors duration-300 reveal">
           <a href="/journal/tech-stack" class="no-underline text-foreground block">
-            <!-- 16:9 visual cover frame -->
-            <div class="w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-secondary border border-border mb-6 flex items-center justify-center font-sans font-semibold text-foreground-muted text-sm select-none">
-              Featured Dispatch Architecture Cover
+            <!-- 16:9 visual cover frame (Editorial illustration instead of blank) -->
+            <div class="w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-secondary border border-border mb-6 flex flex-col justify-between p-6 font-mono text-[11px] text-foreground-muted select-none">
+              <div class="flex justify-between items-start">
+                <span>RE_DISPATCH // ARCH_PLATFORM</span>
+                <span>VER: 4.1</span>
+              </div>
+              <div class="flex items-center justify-center">
+                <svg class="w-12 h-12 text-accent opacity-25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              </div>
+              <div class="text-[9px] text-accent">
+                DASHBOARD_CACHING_LOGS &middot; DEPLOYED
+              </div>
             </div>
             
-            <div class="flex items-center gap-4 text-[12px] text-foreground-muted font-mono mb-3.5">
-              <span class="text-brand font-semibold">TECHNICAL</span>
-              <span>Aug 12, 2026</span>
+            <div class="flex items-center gap-3.5 text-[11px] text-foreground-muted font-mono mb-3.5">
+              <span class="text-accent font-bold uppercase tracking-wider">TECHNICAL DISPATCH</span>
+              <span>Aug 12, 2026 &middot; 8 min read</span>
             </div>
             
-            <h3 class="text-h2 leading-[1.1] text-foreground group-hover:text-brand transition-colors mb-3">
+            <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
               Architecting the New CSEA Platform
             </h3>
             
-            <p class="text-[14px] text-foreground-secondary leading-relaxed mb-6">
-              A detailed overview of database caching, build bundles, and REST interface logic selected to rewrite our public and portal networks.
+            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-6">
+              A detailed overview of database caching structures, Astro Static site generation, build bundles, and REST interface logic selected to rewrite our public and student portal networks.
             </p>
             
             <div class="flex items-center gap-3 pt-6 border-t border-border mt-4">
-              <span class="text-[13px] font-bold text-foreground">Technical Architecture Team</span>
+              <span class="text-[13px] font-bold text-foreground font-mono">AUTHORS / TECHNICAL PLATFORM TEAM</span>
             </div>
           </a>
         </div>
 
-        <!-- Right: Supporting Articles (5 Columns, no big cards, separated with subtle borders) -->
-        <div class="lg:col-span-5 flex flex-col gap-6">
-          <div class="text-[11px] font-sans font-bold tracking-widest text-foreground-muted uppercase">// OTHER READS</div>
+        <!-- Right: Supporting Articles (5 Columns) -->
+        <div class="lg:col-span-5 flex flex-col gap-6 reveal" style="transition-delay: 100ms;">
+          <div class="text-[10px] font-mono font-bold tracking-widest text-foreground-muted uppercase border-b border-border pb-3">// Technical Archive</div>
           
-          <div class="flex flex-col gap-8 divide-y divide-border">
+          <div class="flex flex-col gap-8">
             
             <!-- Article 2 -->
-            <div class="pt-0 group">
+            <div class="group pb-6 border-b border-border last:border-none">
               <a href="/journal/orientation" class="no-underline block">
-                <div class="text-[12px] text-foreground-muted mb-2 font-mono">Aug 05 &middot; Announcements</div>
-                <h4 class="font-sans font-semibold text-[15.5px] text-foreground group-hover:text-brand transition-colors">
+                <div class="text-[11px] text-foreground-muted mb-2 font-mono">Aug 05, 2026 &middot; Announcements</div>
+                <h4 class="font-sans font-semibold text-[18px] text-foreground group-hover:text-accent transition-colors leading-snug">
                   Registration Open for Orientation '26
                 </h4>
-                <p class="text-[13px] text-foreground-secondary leading-relaxed mt-1.5">
+                <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2">
                   Securing entry passes and checking agendas for our department meet.
                 </p>
               </a>
             </div>
 
             <!-- Article 3 -->
-            <div class="pt-6 group">
+            <div class="group pb-6 border-b border-border last:border-none">
               <a href="/journal/hackathon" class="no-underline block">
-                <div class="text-[12px] text-foreground-muted mb-2 font-mono">Jul 28 &middot; Reports</div>
-                <h4 class="font-sans font-semibold text-[15.5px] text-foreground group-hover:text-brand transition-colors">
+                <div class="text-[11px] text-foreground-muted mb-2 font-mono">Jul 28, 2026 &middot; Reports</div>
+                <h4 class="font-sans font-semibold text-[18px] text-foreground group-hover:text-accent transition-colors leading-snug">
                   Lessons from the Summer Hackathon
                 </h4>
-                <p class="text-[13px] text-foreground-secondary leading-relaxed mt-1.5">
+                <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2">
                   Analyzing student prototypes, deployment speeds, and tech alignments.
                 </p>
               </a>
@@ -449,47 +654,61 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- 7. GALLERY SECTION -->
-  <section class="py-24 bg-white border-t border-border">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- 8. GALLERY / MOMENTS SECTION -->
+  <section class="py-24 bg-surface-secondary border-t border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="flex items-end justify-between mb-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
         <div>
-          <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-            Photography-first
-          </span>
-          <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground">
-            Moments
-          </h2>
+          <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Community Photography</span>
+          <h2 class="text-display-lg text-foreground">Moments.</h2>
         </div>
-        <a href="/gallery" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
-          View full archive &rarr;
+        <a href="/gallery" class="text-[14px] font-semibold text-accent hover:underline no-underline mt-4 md:mt-0 inline-flex items-center gap-1">
+          Browse full gallery &rarr;
         </a>
       </div>
 
-      <!-- Asymmetric Collage: 8 columns / 4 columns -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <!-- Asymmetric Collage: 8 columns / 4 columns (Representing real photography mockups) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch reveal">
         
-        <!-- Large visual cover (8 Columns) -->
-        <a href="/gallery/hackathon" class="lg:col-span-8 group relative rounded-2xl overflow-hidden aspect-[16/10] border border-border shadow-soft no-underline flex items-center justify-center bg-surface-secondary">
-          <div class="w-full h-full flex items-center justify-center font-sans font-semibold text-foreground-secondary text-sm group-hover:scale-[1.025] transition-transform duration-500 ease-out select-none">
-            Summer Hackathon Photo Frame
+        <!-- Large landscape visual cover (8 Columns) -->
+        <a href="/gallery/hackathon" class="lg:col-span-8 group relative rounded-lg overflow-hidden aspect-[16/10] border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
+          <div class="w-full h-full rounded bg-gradient-to-tr from-accent/20 to-accent-blue/10 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+            <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
+              <span>ALBUM // SUMMER_HACKATHON_2026</span>
+              <span>342 IMAGES</span>
+            </div>
+            <div class="flex justify-center py-6">
+              <svg class="w-16 h-16 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </div>
+            <div class="font-mono text-[9px] text-foreground-secondary">
+              COM_COORDS: STAGE_INNOVATION_LAB // KITSW
+            </div>
           </div>
-          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/60 to-transparent text-white">
-            <h3 class="font-sans font-bold text-[16px]">Summer Hackathon 2026</h3>
+          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
+            <h3 class="font-sans font-bold text-[18px]">Summer Hackathon 2026</h3>
             <p class="text-[12px] text-white/80">342 Photos &middot; July 2026</p>
           </div>
         </a>
 
-        <!-- Stacked visual frames (4 Columns) -->
-        <a href="/gallery/hackathon" class="lg:col-span-4 group relative rounded-2xl overflow-hidden aspect-square lg:aspect-auto border border-border shadow-soft no-underline flex items-center justify-center bg-surface-secondary">
-          <div class="w-full h-full flex items-center justify-center font-sans font-semibold text-foreground-secondary text-sm group-hover:scale-[1.025] transition-transform duration-500 ease-out select-none">
-            Orientation Photos Frame
+        <!-- Square/Vertical visual cover (4 Columns) -->
+        <a href="/gallery/hackathon" class="lg:col-span-4 group relative rounded-lg overflow-hidden aspect-square lg:aspect-auto border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
+          <div class="w-full h-full rounded bg-gradient-to-br from-accent-blue/10 to-accent/20 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+            <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
+              <span>ALBUM // DEPT_ORIENTATION</span>
+              <span>120 IMAGES</span>
+            </div>
+            <div class="flex justify-center py-6">
+              <svg class="w-12 h-12 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </div>
+            <div class="font-mono text-[9px] text-foreground-secondary">
+              COM_COORDS: KITSW_AUDITORIUM
+            </div>
           </div>
-          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/60 to-transparent text-white">
-            <h3 class="font-sans font-bold text-[15px]">CSEA Orientation</h3>
-            <p class="text-[11.5px] text-white/80">August 2026</p>
+          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
+            <h3 class="font-sans font-bold text-[18px]">CSEA Orientation</h3>
+            <p class="text-[12px] text-white/80">120 Photos &middot; August 2026</p>
           </div>
         </a>
 
@@ -497,69 +716,68 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- 8. LEADERSHIP SECTION (Faculty Coordinator, President, Vice President) -->
-  <section class="py-24 bg-surface-subtle border-t border-border">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8">
+  <!-- 9. LEADERSHIP SECTION -->
+  <section class="py-24 bg-canvas border-t border-border">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="mb-16">
-        <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-2 block">
-          People
-        </span>
-        <h2 class="text-display-md leading-[1] tracking-[-0.045em] text-foreground mb-3">
-          Our Leadership
-        </h2>
-        <p class="text-body text-foreground-secondary max-w-[640px]">
+      <div class="mb-20 reveal">
+        <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-2 block">// Board representation</span>
+        <h2 class="text-display-lg text-foreground">Our Leadership.</h2>
+        <p class="text-body text-foreground-secondary max-w-[620px] mt-4">
           Department coordination and student representations steering the association.
         </p>
       </div>
 
       <!-- 3-Column Profile Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 reveal">
         
         <!-- Advisor Profile -->
-        <div class="flex flex-col gap-4">
-          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
-            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+        <div class="flex flex-col gap-4 group">
+          <div class="aspect-square rounded-lg border border-border bg-surface p-3 shadow-soft relative overflow-hidden flex items-center justify-center">
+            <div class="w-full h-full rounded bg-surface-secondary border border-border flex items-center justify-center text-[36px] font-display font-semibold text-accent select-none group-hover:scale-105 transition-transform duration-300">
               VS
             </div>
+            <div class="absolute top-5 right-5 font-mono text-[9px] text-foreground-muted bg-white border border-border px-2 py-0.5 rounded uppercase">Faculty</div>
           </div>
           <div>
-            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">Dr. V. Shankar</h4>
-            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Faculty Coordinator & Head, CSE</p>
+            <h4 class="font-sans font-bold text-[18px] text-foreground leading-tight">Dr. V. Shankar</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1.5 font-semibold">Faculty Coordinator & Head, CSE</p>
           </div>
         </div>
 
         <!-- President Profile -->
-        <div class="flex flex-col gap-4">
-          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
-            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+        <div class="flex flex-col gap-4 group">
+          <div class="aspect-square rounded-lg border border-border bg-surface p-3 shadow-soft relative overflow-hidden flex items-center justify-center">
+            <div class="w-full h-full rounded bg-surface-secondary border border-border flex items-center justify-center text-[36px] font-display font-semibold text-accent select-none group-hover:scale-105 transition-transform duration-300">
               AS
             </div>
+            <div class="absolute top-5 right-5 font-mono text-[9px] text-foreground-muted bg-white border border-border px-2 py-0.5 rounded uppercase">Student Board</div>
           </div>
           <div>
-            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">A. Sathvik</h4>
-            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Student President</p>
+            <h4 class="font-sans font-bold text-[18px] text-foreground leading-tight">A. Sathvik</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1.5 font-semibold">Student President</p>
           </div>
         </div>
 
         <!-- Vice President Profile -->
-        <div class="flex flex-col gap-4">
-          <div class="aspect-square rounded-2xl border border-border bg-white p-2.5 shadow-soft">
-            <div class="w-full h-full rounded-xl bg-brand-soft/40 border border-brand/5 flex items-center justify-center text-[18px] font-display font-semibold text-brand select-none">
+        <div class="flex flex-col gap-4 group">
+          <div class="aspect-square rounded-lg border border-border bg-surface p-3 shadow-soft relative overflow-hidden flex items-center justify-center">
+            <div class="w-full h-full rounded bg-surface-secondary border border-border flex items-center justify-center text-[36px] font-display font-semibold text-accent select-none group-hover:scale-105 transition-transform duration-300">
               KS
             </div>
+            <div class="absolute top-5 right-5 font-mono text-[9px] text-foreground-muted bg-white border border-border px-2 py-0.5 rounded uppercase">Student Board</div>
           </div>
           <div>
-            <h4 class="font-sans font-bold text-[16px] text-foreground leading-tight">K. Shruti</h4>
-            <p class="text-[13px] text-foreground-secondary mt-1 font-semibold">Student Vice President</p>
+            <h4 class="font-sans font-bold text-[18px] text-foreground leading-tight">K. Shruti</h4>
+            <p class="text-[13px] text-foreground-secondary mt-1.5 font-semibold">Student Vice President</p>
           </div>
         </div>
 
       </div>
 
-      <div class="mt-12 text-center">
-        <a href="/team" class="text-[13.5px] font-semibold text-brand hover:text-brand-hover no-underline">
+      <div class="mt-16 text-center reveal">
+        <a href="/team" class="text-[14px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
           Meet all committee board members &rarr;
         </a>
       </div>
@@ -567,35 +785,128 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- 9. FINAL CTA SECTION -->
-  <section class="py-24 bg-white border-t border-border text-center relative overflow-hidden">
-    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8 relative z-10">
+  <!-- 10. VOICES OF CSEA (High Contrast Dark environment quote block) -->
+  <section class="py-28 bg-dark-canvas text-dark-foreground dark-env border-t border-dark-border">
+    <div class="max-w-[1000px] mx-auto px-5 md:px-6 lg:px-8 text-center reveal">
+      <span class="text-[11px] font-mono tracking-[0.1em] text-accent font-bold uppercase mb-8 block">// Meaningful Voices</span>
       
-      <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-accent text-white font-bold text-sm mx-auto mb-8 shadow-sm">
+      <!-- Carousel Content -->
+      <div id="voices-carousel" class="transition-opacity duration-300">
+        <blockquote class="text-[28px] md:text-[36px] font-sans font-medium tracking-tight leading-snug text-dark-foreground mb-8 text-balance">
+          "CSEA is a lab where computer science is put to work. It bridges the gap between our classrooms and the dynamic infrastructure requirements of the industry."
+        </blockquote>
+        <cite class="not-italic font-mono text-sm text-accent uppercase">
+          Dr. V. Shankar &mdash; Head, Department of CSE
+        </cite>
+      </div>
+
+      <!-- Carousel indicators/controls -->
+      <div class="flex items-center justify-center gap-4 mt-12">
+        <button id="voice-prev" class="w-10 h-10 rounded-full border border-dark-border flex items-center justify-center hover:bg-dark-surface transition-colors" aria-label="Previous Quote">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="flex gap-2">
+          <span class="voice-dot w-2 h-2 rounded-full bg-accent"></span>
+          <span class="voice-dot w-2 h-2 rounded-full bg-dark-border"></span>
+        </div>
+        <button id="voice-next" class="w-10 h-10 rounded-full border border-dark-border flex items-center justify-center hover:bg-dark-surface transition-colors" aria-label="Next Quote">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script for quote carousel -->
+  <script>
+    const quotes = [
+      {
+        quote: "CSEA is a lab where computer science is put to work. It bridges the gap between our classrooms and the dynamic infrastructure requirements of the industry.",
+        author: "Dr. V. Shankar — Head, Department of CSE"
+      },
+      {
+        quote: "Our squads do not make templates or build portfolio sites. We focus on architecting attendance registers, custom lab APIs, and publishing case studies.",
+        author: "A. Sathvik — Student President"
+      }
+    ];
+
+    let currentIndex = 0;
+    const carousel = document.getElementById('voices-carousel');
+    const dots = document.querySelectorAll('.voice-dot');
+    const nextBtn = document.getElementById('voice-next');
+    const prevBtn = document.getElementById('voice-prev');
+
+    function updateQuote(idx) {
+      if (carousel) {
+        carousel.style.opacity = '0';
+        setTimeout(() => {
+          carousel.innerHTML = `
+            <blockquote class="text-[28px] md:text-[36px] font-sans font-medium tracking-tight leading-snug text-dark-foreground mb-8 text-balance">
+              "${quotes[idx].quote}"
+            </blockquote>
+            <cite class="not-italic font-mono text-sm text-accent uppercase">
+              ${quotes[idx].author}
+            </cite>
+          `;
+          dots.forEach((dot, dIdx) => {
+            if (dIdx === idx) {
+              dot.classList.remove('bg-dark-border');
+              dot.classList.add('bg-accent');
+            } else {
+              dot.classList.remove('bg-accent');
+              dot.classList.add('bg-dark-border');
+            }
+          });
+          carousel.style.opacity = '1';
+        }, 150);
+      }
+    }
+
+    nextBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % quotes.length;
+      updateQuote(currentIndex);
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+      updateQuote(currentIndex);
+    });
+  </script>
+
+  <!-- 11. FINAL CTA SECTION (Energetic Orange Section) -->
+  <section class="py-28 bg-accent text-white border-t border-accent-hover relative overflow-hidden">
+    <!-- background vector -->
+    <div class="absolute inset-0 pointer-events-none select-none opacity-20 z-0">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="0" y1="20" x2="100" y2="80" stroke="white" stroke-width="0.5" stroke-dasharray="1 1" />
+        <line x1="20" y1="0" x2="80" y2="100" stroke="white" stroke-width="0.3" />
+      </svg>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 relative z-10 text-center reveal">
+      <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-white/10 text-white font-mono font-bold text-sm mx-auto mb-8 border border-white/20 select-none">
         CS
       </div>
       
-      <span class="text-[12px] font-semibold tracking-[0.08em] text-foreground-muted uppercase mb-3 block">
-        Be part of CSEA
+      <span class="text-[11px] font-mono tracking-[0.15em] text-white/80 uppercase mb-4 block font-bold">
+        // JOIN THE NETWORK
       </span>
       
-      <h2 class="text-display-md leading-[1.05] tracking-[-0.045em] text-foreground mb-6">
-        Learn. Build. Lead. Together.
+      <h2 class="text-display-lg text-white mb-6 text-balance leading-none">
+        Have an idea worth building?
       </h2>
       
-      <p class="text-body text-foreground-secondary max-w-[540px] mx-auto mb-10 leading-relaxed">
+      <p class="text-body-lg text-white/90 max-w-[600px] mx-auto mb-12">
         Access student resources, check events chronology, or submit applications to join project squads.
       </p>
       
       <div class="flex flex-wrap items-center justify-center gap-4">
-        <a href="/events" class="btn btn-primary px-7 py-3 rounded-lg font-semibold shadow-soft no-underline">
+        <a href="/events" class="btn bg-white text-accent hover:bg-surface-secondary px-8 py-3.5 rounded-lg font-bold shadow-soft no-underline text-center">
           Explore Events
         </a>
-        <a href="/portal/login" class="btn btn-outline px-7 py-3 rounded-lg font-semibold hover:bg-surface no-underline">
+        <a href="/portal/login" class="btn border border-white/30 text-white hover:bg-white/10 px-8 py-3.5 rounded-lg font-semibold no-underline text-center">
           Student Portal
         </a>
       </div>
-
     </div>
   </section>
 

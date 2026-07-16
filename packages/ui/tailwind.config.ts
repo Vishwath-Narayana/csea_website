@@ -21,6 +21,7 @@ const config: Config = {
         accent: "var(--accent)",
         "accent-hover": "var(--accent-hover)",
         "accent-muted": "var(--accent-muted)",
+        "accent-blue": "var(--accent-blue)",
         "dark-canvas": "var(--dark-canvas)",
         "dark-surface": "var(--dark-surface)",
         "dark-surface-2": "var(--dark-surface-2)",
@@ -52,10 +53,10 @@ const config: Config = {
       },
       borderRadius: {
         sm: "6px",
-        DEFAULT: "10px",
-        md: "10px",
-        lg: "14px",
-        xl: "20px",
+        DEFAULT: "12px",
+        md: "12px",
+        lg: "20px",
+        xl: "24px",
         pill: "9999px",
       },
       boxShadow: {
