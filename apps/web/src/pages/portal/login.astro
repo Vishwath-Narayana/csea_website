@@ -4,7 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <Layout title="Student Login | CSEA Portal" darkFooter={false}>
   
-  <div class="min-h-screen bg-canvas flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+  <div class="min-h-[calc(100vh-64px)] bg-canvas flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
     <!-- Network graphic backdrop (Subtle background paths) -->
     <div class="absolute inset-0 pointer-events-none select-none opacity-5 z-0">
       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -19,11 +19,14 @@ import Layout from '../../layouts/Layout.astro';
           <span class="text-[11px] font-mono text-accent font-bold tracking-[0.1em] uppercase mt-1">// Student Portal</span>
         </a>
       </div>
-      <h2 class="text-center text-display-md text-foreground">
+      <h2 class="text-center text-display-md text-foreground mb-3">
         Sign in to your account
       </h2>
-      <p class="mt-2 text-center text-[14px] text-foreground-secondary">
-        Use your KITSW institutional email.
+      <p class="text-center text-[15px] text-foreground-secondary max-w-sm mx-auto mb-1">
+        One account for CSEA events, projects and opportunities.
+      </p>
+      <p class="text-center text-[13px] text-foreground-muted font-mono mt-3 bg-surface border border-border inline-block px-3 py-1 rounded-md mx-auto relative left-1/2 -translate-x-1/2">
+        // Use your KITSW institutional email.
       </p>
     </div>
 
@@ -36,7 +39,7 @@ import Layout from '../../layouts/Layout.astro';
               Institutional Email
             </label>
             <div class="mt-1">
-              <input id="email" name="email" type="email" autocomplete="email" required class="w-full bg-canvas/30 border border-border-strong rounded-md px-3 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm" placeholder="b26cs000@kitsw.ac.in">
+              <input id="email" name="email" type="email" autocomplete="email" required class="w-full bg-surface border border-border rounded-md px-3.5 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent transition-all shadow-sm" placeholder="b26cs000@kitsw.ac.in">
             </div>
           </div>
 
@@ -45,7 +48,7 @@ import Layout from '../../layouts/Layout.astro';
               Password
             </label>
             <div class="mt-1">
-              <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full bg-canvas/30 border border-border-strong rounded-md px-3 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all shadow-sm">
+              <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full bg-surface border border-border rounded-md px-3.5 py-2.5 text-[14px] text-foreground focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent transition-all shadow-sm">
             </div>
           </div>
 

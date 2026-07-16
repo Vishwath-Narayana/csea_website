@@ -18,7 +18,7 @@ import Layout from '../../layouts/Layout.astro';
         <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
           <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> // DISPATCHES & DOCUMENTATION
         </div>
-        <h1 class="text-display-lg mb-4 text-balance text-foreground">The Journal.</h1>
+        <h1 class="text-display-lg mb-4 text-balance text-foreground">Journal.</h1>
         <p class="text-body-lg text-foreground-secondary max-w-2xl leading-relaxed">
           Architectural breakdowns, event logs, and engineering articles written by CSEA developers and builders.
         </p>
@@ -45,8 +45,12 @@ import Layout from '../../layouts/Layout.astro';
                 <span>RE_DISPATCH // PLATFORM_STACK</span>
                 <span>SYS_INIT</span>
               </div>
-              <div class="flex justify-center">
-                <svg class="w-16 h-16 text-accent opacity-20 group-hover:scale-105 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              <div class="flex justify-center relative group-hover:scale-105 transition-transform duration-700">
+                <svg class="w-20 h-20 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
               </div>
               <div class="text-[9px] text-accent/80 font-bold">
                 ASTRO &middot; REACT &middot; FASTIFY &middot; POSTGRES
@@ -84,9 +88,13 @@ import Layout from '../../layouts/Layout.astro';
               <span class="text-[11.5px] font-mono text-foreground-muted">Aug 05</span>
             </div>
             <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Registration Open for Orientation '26</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
               Secure your spot for the opening ceremony of the academic year. Meet the committee and discover our roadmap.
             </p>
+            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
+              <span class="text-[12px] font-medium text-foreground">Executive Board</span>
+              <span class="text-[11px] font-mono text-foreground-muted">2 min read</span>
+            </div>
           </a>
 
           <!-- Dispatch 3 -->
@@ -96,9 +104,13 @@ import Layout from '../../layouts/Layout.astro';
               <span class="text-[11.5px] font-mono text-foreground-muted">Jul 28</span>
             </div>
             <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Lessons from the Summer Hackathon</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
               What we learned organizing a 48-hour continuous building session, tech stack reviews, and winning prototype submissions.
             </p>
+            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
+              <span class="text-[12px] font-medium text-foreground">Tech Ops Team</span>
+              <span class="text-[11px] font-mono text-foreground-muted">6 min read</span>
+            </div>
           </a>
 
           <!-- Dispatch 4 -->
@@ -108,9 +120,13 @@ import Layout from '../../layouts/Layout.astro';
               <span class="text-[11.5px] font-mono text-foreground-muted">Jul 10</span>
             </div>
             <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Connecting with the Class of 2024</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed">
+            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
               Insights from our recent alumni panel on breaking into big tech and open-source contributions.
             </p>
+            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
+              <span class="text-[12px] font-medium text-foreground">PR Division</span>
+              <span class="text-[11px] font-mono text-foreground-muted">5 min read</span>
+            </div>
           </a>
 
         </div>

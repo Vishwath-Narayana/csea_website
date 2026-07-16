@@ -25,18 +25,33 @@ import Layout from '../layouts/Layout.astro';
         </p>
       </div>
       <div class="lg:col-span-5 reveal" style="transition-delay: 100ms;">
-        <div class="aspect-[4/3] w-full bg-surface border border-border rounded-lg overflow-hidden shadow-medium p-3">
+        <div class="aspect-[4/3] w-full bg-surface border border-border rounded-lg overflow-hidden shadow-medium p-2.5 relative group">
           <!-- Styled abstract illustration for association -->
-          <div class="w-full h-full rounded bg-gradient-to-tr from-accent/15 to-accent-blue/15 flex flex-col justify-between p-6 select-none font-mono text-[10px] text-foreground-secondary">
-            <div class="flex justify-between items-start">
-              <span>SYS_UNIT // CSEA_COMMUNITY</span>
-              <span>VER // 2026.1</span>
+          <div class="w-full h-full rounded border border-border/50 bg-gradient-to-tr from-accent/10 to-accent-blue/5 flex flex-col justify-between p-6 select-none font-mono text-[10px] text-foreground-secondary relative overflow-hidden">
+            <!-- Grid pattern background -->
+            <div class="absolute inset-0 opacity-[0.15]" style="background-image: radial-gradient(var(--foreground-muted) 1px, transparent 1px); background-size: 16px 16px;"></div>
+            
+            <div class="flex justify-between items-start relative z-10">
+              <span class="bg-surface/80 px-2 py-0.5 rounded border border-border">SYS_UNIT // CSEA_COMMUNITY</span>
+              <span class="bg-surface/80 px-2 py-0.5 rounded border border-border">VER // 2026.1</span>
             </div>
-            <div class="flex justify-center">
-              <svg class="w-16 h-16 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            
+            <div class="flex justify-center relative z-10 group-hover:scale-105 transition-transform duration-700">
+              <svg class="w-20 h-20 text-accent opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 17 17 22 12"></polyline>
+              </svg>
             </div>
-            <div class="text-right text-[9px] text-accent/80 font-bold">
-              ESTD. 1998 // CSE KITSW
+            
+            <div class="flex justify-between items-end relative z-10">
+              <div class="flex flex-col gap-1">
+                <span class="w-12 h-1 bg-accent/30 rounded-full"></span>
+                <span class="w-8 h-1 bg-accent/20 rounded-full"></span>
+              </div>
+              <div class="text-[9px] text-accent/80 font-bold bg-surface/80 px-2 py-0.5 rounded border border-border">
+                ESTD. 1998 // CSE KITSW
+              </div>
             </div>
           </div>
         </div>
@@ -49,25 +64,27 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
       
       <!-- Left Column: Key Principles -->
-      <div class="lg:col-span-7 reveal text-body text-foreground-secondary leading-relaxed flex flex-col gap-6">
-        <h2 class="text-display-md text-foreground mb-4">Our Philosophy</h2>
-        <p>
-          CSEA operates as a technology incubator within the college. We do not just host seminars; we assemble teams to build internal software, we organize hackathons to test engineering endurance, and we maintain an active technical journal.
-        </p>
-        <p class="mb-6">
-          Our core philosophy is <strong>"Structured Energy"</strong> — taking the raw enthusiasm of CS students and channeling it into precise, production-level outputs. We treat student projects with the same rigor as industry development pipelines.
-        </p>
+      <div class="lg:col-span-7 reveal text-body text-foreground-secondary leading-relaxed flex flex-col gap-8 max-w-[650px]">
+        <div>
+          <h2 class="text-display-md text-foreground mb-4">Our Philosophy</h2>
+          <p class="mb-4">
+            CSEA operates as a technology incubator within the college. We do not just host seminars; we assemble teams to build internal software, we organize hackathons to test engineering endurance, and we maintain an active technical journal.
+          </p>
+          <p class="mb-2">
+            Our core philosophy is <strong class="text-foreground">"Structured Energy"</strong> — taking the raw enthusiasm of CS students and channeling it into precise, production-level outputs. We treat student projects with the same rigor as industry development pipelines.
+          </p>
+        </div>
 
-        <div class="border-t border-border pt-6">
-          <h3 class="text-h3 text-foreground mb-3">Technical Publishing</h3>
-          <p class="text-body-sm text-foreground-secondary leading-relaxed">
+        <div class="border-t border-border pt-8 flex flex-col gap-2">
+          <h3 class="text-h2 text-foreground mb-2">Technical Publishing</h3>
+          <p class="text-[16px] text-foreground-secondary leading-relaxed">
             Through the CSEA Journal, we document architectures, system decisions, and lessons learned by our student body. Writing is thinking, and clear documentation is a core engineering requirement.
           </p>
         </div>
 
-        <div class="border-t border-border pt-6">
-          <h3 class="text-h3 text-foreground mb-3">Systems Engineering</h3>
-          <p class="text-body-sm text-foreground-secondary leading-relaxed">
+        <div class="border-t border-border pt-8 flex flex-col gap-2">
+          <h3 class="text-h2 text-foreground mb-2">Systems Engineering</h3>
+          <p class="text-[16px] text-foreground-secondary leading-relaxed">
             We maintain CSEA's digital ecosystem, build automated lab tracking gateways, and ship open source utilities to assist the department. If a problem exists on campus, we build software to solve it.
           </p>
         </div>
@@ -79,6 +96,10 @@ import Layout from '../layouts/Layout.astro';
           <div class="text-[11px] font-mono text-accent font-bold tracking-wider uppercase mb-6">// ORGANIZATION HIERARCHY</div>
           
           <div class="flex flex-col gap-6 border-l-2 border-accent/25 pl-5">
+            <div>
+              <h4 class="font-semibold text-foreground text-[16px] leading-tight">Faculty Leadership</h4>
+              <p class="text-[13.5px] text-foreground-secondary mt-1.5">Department professors guiding the association's academic alignment and approvals.</p>
+            </div>
             <div>
               <h4 class="font-semibold text-foreground text-[16px] leading-tight">Core Committee</h4>
               <p class="text-[13.5px] text-foreground-secondary mt-1.5">Final year students responsible for high-level strategy, system administration, and technical direction.</p>

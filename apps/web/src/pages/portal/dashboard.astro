@@ -4,11 +4,11 @@ import Layout from '../../layouts/Layout.astro';
 
 <Layout title="Dashboard | CSEA Portal" darkFooter={false}>
   
-  <div class="min-h-screen bg-surface-secondary pt-16">
+  <div class="min-h-[calc(100vh-64px)] bg-surface-secondary">
     
     <!-- Portal Header -->
     <div class="bg-surface border-b border-border">
-      <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 class="text-h2 font-semibold text-foreground">Student Portal</h1>
           <p class="text-[14px] text-foreground-secondary mt-1">Welcome back, Student.</p>
@@ -20,7 +20,7 @@ import Layout from '../../layouts/Layout.astro';
     </div>
 
     <!-- Portal Content -->
-    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8 py-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
       
       <!-- Sidebar Navigation (3 Columns) -->
       <aside class="lg:col-span-3">
@@ -58,7 +58,7 @@ import Layout from '../../layouts/Layout.astro';
               <h3 class="text-[16px] font-semibold text-foreground">CSEA Orientation 2026</h3>
               <div class="text-[13.5px] text-foreground-secondary mt-1">Aug 15, 2026 &middot; Main Auditorium</div>
             </div>
-            <button class="btn btn-outline text-[13px] px-4.5 py-2">View Ticket</button>
+            <button class="btn btn-outline text-[13px] px-5 py-2">View Ticket</button>
           </div>
         </section>
 
@@ -74,7 +74,7 @@ import Layout from '../../layouts/Layout.astro';
               <h3 class="text-[16px] font-semibold text-foreground">CSEA Digital Platform</h3>
               <div class="text-[13.5px] text-foreground-secondary mt-1">Role: Frontend Engineer</div>
             </div>
-            <button class="btn btn-ghost text-[13px] px-4.5 py-2 text-foreground-muted hover:text-foreground">Withdraw</button>
+            <button class="btn btn-ghost text-[13px] px-5 py-2 text-foreground-muted hover:text-foreground">Withdraw</button>
           </div>
         </section>
 

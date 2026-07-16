@@ -7,9 +7,10 @@ interface Props {
   title: string;
   description?: string;
   darkFooter?: boolean;
+  hasBanner?: boolean;
 }
 
-const { title, description = "Computer Science & Engineering Association — KITSW, Warangal", darkFooter = true } = Astro.props;
+const { title, description = "Computer Science & Engineering Association — KITSW, Warangal", darkFooter = true, hasBanner = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -33,7 +34,7 @@ const { title, description = "Computer Science & Engineering Association — KIT
     <title>{title} — CSEA</title>
   </head>
   <body class="min-h-screen flex flex-col">
-    <Navigation />
+    <Navigation hasBanner={hasBanner} />
     <main class="flex-1 pt-16">
       <slot />
     </main>

@@ -2,10 +2,10 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-dark-canvas text-dark-foreground border-t border-dark-border pt-24 pb-12 dark-env">
-  <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
+<footer class="bg-dark-canvas text-dark-foreground border-t border-dark-border pt-16 pb-8 dark-env relative overflow-hidden">
+  <div class="max-w-[1280px] mx-auto px-5 md:px-6 lg:px-8 relative z-10">
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-12">
       
       <!-- Column 1: CSEA Identity and Description (span 4) -->
       <div class="lg:col-span-4">
@@ -74,7 +74,7 @@ const currentYear = new Date().getFullYear();
     </div>
 
     <!-- Bottom copyright and links -->
-    <div class="pt-8 border-t border-dark-border flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="pt-6 border-t border-dark-border flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
       <div class="text-[12.5px] text-dark-foreground-muted font-medium">
         &copy; {currentYear} Computer Science & Engineering Association, KITSW. All rights reserved.
       </div>
@@ -84,11 +84,10 @@ const currentYear = new Date().getFullYear();
         <a href="https://github.com" class="text-[13px] text-dark-foreground-muted hover:text-accent transition-colors no-underline">GitHub</a>
       </div>
     </div>
+  </div>
 
-    <!-- Giant background branding text -->
-    <div class="mt-16 pt-4 text-center select-none opacity-[0.02] pointer-events-none">
-      <div class="text-[12vw] font-bold tracking-tight uppercase leading-none font-sans">CSEA KITSW</div>
-    </div>
-
+  <!-- Giant background branding text - partially cropped -->
+  <div class="absolute bottom-[-15%] left-0 right-0 text-center select-none opacity-[0.015] pointer-events-none z-0 overflow-hidden">
+    <div class="text-[18vw] font-bold tracking-tight uppercase leading-[0.7] font-sans translate-y-12">CSEA KITSW</div>
   </div>
 </footer>

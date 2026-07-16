@@ -55,8 +55,8 @@ const config: Config = {
         sm: "6px",
         DEFAULT: "12px",
         md: "12px",
-        lg: "20px",
-        xl: "24px",
+        lg: "16px",
+        xl: "20px",
         pill: "9999px",
       },
       boxShadow: {
@@ -75,12 +75,12 @@ const config: Config = {
         "ease-out-custom": "cubic-bezier(0.22, 1, 0.36, 1)",
       },
       maxWidth: {
-        content: "1440px",
+        content: "1280px",
         editorial: "720px",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
 
 export default config;
