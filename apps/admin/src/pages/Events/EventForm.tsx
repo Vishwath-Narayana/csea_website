@@ -3,11 +3,10 @@ import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, Plus, GripVertical, Trash2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export function EventForm({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
   const isEditing = !!id;
-  const [formFields, setFormFields] = useState([{ id: 1, type: 'Short Text', label: 'Full Name', required: true }]);
   const [activeTab, setActiveTab] = useState('basic'); // 'basic', 'location', 'registration', 'team', 'publish'
   const [registrationEnabled, setRegistrationEnabled] = useState(true);
 

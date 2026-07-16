@@ -25,8 +25,6 @@ import { UsersList } from './pages/Users/UsersList';
 import { Settings } from './pages/Settings/Settings';
 import { AuditLog } from './pages/Settings/AuditLog';
 import { DropdownMenu, DropdownMenuItem } from './components/ui/DropdownMenu';
-import { Modal } from './components/ui/Modal';
-import { Input } from './components/ui/Input';
 
 // ─── Sidebar Section ───
 const SidebarSection = ({ label, children }: { label: string, children: React.ReactNode }) => (

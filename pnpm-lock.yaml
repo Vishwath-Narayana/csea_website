@@ -206,6 +206,19 @@ importers:
 
   packages/utilities: {}
 
+  packages/validation:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@csea/config':
+        specifier: workspace:*
+        version: link:../config
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

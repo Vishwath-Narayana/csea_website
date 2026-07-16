@@ -1,6 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { db, events, eventRegistrations } from '@csea/database';
-import { eq } from 'drizzle-orm';
+import { db, events } from '@csea/database';
 
 export const eventsRoutes: FastifyPluginAsync = async (fastify, opts) => {
   // GET all events
@@ -9,27 +8,19 @@ export const eventsRoutes: FastifyPluginAsync = async (fastify, opts) => {
     return allEvents;
   });
 
-  // POST create an event
+  // POST create an event (placeholder — will be fully implemented in Phase 2C)
   fastify.post('/', async (request, reply) => {
-    const { title, slug, description, startDate, endDate, venue, capacity } = request.body as any;
+    const body = request.body as any;
     const [newEvent] = await db.insert(events).values({
-      title, slug, description, startDate: new Date(startDate), endDate: new Date(endDate), venue, capacity
+      title: body.title,
+      slug: body.slug,
+      shortDescription: body.shortDescription,
+      fullDescription: body.fullDescription,
+      startDate: new Date(body.startDate),
+      endDate: new Date(body.endDate),
+      venue: body.venue,
+      status: body.status || "DRAFT",
     }).returning();
     return newEvent;
-  });
-
-  // POST register for an event
-  fastify.post('/:id/register', async (request, reply) => {
-    const { id } = request.params as any;
-    const { userId } = request.body as any; // Mocking auth for now
-    
-    // In a real scenario, check capacity and existing registration
-    const [registration] = await db.insert(eventRegistrations).values({
-      eventId: id,
-      userId,
-      status: "REGISTERED"
-    }).returning();
-    
-    return registration;
   });
 };

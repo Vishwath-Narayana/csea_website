@@ -1,5 +1,5 @@
 {
-  "id": "3d7383d0-00b6-4896-acc6-2865b46d9398",
+  "id": "7a504cba-9fa6-4e40-ae4b-2e60c6b5f14b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -64,7 +64,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "role_permissions_permission_id_permissions_id_fk": {
@@ -77,7 +77,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -149,7 +149,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'CONTRIBUTOR'"
+          "default": "'EDITOR'"
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -166,7 +172,22 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "users_email_idx": {
+          "name": "users_email_idx",
+          "columns": [
+            "email"
+          ],
+          "isUnique": false
+        },
+        "users_role_idx": {
+          "name": "users_role_idx",
+          "columns": [
+            "role"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -178,76 +199,6 @@
           ]
         }
       }
-    },
-    "event_registrations": {
-      "name": "event_registrations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "event_id": {
-          "name": "event_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'REGISTERED'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "event_registrations_event_id_events_id_fk": {
-          "name": "event_registrations_event_id_events_id_fk",
-          "tableFrom": "event_registrations",
-          "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "event_registrations_user_id_users_id_fk": {
-          "name": "event_registrations_user_id_users_id_fk",
-          "tableFrom": "event_registrations",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     },
     "events": {
       "name": "events",
@@ -272,20 +223,26 @@
           "primaryKey": false,
           "notNull": true
         },
+        "event_type": {
+          "name": "event_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "short_description": {
+          "name": "short_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "full_description": {
+          "name": "full_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "cover_image": {
           "name": "cover_image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "venue": {
-          "name": "venue",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -302,6 +259,74 @@
           "primaryKey": false,
           "notNull": true
         },
+        "venue": {
+          "name": "venue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "format": {
+          "name": "format",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'OFFLINE'"
+        },
+        "meeting_url": {
+          "name": "meeting_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_enabled": {
+          "name": "registration_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "registration_url": {
+          "name": "registration_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_open_at": {
+          "name": "registration_open_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_close_at": {
+          "name": "registration_close_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "faculty_coordinator": {
+          "name": "faculty_coordinator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "student_coordinator": {
+          "name": "student_coordinator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contact_email": {
+          "name": "contact_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contact_phone": {
+          "name": "contact_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "text",
@@ -309,11 +334,12 @@
           "notNull": true,
           "default": "'DRAFT'"
         },
-        "capacity": {
-          "name": "capacity",
-          "type": "integer",
+        "visibility": {
+          "name": "visibility",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'PUBLIC'"
         },
         "created_at": {
           "name": "created_at",
@@ -330,7 +356,29 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "events_slug_idx": {
+          "name": "events_slug_idx",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": false
+        },
+        "events_status_idx": {
+          "name": "events_status_idx",
+          "columns": [
+            "status"
+          ],
+          "isUnique": false
+        },
+        "events_start_date_idx": {
+          "name": "events_start_date_idx",
+          "columns": [
+            "start_date"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -360,17 +408,152 @@
           "primaryKey": false,
           "notNull": true
         },
-        "event_id": {
-          "name": "event_id",
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "related_event_id": {
+          "name": "related_event_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "cover_image": {
-          "name": "cover_image",
+        "event_date": {
+          "name": "event_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PUBLIC'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "galleries_slug_idx": {
+          "name": "galleries_slug_idx",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "galleries_related_event_id_events_id_fk": {
+          "name": "galleries_related_event_id_events_id_fk",
+          "tableFrom": "galleries",
+          "tableTo": "events",
+          "columnsFrom": [
+            "related_event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "galleries_slug_unique": {
+          "name": "galleries_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      }
+    },
+    "gallery_photos": {
+      "name": "gallery_photos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "gallery_id": {
+          "name": "gallery_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_id": {
+          "name": "public_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_size": {
+          "name": "file_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -380,19 +563,27 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "gallery_photos_gallery_id_idx": {
+          "name": "gallery_photos_gallery_id_idx",
+          "columns": [
+            "gallery_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
-        "galleries_event_id_events_id_fk": {
-          "name": "galleries_event_id_events_id_fk",
-          "tableFrom": "galleries",
-          "tableTo": "events",
+        "gallery_photos_gallery_id_galleries_id_fk": {
+          "name": "gallery_photos_gallery_id_galleries_id_fk",
+          "tableFrom": "gallery_photos",
+          "tableTo": "galleries",
           "columnsFrom": [
-            "event_id"
+            "gallery_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -446,12 +637,37 @@
           "primaryKey": false,
           "notNull": false
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'DRAFT'"
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PUBLIC'"
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "archived_at": {
+          "name": "archived_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -466,21 +682,31 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "published_at": {
-          "name": "published_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "archived_at": {
-          "name": "archived_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "journal_posts_slug_idx": {
+          "name": "journal_posts_slug_idx",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": false
+        },
+        "journal_posts_status_idx": {
+          "name": "journal_posts_status_idx",
+          "columns": [
+            "status"
+          ],
+          "isUnique": false
+        },
+        "journal_posts_published_at_idx": {
+          "name": "journal_posts_published_at_idx",
+          "columns": [
+            "published_at"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "journal_posts_author_id_users_id_fk": {
           "name": "journal_posts_author_id_users_id_fk",
@@ -492,7 +718,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -524,14 +750,62 @@
           "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "project_role_id": {
+          "name": "project_role_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "applicant_name": {
+          "name": "applicant_name",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "details": {
-          "name": "details",
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "roll_number": {
+          "name": "roll_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "statement": {
+          "name": "statement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "portfolio_url": {
+          "name": "portfolio_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "github_url": {
+          "name": "github_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resume_url": {
+          "name": "resume_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -549,9 +823,31 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "project_applications_project_id_idx": {
+          "name": "project_applications_project_id_idx",
+          "columns": [
+            "project_id"
+          ],
+          "isUnique": false
+        },
+        "project_applications_status_idx": {
+          "name": "project_applications_status_idx",
+          "columns": [
+            "status"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "project_applications_project_id_projects_id_fk": {
           "name": "project_applications_project_id_projects_id_fk",
@@ -563,20 +859,110 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "project_applications_user_id_users_id_fk": {
-          "name": "project_applications_user_id_users_id_fk",
+        "project_applications_project_role_id_project_roles_id_fk": {
+          "name": "project_applications_project_role_id_project_roles_id_fk",
           "tableFrom": "project_applications",
-          "tableTo": "users",
+          "tableTo": "project_roles",
           "columnsFrom": [
-            "user_id"
+            "project_role_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "project_roles": {
+      "name": "project_roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_name": {
+          "name": "role_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number_of_openings": {
+          "name": "number_of_openings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "required_skills": {
+          "name": "required_skills",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eligibility": {
+          "name": "eligibility",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "project_roles_project_id_idx": {
+          "name": "project_roles_project_id_idx",
+          "columns": [
+            "project_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "project_roles_project_id_projects_id_fk": {
+          "name": "project_roles_project_id_projects_id_fk",
+          "tableFrom": "project_roles",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -606,33 +992,21 @@
           "primaryKey": false,
           "notNull": true
         },
+        "short_description": {
+          "name": "short_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "full_description": {
+          "name": "full_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "cover_image": {
           "name": "cover_image",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "problem_statement": {
-          "name": "problem_statement",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "technologies": {
-          "name": "technologies",
-          "type": "text[]",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "mentor_id": {
-          "name": "mentor_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -641,7 +1015,37 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'OPEN'"
+          "default": "'DRAFT'"
+        },
+        "project_lead": {
+          "name": "project_lead",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timeline": {
+          "name": "timeline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tech_stack": {
+          "name": "tech_stack",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repository_url": {
+          "name": "repository_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "demo_url": {
+          "name": "demo_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -658,22 +1062,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "projects_mentor_id_users_id_fk": {
-          "name": "projects_mentor_id_users_id_fk",
-          "tableFrom": "projects",
-          "tableTo": "users",
-          "columnsFrom": [
-            "mentor_id"
+      "indexes": {
+        "projects_slug_idx": {
+          "name": "projects_slug_idx",
+          "columns": [
+            "slug"
           ],
-          "columnsTo": [
-            "id"
+          "isUnique": false
+        },
+        "projects_status_idx": {
+          "name": "projects_status_idx",
+          "columns": [
+            "status"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "isUnique": false
         }
       },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "projects_slug_unique": {
@@ -700,7 +1105,7 @@
           "name": "user_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "action": {
           "name": "action",
@@ -708,8 +1113,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "entity": {
-          "name": "entity",
+        "entity_type": {
+          "name": "entity_type",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -720,21 +1125,61 @@
           "primaryKey": false,
           "notNull": true
         },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "metadata": {
           "name": "metadata",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "timestamp": {
-          "name": "timestamp",
+        "ip_address": {
+          "name": "ip_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "audit_logs_user_id_idx": {
+          "name": "audit_logs_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "audit_logs_entity_type_idx": {
+          "name": "audit_logs_entity_type_idx",
+          "columns": [
+            "entity_type"
+          ],
+          "isUnique": false
+        },
+        "audit_logs_created_at_idx": {
+          "name": "audit_logs_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "audit_logs_user_id_users_id_fk": {
           "name": "audit_logs_user_id_users_id_fk",
@@ -746,7 +1191,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -770,11 +1215,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "public_id": {
+          "name": "public_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "type": {
           "name": "type",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "uploaded_by": {
           "name": "uploaded_by",
@@ -802,7 +1265,56 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "platform_settings": {
+      "name": "platform_settings",
+      "schema": "",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_by": {
+          "name": "updated_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "platform_settings_updated_by_users_id_fk": {
+          "name": "platform_settings_updated_by_users_id_fk",
+          "tableFrom": "platform_settings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "updated_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },

@@ -10,7 +10,6 @@ export function AuditLog() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [timeFilter, setTimeFilter] = useState('');
   
   const allLogs = [
     { id: 1, action: 'User Login', user: 'vishwath@kitsw.ac.in', target: 'System', time: '10 mins ago', ip: '192.168.1.1', status: 'Success' },
@@ -65,7 +64,6 @@ export function AuditLog() {
         onSearchChange={setSearch}
         onFilterChange={(id, val) => {
           if (id === 'status') setStatusFilter(val);
-          if (id === 'time') setTimeFilter(val);
         }}
       />
 

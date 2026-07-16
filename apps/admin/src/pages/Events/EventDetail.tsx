@@ -1,21 +1,12 @@
 import { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { StatusBadge } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Tabs';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
-import { SearchInput } from '../../components/ui/Input';
-import { DropdownMenu, DropdownMenuItem } from '../../components/ui/DropdownMenu';
-import { ArrowLeft, Edit, Download, MoreHorizontal, CheckCircle2, UserX } from 'lucide-react';
+import { ArrowLeft, Edit } from 'lucide-react';
 import { MetricCard } from '../../components/DashboardMetrics';
 
 export function EventDetail({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
   const [activeTab, setActiveTab] = useState('overview');
-
-  const attendees = [
-    { id: 1, name: "Alice Johnson", roll: "b26cs012", email: "b26cs012@kitsw.ac.in", branch: "CSE", year: "1st", status: "Confirmed", date: "Aug 10" },
-    { id: 2, name: "Bob Smith", roll: "b26it045", email: "b26it045@kitsw.ac.in", branch: "IT", year: "1st", status: "Waitlisted", date: "Aug 11" },
-  ];
 
   return (
     <div className="mx-auto max-w-content flex flex-col h-[calc(100vh-120px)] overflow-hidden">

@@ -3,7 +3,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, UploadCloud, FileImage, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, UploadCloud, FileImage, X } from 'lucide-react';
 
 export function GalleryUpload({ navigate }: { navigate: (view: string) => void }) {
   const [isUploading, setIsUploading] = useState(false);
