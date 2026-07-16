@@ -1,0 +1,25 @@
+import React from 'react';
+
+interface PageHeaderProps {
+  title: string;
+  description?: string;
+  breadcrumbs?: React.ReactNode;
+  actions?: React.ReactNode;
+}
+
+export function PageHeader({ title, description, breadcrumbs, actions }: PageHeaderProps) {
+  return (
+    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        {breadcrumbs && <div className="mb-2">{breadcrumbs}</div>}
+        <h1 className="mb-1 text-[20px] font-semibold tracking-tight text-foreground">{title}</h1>
+        {description && <p className="text-[14px] text-foreground-secondary">{description}</p>}
+      </div>
+      {actions && (
+        <div className="flex items-center gap-3 shrink-0">
+          {actions}
+        </div>
+      )}
+    </div>
+  );
+}

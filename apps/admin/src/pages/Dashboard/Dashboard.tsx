@@ -1,94 +1,122 @@
 import { MetricCard } from '../../components/DashboardMetrics';
 import { ActivityRow } from '../../components/ActivityRow';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
+import { StatusBadge } from '../../components/ui/Badge';
+import { Skeleton } from '../../components/ui/LoadingState';
 
 export function Dashboard() {
+  const isLoading = false;
+
+  const upcomingEvents = [
+    { id: 1, name: 'CSEA Orientation 2026', date: 'Aug 15', venue: 'Main Auditorium', count: 142, capacity: 200, status: 'Registration Open' },
+    { id: 2, name: 'Tech Talk: Web3', date: 'Aug 22', venue: 'Seminar Hall 1', count: 45, capacity: 100, status: 'Upcoming' },
+  ];
+
   return (
-    <div className="mx-auto max-w-content">
-      {/* Metrics Grid */}
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Published Content" value="12" change="3 this week" positive />
-        <MetricCard label="Event Registrations" value="148" change="23 today" positive />
-        <MetricCard label="Active Projects" value="3" />
-        <MetricCard label="Applications" value="18" change="5 pending" positive={false} />
+    <div className="mx-auto max-w-content space-y-8">
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)
+        ) : (
+          <>
+            <MetricCard label="Published Content" value="24" change="+3 this month" />
+            <MetricCard label="Open Registrations" value="4" change="2 closing soon" />
+            <MetricCard label="Active Projects" value="5" change="2 recruiting" />
+            <MetricCard label="Pending Applications" value="18" change="-4 since yesterday" positive={false} />
+          </>
+        )}
       </div>
 
-      {/* Layout Grid */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_380px]">
-        {/* Recent Activity */}
-        <div className="rounded-xl border border-border bg-surface p-5 shadow-sm lg:p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-[16px] font-semibold tracking-tight">Recent Activity</h2>
-            <button className="cursor-pointer border-none bg-transparent text-[13px] text-accent hover:underline">View all</button>
-          </div>
-
-          <div className="flex flex-col">
-            <ActivityRow title="Orientation 2026" description="Event created by Admin" time="2h ago" status="Published" />
-            <ActivityRow title="Welcome to CSEA Platform" description="Journal post published" time="3h ago" status="Published" />
-            <ActivityRow title="CSEA Website Reboot" description="Project updated — 12 builders joined" time="5h ago" status="Active" />
-            <ActivityRow title="Inside CSEA: Week 04" description="Draft saved by Editor" time="1d ago" status="Draft" />
-            <ActivityRow title="Hackathon '26 Gallery" description="342 photos uploaded" time="2d ago" status="Published" />
-          </div>
-        </div>
-
-        {/* Right sidebar */}
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Left Column: Events & Approvals */}
+        <div className="flex flex-col gap-8 lg:col-span-2">
+          
           {/* Upcoming Events */}
-          <div className="rounded-xl border border-border bg-surface p-5 shadow-sm lg:p-6">
-            <h3 className="mb-4 text-[14px] font-semibold tracking-tight">Upcoming Events</h3>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-[14px] font-medium text-foreground">Orientation 2026</div>
-                  <div className="text-[12px] text-foreground-muted">15 Aug · Main Auditorium</div>
-                </div>
-                <span className="text-[13px] font-semibold text-accent">148</span>
+          <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+            <h2 className="mb-4 text-[16px] font-semibold tracking-tight text-foreground">Upcoming Events</h2>
+            {isLoading ? (
+              <div className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Event</TableHead>
+                      <TableHead>Date & Venue</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {upcomingEvents.map(evt => (
+                      <TableRow key={evt.id}>
+                        <TableCell className="font-medium text-foreground">{evt.name}</TableCell>
+                        <TableCell>
+                          <div className="text-foreground-secondary">{evt.date}</div>
+                          <div className="text-[12px] text-foreground-muted">{evt.venue}</div>
+                        </TableCell>
+                        <TableCell><StatusBadge status={evt.status} /></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-              <div className="h-px bg-border"></div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-[14px] font-medium text-foreground">Tech Talk Series #1</div>
-                  <div className="text-[12px] text-foreground-muted">22 Aug · Seminar Hall</div>
-                </div>
-                <span className="text-[13px] font-semibold text-accent">67</span>
-              </div>
-            </div>
-          </div>
+            )}
+          </section>
 
           {/* Pending Approvals */}
-          <div className="rounded-xl border border-border bg-surface p-5 shadow-sm lg:p-6">
-            <h3 className="mb-4 text-[14px] font-semibold tracking-tight">Pending Approvals</h3>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between border-b border-border pb-3">
+          <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+            <h2 className="mb-4 text-[16px] font-semibold tracking-tight text-foreground">Pending Approvals</h2>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-surface-secondary cursor-pointer transition-colors">
                 <div>
-                  <div className="text-[13px] font-medium text-foreground">5 project applications</div>
-                  <div className="text-[12px] text-foreground-muted">Platform Reboot</div>
+                  <div className="text-[14px] font-medium text-foreground">Project Application: Frontend Engineer</div>
+                  <div className="text-[13px] text-foreground-secondary">Submitted by John Doe (b26cs042)</div>
                 </div>
-                <button className="cursor-pointer rounded-sm border-none bg-accent-muted px-2.5 py-1 text-[12px] font-medium text-accent transition-colors hover:bg-accent hover:text-white">Review</button>
+                <StatusBadge status="Pending" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-surface-secondary cursor-pointer transition-colors">
                 <div>
-                  <div className="text-[13px] font-medium text-foreground">2 draft stories</div>
-                  <div className="text-[12px] text-foreground-muted">Awaiting review</div>
+                  <div className="text-[14px] font-medium text-foreground">Journal Draft: "Getting Started with React"</div>
+                  <div className="text-[13px] text-foreground-secondary">Submitted by Jane Smith</div>
                 </div>
-                <button className="cursor-pointer rounded-sm border-none bg-accent-muted px-2.5 py-1 text-[12px] font-medium text-accent transition-colors hover:bg-accent hover:text-white">Review</button>
+                <StatusBadge status="In Review" />
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Quick Stats */}
-          <div className="rounded-xl border border-border bg-surface p-5 shadow-sm lg:p-6">
-            <h3 className="mb-4 text-[14px] font-semibold tracking-tight">Platform Health</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted">Users</div>
-                <div className="mt-1 text-[24px] font-semibold tracking-tight text-foreground">342</div>
+        </div>
+
+        {/* Right Column: Activity & Health */}
+        <div className="flex flex-col gap-8">
+          
+          <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
+            <h2 className="mb-4 text-[16px] font-semibold tracking-tight text-foreground">Platform Health</h2>
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] text-foreground-secondary">Total Users</span>
+                <span className="text-[14px] font-medium text-foreground">1,452</span>
               </div>
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted">Photos</div>
-                <div className="mt-1 text-[24px] font-semibold tracking-tight text-foreground">14.2K</div>
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] text-foreground-secondary">Total Gallery Assets</span>
+                <span className="text-[14px] font-medium text-foreground">428</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] text-foreground-secondary">Storage Usage</span>
+                <span className="text-[14px] font-medium text-foreground">1.2 GB / 10 GB</span>
               </div>
             </div>
-          </div>
+          </section>
+
+          <section className="rounded-xl border border-border bg-surface p-6 shadow-sm flex-1">
+            <h2 className="mb-4 text-[16px] font-semibold tracking-tight text-foreground">Recent Activity</h2>
+            <div className="flex flex-col gap-4">
+              <ActivityRow title="Updated Event" description="Admin User updated 'CSEA Orientation'" time="2h ago" status="Success" />
+              <ActivityRow title="New Application" description="Sarah applied for 'Backend Engineer'" time="4h ago" status="Pending" />
+              <ActivityRow title="Published Article" description="Editor published 'Web3 Guide'" time="1d ago" status="Success" />
+              <ActivityRow title="Failed Login" description="Unknown IP attempt" time="2d ago" status="Error" />
+            </div>
+          </section>
         </div>
       </div>
     </div>

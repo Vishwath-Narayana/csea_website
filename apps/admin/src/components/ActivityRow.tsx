@@ -2,15 +2,20 @@ import { StatusBadge } from './ui/Badge';
 
 export function ActivityRow({ title, description, time, status }: { title: string; description: string; time: string; status?: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-border py-3.5 last:border-0 hover:bg-surface-secondary/20 transition-colors -mx-5 px-5 lg:-mx-6 lg:px-6">
-      <div>
-        <div className="text-[14px] font-medium text-foreground">{title}</div>
-        <div className="mt-0.5 text-[13px] text-foreground-muted">{description}</div>
+    <div className="flex items-start gap-3">
+      <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent/40 ring-4 ring-accent/10"></div>
+      <div className="flex-1 space-y-1">
+        <div className="flex items-center justify-between">
+          <p className="text-[13px] font-medium leading-none text-foreground">{title}</p>
+          <span className="text-[11px] text-foreground-muted">{time}</span>
+        </div>
+        <p className="text-[13px] text-foreground-secondary">{description}</p>
       </div>
-      <div className="flex shrink-0 items-center gap-3">
-        {status && <StatusBadge status={status} />}
-        <span className="whitespace-nowrap text-[12px] text-foreground-subtle">{time}</span>
-      </div>
+      {status && (
+        <div className="shrink-0 pt-1">
+          <StatusBadge status={status} />
+        </div>
+      )}
     </div>
   );
 }

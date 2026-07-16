@@ -9,39 +9,60 @@ import {
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { JournalList } from './pages/Journal/JournalList';
 import { JournalEditor } from './pages/Journal/JournalEditor';
+import { JournalDetail } from './pages/Journal/JournalDetail';
 import { EventList } from './pages/Events/EventList';
 import { EventForm } from './pages/Events/EventForm';
 import { EventAttendees } from './pages/Events/EventAttendees';
+import { EventDetail } from './pages/Events/EventDetail';
 import { ProjectList } from './pages/Projects/ProjectList';
 import { ProjectForm } from './pages/Projects/ProjectForm';
 import { ApplicationList } from './pages/Applications/ApplicationList';
 import { GalleryList } from './pages/Galleries/GalleryList';
 import { GalleryUpload } from './pages/Galleries/GalleryUpload';
-import { UsersList } from './pages/System/UsersList';
-import { Settings } from './pages/System/Settings';
-import { AuditLog } from './pages/System/AuditLog';
+import { GalleryDetail } from './pages/Galleries/GalleryDetail';
+import { ProjectDetail } from './pages/Projects/ProjectDetail';
+import { UsersList } from './pages/Users/UsersList';
+import { Settings } from './pages/Settings/Settings';
+import { AuditLog } from './pages/Settings/AuditLog';
 import { DropdownMenu, DropdownMenuItem } from './components/ui/DropdownMenu';
+import { Modal } from './components/ui/Modal';
+import { Input } from './components/ui/Input';
 
 // ─── Sidebar Section ───
-function SidebarSection({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="mb-6">
-      <div className="mb-2 px-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground-muted">
-        {label}
-      </div>
+const SidebarSection = ({ label, children }: { label: string, children: React.ReactNode }) => (
+  <div className="mb-6 px-4">
+    <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
+      {label}
+    </div>
+    <div className="flex flex-col space-y-0.5">
       {children}
     </div>
-  );
-}
+  </div>
+);
 
-// ─── Main App ───
+// ─── Main Application ───
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState<string>('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Handle keyboard shortcut for search
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const navigate = (view: string) => {
     setCurrentView(view);
     setIsSidebarOpen(false);
+    setIsSearchOpen(false);
   };
 
   const NavItem = ({ id, icon: IconComponent, label }: { id: string, icon: any, label: string }) => {
@@ -61,24 +82,42 @@ function App() {
   const renderView = () => {
     const parts = currentView.split('/');
     const module = parts[0];
-    const action = parts[1];
-    const id = parts[2];
+    
+    // Handle paths like 'events/create' or 'events/123/edit' or 'events/123'
+    let id: string | undefined = undefined;
+    let action: string | undefined = undefined;
+
+    if (parts.length === 2) {
+      if (parts[1] === 'create' || parts[1] === 'upload') {
+        action = parts[1];
+      } else {
+        id = parts[1];
+        action = 'detail';
+      }
+    } else if (parts.length === 3) {
+      id = parts[1];
+      action = parts[2];
+    }
 
     switch (module) {
       case 'dashboard': return <Dashboard />;
       case 'journal':
         if (action === 'create' || action === 'edit') return <JournalEditor navigate={navigate} id={id} />;
+        if (action === 'detail') return <JournalDetail navigate={navigate} id={id} />;
         return <JournalList navigate={navigate} />;
       case 'events':
         if (action === 'create' || action === 'edit') return <EventForm navigate={navigate} id={id} />;
         if (action === 'attendees') return <EventAttendees navigate={navigate} id={id} />;
+        if (action === 'detail') return <EventDetail navigate={navigate} id={id} />;
         return <EventList navigate={navigate} />;
       case 'projects':
         if (action === 'create' || action === 'edit') return <ProjectForm navigate={navigate} id={id} />;
+        if (action === 'detail') return <ProjectDetail navigate={navigate} id={id} />;
         return <ProjectList navigate={navigate} />;
       case 'applications': return <ApplicationList />;
       case 'galleries':
         if (action === 'upload') return <GalleryUpload navigate={navigate} />;
+        if (action === 'detail') return <GalleryDetail navigate={navigate} id={id} />;
         return <GalleryList navigate={navigate} />;
       case 'users': return <UsersList />;
       case 'settings': return <Settings />;
@@ -91,15 +130,24 @@ function App() {
   const getBreadcrumbs = () => {
     const parts = currentView.split('/');
     const module = parts[0];
-    const action = parts[1];
+    const isCreate = parts[1] === 'create' || parts[1] === 'upload';
+    const hasId = parts.length >= 2 && !isCreate;
+    const action = parts.length === 3 ? parts[2] : (isCreate ? parts[1] : undefined);
     
     let label = module.charAt(0).toUpperCase() + module.slice(1);
     if (module === 'dashboard') label = 'Dashboard';
     if (module === 'journal') label = 'Journal';
+    if (module === 'users') label = 'Users & Roles';
     
     return (
       <div className="hidden items-center gap-2 text-[13px] md:flex">
         <span className="text-foreground-muted cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate(module)}>{label}</span>
+        {hasId && (
+          <>
+            <ChevronRight size={14} className="text-foreground-muted/50" />
+            <span className="text-foreground-muted cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate(`${module}/${parts[1]}`)}>Detail</span>
+          </>
+        )}
         {action && (
           <>
             <ChevronRight size={14} className="text-foreground-muted/50" />
@@ -205,21 +253,53 @@ function App() {
           
           <div className="flex items-center gap-2">
             {/* Search */}
-            <button className="hidden cursor-pointer items-center gap-1.5 rounded-sm border border-border bg-surface-secondary/50 px-3 py-1.5 text-[13px] text-foreground-muted transition-colors hover:bg-surface-secondary sm:flex">
+            <button 
+              className="hidden cursor-pointer items-center gap-1.5 rounded-sm border border-border bg-surface-secondary/50 px-3 py-1.5 text-[13px] text-foreground-muted transition-colors hover:bg-surface-secondary sm:flex"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search size={14} />
               <span>Search platform...</span>
               <kbd className="ml-4 rounded-[4px] border border-border bg-surface px-1.5 py-px font-mono text-[10px]">⌘K</kbd>
             </button>
 
-            <button className="p-2 text-foreground-muted sm:hidden">
+            <button 
+              className="p-2 text-foreground-muted sm:hidden hover:text-foreground"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search size={18} />
             </button>
 
             {/* Notifications */}
-            <button className="relative cursor-pointer rounded-sm border-none bg-transparent p-2 text-foreground-muted transition-colors hover:bg-surface-secondary hover:text-foreground">
-              <Bell size={18} />
-              <span className="absolute right-[6px] top-[6px] h-1.5 w-1.5 rounded-full bg-accent"></span>
-            </button>
+            <DropdownMenu
+              align="right"
+              trigger={
+                <button className="relative cursor-pointer rounded-sm border-none bg-transparent p-2 text-foreground-muted transition-colors hover:bg-surface-secondary hover:text-foreground">
+                  <Bell size={18} />
+                  <span className="absolute right-[6px] top-[6px] h-1.5 w-1.5 rounded-full bg-accent"></span>
+                </button>
+              }
+            >
+              <div className="px-4 py-3 border-b border-border w-[300px]">
+                <h3 className="font-semibold text-[14px]">Notifications</h3>
+              </div>
+              <div className="max-h-[300px] overflow-y-auto">
+                <DropdownMenuItem>
+                  <div className="flex flex-col gap-1 w-full py-1">
+                    <span className="font-medium text-[13px]">New project application received</span>
+                    <span className="text-[12px] text-foreground-muted">Alice applied for Frontend Dev</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <div className="flex flex-col gap-1 w-full py-1">
+                    <span className="font-medium text-[13px]">Article awaiting review</span>
+                    <span className="text-[12px] text-foreground-muted">"Web3 Guide" needs approval</span>
+                  </div>
+                </DropdownMenuItem>
+              </div>
+              <div className="px-4 py-2 border-t border-border text-center">
+                <button className="text-[12px] font-medium text-accent hover:underline">Mark all as read</button>
+              </div>
+            </DropdownMenu>
 
             <div className="mx-2 h-4 w-px bg-border hidden sm:block"></div>
 
@@ -236,6 +316,7 @@ function App() {
               <DropdownMenuItem onClick={() => navigate('journal/create')}>New Article</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('events/create')}>New Event</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('projects/create')}>New Project</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('galleries/upload')}>New Album</DropdownMenuItem>
             </DropdownMenu>
           </div>
         </header>
@@ -245,6 +326,43 @@ function App() {
           {renderView()}
         </main>
       </div>
+
+      {/* Command Palette Modal */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] sm:pt-[20vh]">
+          <div className="fixed inset-0 bg-canvas/80 backdrop-blur-sm" onClick={() => setIsSearchOpen(false)} />
+          <div className="relative w-full max-w-[600px] mx-4 bg-surface border border-border shadow-strong rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center px-4 py-3 border-b border-border">
+              <Search size={18} className="text-foreground-muted mr-3" />
+              <input 
+                autoFocus
+                placeholder="Search modules, pages, or content..." 
+                className="flex-1 bg-transparent border-none outline-none text-[15px] placeholder:text-foreground-muted"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <kbd className="hidden sm:inline-block rounded border border-border bg-surface-secondary px-1.5 py-0.5 text-[10px] font-mono text-foreground-muted">ESC</kbd>
+            </div>
+            <div className="max-h-[300px] overflow-y-auto p-2">
+              {/* Mock Results */}
+              <div className="px-3 py-2 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Navigation</div>
+              <button className="w-full text-left px-3 py-2.5 rounded-lg text-[14px] hover:bg-surface-secondary flex items-center justify-between" onClick={() => navigate('dashboard')}>
+                <span>Dashboard</span>
+                <ChevronRight size={14} className="text-foreground-muted" />
+              </button>
+              <button className="w-full text-left px-3 py-2.5 rounded-lg text-[14px] hover:bg-surface-secondary flex items-center justify-between" onClick={() => navigate('events')}>
+                <span>Events</span>
+                <ChevronRight size={14} className="text-foreground-muted" />
+              </button>
+              
+              <div className="px-3 py-2 mt-2 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Actions</div>
+              <button className="w-full text-left px-3 py-2.5 rounded-lg text-[14px] hover:bg-surface-secondary flex items-center gap-2" onClick={() => navigate('events/create')}>
+                <Plus size={14} className="text-foreground-muted" /> Create New Event
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
