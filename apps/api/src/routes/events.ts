@@ -8,8 +8,8 @@ export const eventsRoutes: FastifyPluginAsync = async (fastify, opts) => {
     return allEvents;
   });
 
-  // POST create an event (placeholder — will be fully implemented in Phase 2C)
-  fastify.post('/', async (request, reply) => {
+  // POST create an event (protected)
+  fastify.post('/', { onRequest: [fastify.requireAuth, fastify.requireRole(["SUPER_ADMIN", "ADMIN", "EDITOR"])] }, async (request, reply) => {
     const body = request.body as any;
     const [newEvent] = await db.insert(events).values({
       title: body.title,

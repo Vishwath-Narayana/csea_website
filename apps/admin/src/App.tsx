@@ -25,6 +25,8 @@ import { UsersList } from './pages/Users/UsersList';
 import { Settings } from './pages/Settings/Settings';
 import { AuditLog } from './pages/Settings/AuditLog';
 import { DropdownMenu, DropdownMenuItem } from './components/ui/DropdownMenu';
+import { Login } from './pages/Login';
+import { authClient } from './utils/auth-client';
 
 // ─── Sidebar Section ───
 const SidebarSection = ({ label, children }: { label: string, children: React.ReactNode }) => (
@@ -40,6 +42,7 @@ const SidebarSection = ({ label, children }: { label: string, children: React.Re
 
 // ─── Main Application ───
 function App() {
+  const { data: session, isPending } = authClient.useSession();
   const [currentView, setCurrentView] = useState<string>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -156,6 +159,14 @@ function App() {
     );
   };
 
+  if (isPending) {
+    return <div className="flex h-screen w-full items-center justify-center bg-canvas text-foreground-muted">Loading...</div>;
+  }
+
+  if (!session) {
+    return <Login />;
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-canvas text-foreground selection:bg-accent/20">
       
@@ -226,7 +237,7 @@ function App() {
             <DropdownMenuItem>Profile Settings</DropdownMenuItem>
             <DropdownMenuItem>Preferences</DropdownMenuItem>
             <div className="my-1 border-t border-border"></div>
-            <DropdownMenuItem destructive>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem destructive onClick={() => authClient.signOut()}>Sign Out</DropdownMenuItem>
           </DropdownMenu>
         </div>
       </aside>
