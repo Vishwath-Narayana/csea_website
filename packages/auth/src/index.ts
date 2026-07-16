@@ -6,5 +6,16 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  // Session configuration, etc.
+  user: {
+    modelName: "users",
+  },
+  session: {
+    modelName: "sessions",
+  },
+  account: {
+    modelName: "accounts",
+  },
+  verification: {
+    modelName: "verifications",
+  },
 });
