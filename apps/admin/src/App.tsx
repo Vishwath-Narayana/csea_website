@@ -219,14 +219,16 @@ function App() {
         {/* User Profile Footer */}
         <div className="mt-auto border-t border-border p-4">
           <DropdownMenu
+            position="top"
+            align="left"
             trigger={
               <div className="flex w-full cursor-pointer items-center gap-3 rounded-md p-2 transition-colors hover:bg-surface-secondary">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[12px] font-medium text-white">
-                  A
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[12px] font-medium text-white uppercase">
+                  {session.user.name.charAt(0)}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <div className="truncate text-[13px] font-medium text-foreground">Admin User</div>
-                  <div className="truncate text-[12px] text-foreground-muted">admin@csea.kitsw.ac.in</div>
+                  <div className="truncate text-[13px] font-medium text-foreground">{session.user.name}</div>
+                  <div className="truncate text-[12px] text-foreground-muted">{session.user.email}</div>
                 </div>
               </div>
             }
@@ -234,7 +236,15 @@ function App() {
             <DropdownMenuItem>Profile Settings</DropdownMenuItem>
             <DropdownMenuItem>Preferences</DropdownMenuItem>
             <div className="my-1 border-t border-border"></div>
-            <DropdownMenuItem destructive onClick={() => authClient.signOut()}>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem 
+              destructive 
+              onClick={async () => {
+                await authClient.signOut();
+                window.location.href = '/';
+              }}
+            >
+              Sign Out
+            </DropdownMenuItem>
           </DropdownMenu>
         </div>
       </aside>
@@ -260,16 +270,18 @@ function App() {
           <div className="flex items-center gap-2">
             {/* Search */}
             <button 
-              className="hidden cursor-pointer items-center gap-1.5 rounded-sm border border-border bg-surface-secondary/50 px-3 py-1.5 text-[13px] text-foreground-muted transition-colors hover:bg-surface-secondary sm:flex"
+              className="hidden w-64 cursor-pointer items-center justify-between rounded-md border border-border bg-surface-secondary/50 px-3 py-1.5 text-[13px] text-foreground-muted transition-colors hover:bg-surface-secondary hover:border-border-hover sm:flex shrink-0"
               onClick={() => setIsSearchOpen(true)}
             >
-              <Search size={14} />
-              <span>Search platform...</span>
-              <kbd className="ml-4 rounded-[4px] border border-border bg-surface px-1.5 py-px font-mono text-[10px]">⌘K</kbd>
+              <div className="flex items-center gap-2">
+                <Search size={14} className="shrink-0" />
+                <span>Search platform...</span>
+              </div>
+              <kbd className="rounded-[4px] border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] shrink-0">⌘K</kbd>
             </button>
 
             <button 
-              className="p-2 text-foreground-muted sm:hidden hover:text-foreground"
+              className="p-2 text-foreground-muted sm:hidden hover:text-foreground rounded-md transition-colors hover:bg-surface-secondary"
               onClick={() => setIsSearchOpen(true)}
             >
               <Search size={18} />
@@ -279,9 +291,9 @@ function App() {
             <DropdownMenu
               align="right"
               trigger={
-                <button className="relative cursor-pointer rounded-sm border-none bg-transparent p-2 text-foreground-muted transition-colors hover:bg-surface-secondary hover:text-foreground">
-                  <Bell size={18} />
-                  <span className="absolute right-[6px] top-[6px] h-1.5 w-1.5 rounded-full bg-accent"></span>
+                <button className="relative cursor-pointer rounded-md border border-border bg-surface-secondary/30 p-2 text-foreground-muted transition-all hover:bg-surface-secondary hover:text-foreground">
+                  <Bell size={16} />
+                  <span className="absolute right-[8px] top-[8px] h-1.5 w-1.5 rounded-full bg-accent"></span>
                 </button>
               }
             >
@@ -307,13 +319,13 @@ function App() {
               </div>
             </DropdownMenu>
 
-            <div className="mx-2 h-4 w-px bg-border hidden sm:block"></div>
+            <div className="mx-2 h-4 w-px bg-border/80 hidden sm:block"></div>
 
             {/* Quick Create Menu */}
             <DropdownMenu
               align="right"
               trigger={
-                <button className="hidden cursor-pointer items-center gap-1 rounded-sm border-none bg-foreground px-3.5 py-1.5 text-[13px] font-medium text-canvas transition-opacity hover:opacity-90 sm:flex">
+                <button className="hidden cursor-pointer items-center gap-1 rounded-md border-none bg-foreground px-4 py-1.5 text-[13px] font-medium text-canvas transition-all hover:opacity-90 active:scale-[0.98] sm:flex">
                   <Plus size={14} />
                   <span>Create</span>
                 </button>

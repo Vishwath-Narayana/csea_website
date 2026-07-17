@@ -1,6 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export function DropdownMenu({ trigger, children, align = 'right' }: { trigger: React.ReactNode, children: React.ReactNode, align?: 'left' | 'right' }) {
+export function DropdownMenu({ 
+  trigger, 
+  children, 
+  align = 'right',
+  position = 'bottom'
+}: { 
+  trigger: React.ReactNode; 
+  children: React.ReactNode; 
+  align?: 'left' | 'right';
+  position?: 'top' | 'bottom';
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -12,19 +22,24 @@ export function DropdownMenu({ trigger, children, align = 'right' }: { trigger: 
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dropdownRef]);
 
+  const positionClass = position === 'top' ? 'bottom-full mb-2' : 'mt-2';
+  const originClass = position === 'top' 
+    ? `origin-bottom-${align}` 
+    : `origin-top-${align}`;
+
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative w-full text-left" ref={dropdownRef}>
       <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
         {trigger}
       </div>
 
       {isOpen && (
         <div 
-          className={`absolute z-50 mt-2 w-48 origin-top-${align} rounded-md bg-surface shadow-medium ring-1 ring-border focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${align === 'right' ? 'right-0' : 'left-0'}`}
+          className={`absolute z-50 w-full min-w-[180px] ${positionClass} ${originClass} rounded-md bg-surface shadow-medium ring-1 ring-border focus:outline-none animate-in fade-in zoom-in-95 duration-100 ${align === 'right' ? 'right-0' : 'left-0'}`}
         >
           <div className="py-1" onClick={() => setIsOpen(false)}>
             {children}
@@ -45,3 +60,4 @@ export function DropdownMenuItem({ children, onClick, className, destructive }: 
     </button>
   );
 }
+
