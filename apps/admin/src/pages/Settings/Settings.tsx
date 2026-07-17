@@ -1,15 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Tabs } from '../../components/ui/Tabs';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
+import { Loader2 } from 'lucide-react';
+import { api } from '../../utils/api';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('general');
   const [isMaintenanceModalOpen, setMaintenanceModalOpen] = useState(false);
-  const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
   const [isResetModalOpen, setResetModalOpen] = useState(false);
+  const [settings, setSettings] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.get<any>('/control/settings');
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await api.patch('/control/settings', settings);
+      // alert('Settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      alert('Failed to save settings.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleToggleMaintenance = async () => {
+    try {
+      const newMode = !settings.maintenanceMode;
+      setSettings((prev: any) => ({ ...prev, maintenanceMode: newMode }));
+      await api.patch('/control/settings', { maintenanceMode: newMode });
+    } catch (error) {
+      console.error('Failed to toggle maintenance mode:', error);
+    } finally {
+      setMaintenanceModalOpen(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-64"><Loader2 className="animate-spin text-foreground-muted" /></div>;
+  }
+
+  if (!settings) return null;
 
   return (
     <div className="mx-auto max-w-[800px] pb-12">
@@ -23,8 +74,6 @@ export function Settings() {
           onChange={setActiveTab}
           tabs={[
             { id: 'general', label: 'General' },
-            { id: 'branding', label: 'Branding' },
-            { id: 'integrations', label: 'Integrations' },
             { id: 'advanced', label: 'Advanced' }
           ]}
         />
@@ -37,65 +86,31 @@ export function Settings() {
             <div className="space-y-4">
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Platform Name</label>
-                <Input defaultValue="CSEA Digital Platform" />
+                <Input 
+                  value={settings.platformName} 
+                  onChange={(e) => setSettings({...settings, platformName: e.target.value})} 
+                />
               </div>
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Support Email</label>
-                <Input defaultValue="support@csea.kitsw.ac.in" />
+                <Input 
+                  value={settings.supportEmail} 
+                  onChange={(e) => setSettings({...settings, supportEmail: e.target.value})} 
+                />
               </div>
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Meta Description (SEO)</label>
-                <Textarea defaultValue="The official platform for Computer Science & Engineering Association, KITSW." />
+                <Textarea 
+                  value={settings.metaDescription} 
+                  onChange={(e) => setSettings({...settings, metaDescription: e.target.value})} 
+                />
               </div>
             </div>
-            <div className="mt-6">
-              <Button>Save Changes</Button>
-            </div>
-          </section>
-        </div>
-      )}
-
-      {activeTab === 'branding' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
-          <section className="bg-surface rounded-xl border border-border p-6 shadow-sm">
-            <h3 className="text-[16px] font-semibold mb-4">Logos & Assets</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="text-[13px] font-medium block mb-1.5">Primary Logo</label>
-                <div className="flex items-center justify-center p-6 border-2 border-dashed border-border rounded-lg text-foreground-muted">
-                  Upload Logo (SVG/PNG)
-                </div>
-              </div>
-              <div>
-                <label className="text-[13px] font-medium block mb-1.5">Favicon</label>
-                <div className="flex items-center justify-center p-6 border-2 border-dashed border-border rounded-lg text-foreground-muted">
-                  Upload Favicon (.ico)
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      )}
-
-      {activeTab === 'integrations' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
-          <section className="bg-surface rounded-xl border border-border p-6 shadow-sm">
-            <h3 className="text-[16px] font-semibold mb-4">Third-Party Services</h3>
-            <div className="space-y-6">
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <div>
-                  <h4 className="font-medium text-[14px]">SendGrid API</h4>
-                  <p className="text-[13px] text-foreground-secondary">Required for sending automated emails.</p>
-                </div>
-                <Button variant="outline">Configure</Button>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <div>
-                  <h4 className="font-medium text-[14px]">AWS S3</h4>
-                  <p className="text-[13px] text-foreground-secondary">Used for storing gallery images and assets.</p>
-                </div>
-                <Button variant="outline">Configure</Button>
-              </div>
+            <div className="mt-6 flex justify-end">
+              <Button onClick={handleSave} disabled={isSaving}>
+                {isSaving && <Loader2 size={16} className="animate-spin mr-2" />}
+                Save Changes
+              </Button>
             </div>
           </section>
         </div>
@@ -112,7 +127,7 @@ export function Settings() {
               e.preventDefault();
               setMaintenanceModalOpen(true);
             }}>
-              <input type="checkbox" className="w-4 h-4 text-accent" checked={isMaintenanceMode} readOnly />
+              <input type="checkbox" className="w-4 h-4 text-accent" checked={settings.maintenanceMode} readOnly />
               <span className="text-[14px] font-medium">Enable Maintenance Mode</span>
             </label>
           </section>
@@ -130,16 +145,13 @@ export function Settings() {
       <ConfirmationDialog 
         isOpen={isMaintenanceModalOpen}
         onClose={() => setMaintenanceModalOpen(false)}
-        onConfirm={() => {
-          setIsMaintenanceMode(!isMaintenanceMode);
-          setMaintenanceModalOpen(false);
-        }}
-        title={isMaintenanceMode ? "Disable Maintenance Mode?" : "Enable Maintenance Mode?"}
-        description={isMaintenanceMode 
+        onConfirm={handleToggleMaintenance}
+        title={settings.maintenanceMode ? "Disable Maintenance Mode?" : "Enable Maintenance Mode?"}
+        description={settings.maintenanceMode 
           ? "The platform will become accessible to all users again." 
           : "Are you sure? Non-admin users will see a maintenance screen and will not be able to access the platform."}
-        isDestructive={!isMaintenanceMode}
-        confirmLabel={isMaintenanceMode ? "Disable" : "Enable Mode"}
+        isDestructive={!settings.maintenanceMode}
+        confirmLabel={settings.maintenanceMode ? "Disable Mode" : "Enable Mode"}
       />
 
       <ConfirmationDialog 

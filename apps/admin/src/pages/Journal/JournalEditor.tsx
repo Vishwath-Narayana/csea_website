@@ -1,16 +1,60 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, Image as ImageIcon, Settings, Type, Bold, Italic, Underline, Link, List, Quote, Code, Minus } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Settings, Type, Bold, Italic, Underline, Link, List, Quote, Code, Minus, Loader2 } from 'lucide-react';
+import { api } from '../../utils/api';
 
 export function JournalEditor({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
   const isEditing = !!id;
   const [hasChanges, setHasChanges] = useState(false);
   const [showSettings, setShowSettings] = useState(true);
+  const [isLoading, setIsLoading] = useState(isEditing);
+  const [isSaving, setIsSaving] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  // Mock unsaved changes protection
+  const [formData, setFormData] = useState({
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    coverImage: '',
+    category: 'Technology',
+    status: 'DRAFT',
+    visibility: 'PUBLIC',
+    publishedAt: ''
+  });
+
+  useEffect(() => {
+    if (isEditing) fetchPost();
+  }, [id]);
+
+  const fetchPost = async () => {
+    try {
+      const res = await api.get<any>(`/control/journal/${id}`);
+      const post = res.data;
+      setFormData({
+        title: post.title || '',
+        slug: post.slug || '',
+        excerpt: post.excerpt || '',
+        content: post.content || '',
+        coverImage: post.coverImage || '',
+        category: post.category || 'Technology',
+        status: post.status || 'DRAFT',
+        visibility: post.visibility || 'PUBLIC',
+        publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 16) : ''
+      });
+      if (contentRef.current) {
+        contentRef.current.innerHTML = post.content || '';
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -22,7 +66,52 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasChanges]);
 
-  const handleChange = () => setHasChanges(true);
+  const handleChange = (field: string, value: any) => {
+    setHasChanges(true);
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (!isEditing && field === 'title') {
+        updated.slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      }
+      return updated;
+    });
+  };
+
+  const handleContentInput = (e: React.FormEvent<HTMLDivElement>) => {
+    setHasChanges(true);
+    setFormData(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
+  };
+
+  const handleSave = async (forceStatus?: string) => {
+    setIsSaving(true);
+    try {
+      const payload = { ...formData };
+      if (forceStatus) {
+        payload.status = forceStatus;
+      }
+      // Set publishedAt to now if publishing and not set
+      if (payload.status === 'PUBLISHED' && !payload.publishedAt) {
+        payload.publishedAt = new Date().toISOString();
+      }
+
+      if (isEditing) {
+        await api.patch(`/control/journal/${id}`, payload);
+      } else {
+        await api.post(`/control/journal`, payload);
+      }
+      setHasChanges(false);
+      navigate('journal');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save article.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-foreground-muted" /></div>;
+  }
 
   return (
     <div className="mx-auto max-w-[1400px] flex flex-col h-[calc(100vh-120px)] overflow-hidden">
@@ -40,9 +129,11 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
                 <Settings size={16} className="mr-2" />
                 {showSettings ? 'Hide Settings' : 'Settings'}
               </Button>
-              <Button variant="outline" onClick={() => navigate(isEditing ? `journal/${id}` : 'journal/preview')}>Preview</Button>
-              <Button variant="outline" onClick={() => setHasChanges(false)}>Save Draft</Button>
-              <Button onClick={() => setHasChanges(false)}>{isEditing ? 'Update Article' : 'Publish'}</Button>
+              <Button variant="outline" disabled={isSaving} onClick={() => handleSave('DRAFT')}>Save Draft</Button>
+              <Button disabled={isSaving} onClick={() => handleSave()}>
+                {isSaving && <Loader2 size={16} className="animate-spin mr-2" />}
+                {isEditing ? 'Update Article' : 'Publish'}
+              </Button>
             </>
           }
         />
@@ -72,21 +163,19 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
             <div className="max-w-editorial mx-auto">
               <input 
                 type="text" 
+                value={formData.title}
                 placeholder="Article Title" 
                 className="w-full bg-transparent text-[40px] font-bold tracking-tight text-foreground placeholder:text-foreground-muted/50 focus:outline-none mb-6"
-                onChange={handleChange}
+                onChange={(e) => handleChange('title', e.target.value)}
               />
               <div 
+                ref={contentRef}
                 className="w-full min-h-[500px] text-[16px] leading-relaxed text-foreground focus:outline-none"
                 contentEditable
                 suppressContentEditableWarning
-                onInput={handleChange}
+                onInput={handleContentInput}
                 data-placeholder="Start writing..."
-              >
-                {isEditing ? (
-                  <p>The tech industry is moving incredibly fast, and as engineers we must adapt...</p>
-                ) : null}
-              </div>
+              />
             </div>
           </div>
         </div>
@@ -100,19 +189,15 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
                 <div className="space-y-4">
                   <div>
                     <label className="text-[13px] font-medium block mb-1.5">Category</label>
-                    <Select onChange={handleChange}>
-                      <option>Technology</option>
-                      <option>Academics</option>
-                      <option>Tutorials</option>
+                    <Select value={formData.category} onChange={e => handleChange('category', e.target.value)}>
+                      <option value="Technology">Technology</option>
+                      <option value="Academics">Academics</option>
+                      <option value="Tutorials">Tutorials</option>
                     </Select>
                   </div>
                   <div>
-                    <label className="text-[13px] font-medium block mb-1.5">Author</label>
-                    <Input defaultValue="Vishwath" onChange={handleChange} />
-                  </div>
-                  <div>
-                    <label className="text-[13px] font-medium block mb-1.5">Tags (comma separated)</label>
-                    <Input placeholder="e.g. React, UI, Design" onChange={handleChange} />
+                    <label className="text-[13px] font-medium block mb-1.5">Excerpt</label>
+                    <Textarea value={formData.excerpt} onChange={e => handleChange('excerpt', e.target.value)} placeholder="Short summary for preview cards" className="min-h-[80px]" />
                   </div>
                 </div>
               </section>
@@ -120,11 +205,8 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
               <section>
                 <h3 className="text-[13px] font-semibold tracking-wide uppercase text-foreground-muted mb-4">Media</h3>
                 <div>
-                  <label className="text-[13px] font-medium block mb-1.5">Cover Image</label>
-                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border rounded-lg text-foreground-muted hover:bg-surface-secondary/50 cursor-pointer transition-colors" onClick={handleChange}>
-                    <ImageIcon size={24} className="mb-2 opacity-50" />
-                    <span className="text-[12px]">Click to upload cover</span>
-                  </div>
+                  <label className="text-[13px] font-medium block mb-1.5">Cover Image URL</label>
+                  <Input type="url" value={formData.coverImage} onChange={e => handleChange('coverImage', e.target.value)} placeholder="https://..." />
                 </div>
               </section>
 
@@ -133,21 +215,23 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
                 <div className="space-y-4">
                   <div>
                     <label className="text-[13px] font-medium block mb-1.5">Status</label>
-                    <Select onChange={handleChange}>
-                      <option>Draft</option>
-                      <option>In Review</option>
-                      <option>Published</option>
-                      <option>Archived</option>
+                    <Select value={formData.status} onChange={e => handleChange('status', e.target.value)}>
+                      <option value="DRAFT">Draft</option>
+                      <option value="PUBLISHED">Published</option>
+                      <option value="ARCHIVED">Archived</option>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-[13px] font-medium block mb-1.5">Visibility</label>
+                    <Select value={formData.visibility} onChange={e => handleChange('visibility', e.target.value)}>
+                      <option value="PUBLIC">Public</option>
+                      <option value="PRIVATE">Private</option>
                     </Select>
                   </div>
                   <div>
                     <label className="text-[13px] font-medium block mb-1.5">Publish Date</label>
-                    <Input type="datetime-local" onChange={handleChange} />
+                    <Input type="datetime-local" value={formData.publishedAt} onChange={e => handleChange('publishedAt', e.target.value)} />
                   </div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="rounded border-border text-accent focus:ring-accent" onChange={handleChange} />
-                    <span className="text-[13px] font-medium">Featured Article</span>
-                  </label>
                 </div>
               </section>
 
@@ -155,16 +239,8 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
                 <h3 className="text-[13px] font-semibold tracking-wide uppercase text-foreground-muted mb-4">SEO</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-[13px] font-medium block mb-1.5">Slug</label>
-                    <Input placeholder="e.g. future-of-ai" onChange={handleChange} />
-                  </div>
-                  <div>
-                    <label className="text-[13px] font-medium block mb-1.5">SEO Title</label>
-                    <Input placeholder="Max 60 characters" onChange={handleChange} />
-                  </div>
-                  <div>
-                    <label className="text-[13px] font-medium block mb-1.5">SEO Description</label>
-                    <Textarea placeholder="Max 160 characters" className="min-h-[80px]" onChange={handleChange} />
+                    <label className="text-[13px] font-medium block mb-1.5">Slug <span className="text-error">*</span></label>
+                    <Input value={formData.slug} onChange={e => handleChange('slug', e.target.value)} placeholder="e.g. future-of-ai" required />
                   </div>
                 </div>
               </section>

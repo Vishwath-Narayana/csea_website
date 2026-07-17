@@ -16,6 +16,7 @@ export const createProjectSchema = z.object({
 
   repositoryUrl: z.string().url().optional().or(z.literal("")),
   demoUrl: z.string().url().optional().or(z.literal("")),
+  applicationUrl: z.string().url().optional().or(z.literal("")),
 });
 
 export const updateProjectSchema = createProjectSchema.partial().omit({ slug: true });

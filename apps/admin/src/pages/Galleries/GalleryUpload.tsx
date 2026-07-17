@@ -1,23 +1,68 @@
 import { useState } from 'react';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, UploadCloud, FileImage, X } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Plus, Trash2, Loader2 } from 'lucide-react';
+import { api } from '../../utils/api';
 
 export function GalleryUpload({ navigate }: { navigate: (view: string) => void }) {
-  const [isUploading, setIsUploading] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
+  const [formData, setFormData] = useState({
+    title: '',
+    slug: '',
+    description: '',
+    eventDate: '',
+    visibility: 'PUBLIC'
+  });
+
+  const [photoUrls, setPhotoUrls] = useState<{url: string, name: string}[]>([]);
+  const [newUrl, setNewUrl] = useState('');
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'title') {
+        updated.slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      }
+      return updated;
+    });
+  };
+
+  const handleAddUrl = () => {
+    if (newUrl.trim()) {
+      setPhotoUrls(prev => [...prev, { url: newUrl.trim(), name: `Photo ${prev.length + 1}` }]);
+      setNewUrl('');
     }
   };
 
-  const handleUploadClick = () => {
-    if (selectedFiles.length > 0) {
-      setIsUploading(true);
+  const handleRemoveUrl = (index: number) => {
+    setPhotoUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // 1. Create Gallery
+      const payload = { ...formData, eventDate: formData.eventDate || undefined };
+      const res = await api.post<any>('/control/galleries', payload);
+      const galleryId = res.data.id;
+
+      // 2. Add Photos
+      for (const photo of photoUrls) {
+        await api.post(`/control/galleries/${galleryId}/photos`, {
+          url: photo.url,
+          fileName: photo.name
+        });
+      }
+
+      navigate('galleries');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save gallery.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -26,7 +71,7 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
       <div className="shrink-0 mb-6">
         <PageHeader 
           title="New Album"
-          description="Create a new gallery and upload high-resolution photos."
+          description="Create a new gallery and provide external image URLs."
           breadcrumbs={
             <div className="flex items-center gap-2 text-[13px] text-foreground-muted mb-2 cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate('galleries')}>
               <ArrowLeft size={14} /> Back to Galleries
@@ -35,7 +80,10 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
           actions={
             <>
               <Button variant="ghost" onClick={() => navigate('galleries')}>Cancel</Button>
-              <Button onClick={() => navigate('galleries/1')}>Create & Publish</Button>
+              <Button disabled={isSaving} onClick={handleSave}>
+                {isSaving && <Loader2 size={16} className="animate-spin mr-2" />}
+                Create & Publish
+              </Button>
             </>
           }
         />
@@ -44,109 +92,79 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
       <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-8">
         {/* Metadata */}
         <section className="bg-surface rounded-xl border border-border p-6 shadow-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="text-[13px] font-medium block mb-1.5">Album Title</label>
-                <Input placeholder="e.g. Orientation 2026" />
+                <label className="text-[13px] font-medium block mb-1.5">Album Title <span className="text-error">*</span></label>
+                <Input required value={formData.title} onChange={e => handleChange('title', e.target.value)} placeholder="e.g. Orientation 2026" />
               </div>
               <div>
-                <label className="text-[13px] font-medium block mb-1.5">Related Event</label>
-                <Select>
-                  <option>Select an event...</option>
-                  <option>CSEA Orientation 2026</option>
-                  <option>Tech Talk: Web3</option>
-                </Select>
+                <label className="text-[13px] font-medium block mb-1.5">Slug <span className="text-error">*</span></label>
+                <Input required value={formData.slug} onChange={e => handleChange('slug', e.target.value)} placeholder="e.g. orientation-2026" />
+              </div>
+              <div>
+                <label className="text-[13px] font-medium block mb-1.5">Description</label>
+                <Textarea value={formData.description} onChange={e => handleChange('description', e.target.value)} placeholder="Short description of the gallery..." />
               </div>
             </div>
             <div className="space-y-4">
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Event Date</label>
-                <Input type="date" />
+                <Input type="date" value={formData.eventDate} onChange={e => handleChange('eventDate', e.target.value)} />
               </div>
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Visibility</label>
-                <Select>
-                  <option>Public</option>
-                  <option>Private</option>
+                <Select value={formData.visibility} onChange={e => handleChange('visibility', e.target.value)}>
+                  <option value="PUBLIC">Public</option>
+                  <option value="PRIVATE">Private</option>
                 </Select>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Upload Zone */}
+        {/* External URL Zone */}
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-[16px] font-semibold tracking-tight text-foreground">Upload Photos</h2>
-            {selectedFiles.length > 0 && !isUploading && (
-              <Button onClick={handleUploadClick}>Start Upload ({selectedFiles.length})</Button>
-            )}
+            <h2 className="text-[16px] font-semibold tracking-tight text-foreground">Add Photos (External URLs)</h2>
           </div>
           
-          <label 
-            className="w-full min-h-[240px] rounded-xl border-2 border-dashed border-border bg-surface-secondary/20 flex flex-col items-center justify-center text-foreground-muted hover:bg-surface-secondary/40 hover:border-foreground-muted/30 transition-all cursor-pointer relative"
-          >
-            <input 
-              type="file" 
-              multiple 
-              accept="image/*"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              onChange={handleFileChange}
-              disabled={isUploading}
+          <div className="flex gap-2">
+            <Input 
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={newUrl}
+              onChange={(e) => setNewUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddUrl();
+                }
+              }}
             />
-            <UploadCloud size={32} className="mb-4 opacity-50" />
-            <h3 className="text-[15px] font-medium text-foreground mb-1">Drag & drop photos</h3>
-            <p className="text-[13px] text-foreground-secondary mb-4">JPEG, PNG or WEBP up to 10MB each</p>
-            <Button variant="outline" disabled={isUploading} type="button" className="pointer-events-none">Browse Files</Button>
-          </label>
+            <Button onClick={handleAddUrl}><Plus size={16} className="mr-2" /> Add URL</Button>
+          </div>
 
-          {/* Local Preview List */}
-          {selectedFiles.length > 0 && !isUploading && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
-              {selectedFiles.map((file, idx) => (
-                <div key={idx} className="bg-surface rounded-lg border border-border p-3 flex items-center gap-3">
-                  <FileImage size={18} className="text-foreground-muted shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[12px] font-medium text-foreground truncate">{file.name}</p>
-                    <p className="text-[11px] text-foreground-secondary">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+          {photoUrls.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+              {photoUrls.map((photo, idx) => (
+                <div key={idx} className="group relative aspect-[4/3] bg-surface-secondary border border-border rounded-xl overflow-hidden shadow-sm">
+                  <img src={photo.url} alt={photo.name} className="w-full h-full object-cover" onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="%239CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
+                  }} />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Button variant="danger" size="icon" onClick={() => handleRemoveUrl(idx)}>
+                      <Trash2 size={16} />
+                    </Button>
                   </div>
                 </div>
               ))}
             </div>
-          )}
-
-          {/* Upload Progress UI */}
-          {isUploading && (
-            <div className="mt-4 bg-surface border border-border rounded-xl shadow-sm overflow-hidden">
-              <div className="px-4 py-3 border-b border-border bg-surface-secondary/50 flex items-center justify-between">
-                <span className="text-[13px] font-medium">Uploading {selectedFiles.length} files...</span>
-                <span className="text-[12px] text-foreground-muted">0 / {selectedFiles.length} complete</span>
-              </div>
-              <div className="divide-y divide-border">
-                {selectedFiles.map((file, idx) => (
-                  <div key={idx} className="p-4 flex items-center gap-4">
-                    <div className="h-10 w-10 shrink-0 bg-surface-secondary rounded-lg flex items-center justify-center border border-border">
-                      <FileImage size={20} className="text-foreground-muted" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[13px] font-medium text-foreground truncate">{file.name}</span>
-                        <span className="text-[12px] text-foreground-muted">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-surface-secondary rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-accent animate-pulse" 
-                          style={{ width: '45%' }}
-                        />
-                      </div>
-                    </div>
-                    <div className="shrink-0 ml-2">
-                      <button className="text-foreground-muted hover:text-foreground"><X size={16} /></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          ) : (
+            <div className="text-center py-12 text-foreground-muted border-2 border-dashed border-border rounded-xl mt-4">
+              <ImageIcon size={32} className="mx-auto mb-3 opacity-20" />
+              <p className="text-[14px]">No photos added yet.</p>
+              <p className="text-[12px] mt-1">Paste an image URL above to add to this album.</p>
             </div>
           )}
         </section>

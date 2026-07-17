@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
 import { StatusBadge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -9,29 +9,74 @@ import { Tabs } from '../../components/ui/Tabs';
 import { FilterBar } from '../../components/ui/FilterBar';
 import { DropdownMenu, DropdownMenuItem } from '../../components/ui/DropdownMenu';
 import { Modal } from '../../components/ui/Modal';
-import { MoreHorizontal, Shield, Mail, CheckCircle2 } from 'lucide-react';
+import { MoreHorizontal, Shield, Mail, CheckCircle2, Loader2 } from 'lucide-react';
+import { api } from '../../utils/api';
+import { Pagination } from '../../components/ui/Pagination';
 
 export function UsersList() {
   const [activeTab, setActiveTab] = useState('users');
   const [isInviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState('Editor');
+  const [inviteRole, setInviteRole] = useState('EDITOR');
   const [inviteSent, setInviteSent] = useState(false);
 
-  const users = [
-    { id: 1, name: "Vishwath", email: "vishwath@kitsw.ac.in", role: "Super Admin", status: "Active", lastActive: "Just now" },
-    { id: 2, name: "Jane Smith", email: "jane@kitsw.ac.in", role: "Editor", status: "Active", lastActive: "2 hours ago" },
-    { id: 3, name: "Dr. Rao", email: "rao@kitsw.ac.in", role: "Faculty Advisor", status: "Active", lastActive: "1 day ago" },
-    { id: 4, name: "Pending User", email: "student@kitsw.ac.in", role: "Event Manager", status: "Pending", lastActive: "Never" },
-  ];
+  const [users, setUsers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const handleInvite = () => {
-    setInviteSent(true);
-    setTimeout(() => {
-      setInviteSent(false);
-      setInviteModalOpen(false);
-      setInviteEmail('');
-    }, 1500);
+  useEffect(() => {
+    fetchUsers();
+  }, [currentPage]);
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.get<any>(`/control/users?page=${currentPage}&limit=10`);
+      setUsers(response.data);
+      setTotalPages(response.meta?.totalPages || 1);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInvite = async () => {
+    try {
+      await api.post('/control/users/invite', { email: inviteEmail, role: inviteRole });
+      setInviteSent(true);
+      setTimeout(() => {
+        setInviteSent(false);
+        setInviteModalOpen(false);
+        setInviteEmail('');
+        fetchUsers();
+      }, 1500);
+    } catch (error) {
+      console.error('Failed to invite user:', error);
+      alert('Failed to invite user.');
+    }
+  };
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      await api.patch(`/control/users/${userId}/role`, { role: newRole });
+      fetchUsers();
+    } catch (error) {
+      console.error('Failed to change role:', error);
+      alert('Failed to change user role.');
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (!confirm('Are you sure you want to remove this user?')) return;
+    try {
+      await api.delete(`/control/users/${userId}`);
+      fetchUsers();
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      alert('Failed to delete user.');
+    }
   };
 
   return (
@@ -66,18 +111,10 @@ export function UsersList() {
                   id: 'role',
                   placeholder: 'All Roles',
                   options: [
-                    { label: 'Super Admin', value: 'admin' },
-                    { label: 'Editor', value: 'editor' },
-                    { label: 'Event Manager', value: 'event' }
-                  ]
-                },
-                {
-                  id: 'status',
-                  placeholder: 'All Statuses',
-                  options: [
-                    { label: 'Active', value: 'active' },
-                    { label: 'Pending', value: 'pending' },
-                    { label: 'Disabled', value: 'disabled' }
+                    { label: 'Super Admin', value: 'SUPER_ADMIN' },
+                    { label: 'Admin', value: 'ADMIN' },
+                    { label: 'Editor', value: 'EDITOR' },
+                    { label: 'Viewer', value: 'VIEWER' }
                   ]
                 }
               ]}
@@ -95,36 +132,60 @@ export function UsersList() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="font-medium text-foreground">{user.name}</div>
-                        <div className="text-[12px] text-foreground-secondary">{user.email}</div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-foreground">
-                          {user.role === 'Super Admin' && <Shield size={14} className="text-accent" />}
-                          {user.role}
-                        </span>
-                      </TableCell>
-                      <TableCell><StatusBadge status={user.status} /></TableCell>
-                      <TableCell className="text-foreground-secondary">{user.lastActive}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu 
-                          trigger={<Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>}
-                          align="right"
-                        >
-                          <DropdownMenuItem>Change Role</DropdownMenuItem>
-                          {user.status === 'Pending' && <DropdownMenuItem>Resend Invite</DropdownMenuItem>}
-                          <div className="h-px bg-border my-1 mx-1"></div>
-                          <DropdownMenuItem destructive>Remove Access</DropdownMenuItem>
-                        </DropdownMenu>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8">
+                        <Loader2 className="animate-spin mx-auto text-foreground-muted" />
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : users.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-12 text-foreground-muted">
+                        No users found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="font-medium text-foreground">{user.name}</div>
+                          <div className="text-[12px] text-foreground-secondary">{user.email}</div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-foreground">
+                            {user.role === 'SUPER_ADMIN' && <Shield size={14} className="text-accent" />}
+                            {user.role}
+                          </span>
+                        </TableCell>
+                        <TableCell><StatusBadge status="ACTIVE" /></TableCell>
+                        <TableCell className="text-foreground-secondary">
+                          {new Date(user.lastActive).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu 
+                            trigger={<Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>}
+                            align="right"
+                          >
+                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'SUPER_ADMIN')}>Make Super Admin</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'ADMIN')}>Make Admin</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(user.id, 'EDITOR')}>Make Editor</DropdownMenuItem>
+                            <div className="h-px bg-border my-1 mx-1"></div>
+                            <DropdownMenuItem destructive onClick={() => handleDelete(user.id)}>Remove Access</DropdownMenuItem>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
+            {!isLoading && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         )}
 
@@ -138,20 +199,19 @@ export function UsersList() {
                     <TableRow>
                       <TableHead>Permission</TableHead>
                       <TableHead className="text-center">Super Admin</TableHead>
+                      <TableHead className="text-center">Admin</TableHead>
                       <TableHead className="text-center">Editor</TableHead>
-                      <TableHead className="text-center">Event Manager</TableHead>
-                      <TableHead className="text-center">Faculty Advisor</TableHead>
+                      <TableHead className="text-center">Viewer</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {[
                       { perm: 'Manage Users & Roles', a: true, e: false, v: false, f: false },
                       { perm: 'Global System Settings', a: true, e: false, v: false, f: false },
-                      { perm: 'Publish Journal Articles', a: true, e: true, v: false, f: true },
-                      { perm: 'Edit Journal Articles', a: true, e: true, v: false, f: false },
-                      { perm: 'Manage Events', a: true, e: false, v: true, f: false },
-                      { perm: 'Manage Projects', a: true, e: true, v: true, f: true },
-                      { perm: 'View Audit Logs', a: true, e: false, v: false, f: true },
+                      { perm: 'Publish Content', a: true, e: true, v: true, f: false },
+                      { perm: 'Edit Content', a: true, e: true, v: true, f: false },
+                      { perm: 'Delete Content', a: true, e: true, v: false, f: false },
+                      { perm: 'View Audit Logs', a: true, e: false, v: false, f: false },
                     ].map((row, idx) => (
                       <TableRow key={idx}>
                         <TableCell className="font-medium">{row.perm}</TableCell>
@@ -192,7 +252,7 @@ export function UsersList() {
       >
         <div className="space-y-4 py-4">
           <p className="text-[13px] text-foreground-secondary mb-4">
-            Invite a new member to the admin platform. They will receive an email with instructions to set their password.
+            Invite a new member to the admin platform.
           </p>
           <div>
             <label className="text-[13px] font-medium block mb-1.5">Email Address</label>
@@ -206,10 +266,10 @@ export function UsersList() {
           <div>
             <label className="text-[13px] font-medium block mb-1.5">Role</label>
             <Select value={inviteRole} onChange={(e) => setInviteRole(e.target.value)}>
-              <option>Super Admin</option>
-              <option>Editor</option>
-              <option>Event Manager</option>
-              <option>Faculty Advisor</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="ADMIN">Admin</option>
+              <option value="EDITOR">Editor</option>
+              <option value="VIEWER">Viewer</option>
             </Select>
           </div>
         </div>

@@ -1,17 +1,116 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { api } from '../../utils/api';
 
 export function EventForm({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
   const isEditing = !!id;
   const [activeTab, setActiveTab] = useState('basic'); // 'basic', 'location', 'registration', 'team', 'publish'
-  const [registrationEnabled, setRegistrationEnabled] = useState(true);
+  
+  const [isLoading, setIsLoading] = useState(isEditing);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [formData, setFormData] = useState({
+    title: '',
+    slug: '',
+    eventType: 'Orientation',
+    shortDescription: '',
+    fullDescription: '',
+    coverImage: '',
+    startDate: '',
+    endDate: '',
+    format: 'OFFLINE',
+    venue: '',
+    meetingUrl: '',
+    registrationEnabled: false,
+    registrationUrl: '',
+    facultyCoordinator: '',
+    studentCoordinator: '',
+    contactEmail: '',
+    contactPhone: '',
+    status: 'DRAFT',
+    visibility: 'PUBLIC'
+  });
+
+  useEffect(() => {
+    if (isEditing) fetchEvent();
+  }, [id]);
+
+  const fetchEvent = async () => {
+    try {
+      const res = await api.get<any>(`/control/events/${id}`);
+      const ev = res.data;
+      setFormData({
+        title: ev.title || '',
+        slug: ev.slug || '',
+        eventType: ev.eventType || 'Orientation',
+        shortDescription: ev.shortDescription || '',
+        fullDescription: ev.fullDescription || '',
+        coverImage: ev.coverImage || '',
+        startDate: ev.startDate ? new Date(ev.startDate).toISOString().slice(0, 16) : '',
+        endDate: ev.endDate ? new Date(ev.endDate).toISOString().slice(0, 16) : '',
+        format: ev.format || 'OFFLINE',
+        venue: ev.venue || '',
+        meetingUrl: ev.meetingUrl || '',
+        registrationEnabled: ev.registrationEnabled || false,
+        registrationUrl: ev.registrationUrl || '',
+        facultyCoordinator: ev.facultyCoordinator || '',
+        studentCoordinator: ev.studentCoordinator || '',
+        contactEmail: ev.contactEmail || '',
+        contactPhone: ev.contactPhone || '',
+        status: ev.status || 'DRAFT',
+        visibility: ev.visibility || 'PUBLIC'
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (!isEditing && field === 'title') {
+        updated.slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      }
+      return updated;
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const payload = {
+        ...formData,
+        startDate: new Date(formData.startDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString(),
+      };
+      
+      if (isEditing) {
+        await api.patch(`/control/events/${id}`, payload);
+      } else {
+        await api.post(`/control/events`, payload);
+      }
+      navigate('events');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save event. Check console for details.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-foreground-muted" /></div>;
+  }
 
   return (
-    <div className="mx-auto max-w-[1000px]">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-[1000px]">
       <PageHeader 
         title={isEditing ? "Edit Event" : "Create Event"}
         breadcrumbs={
@@ -21,8 +120,11 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
         }
         actions={
           <>
-            <Button variant="ghost" onClick={() => navigate('events')}>Cancel</Button>
-            <Button>{isEditing ? 'Save Changes' : 'Create Event'}</Button>
+            <Button type="button" variant="ghost" onClick={() => navigate('events')}>Cancel</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving && <Loader2 size={16} className="animate-spin mr-2" />}
+              {isEditing ? 'Save Changes' : 'Create Event'}
+            </Button>
           </>
         }
       />
@@ -32,19 +134,19 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
         {/* Navigation Sidebar */}
         <div className="w-full md:w-[240px] shrink-0">
           <nav className="flex flex-col space-y-1 sticky top-4">
-            <button onClick={() => setActiveTab('basic')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'basic' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
+            <button type="button" onClick={() => setActiveTab('basic')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'basic' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
               Basic Information
             </button>
-            <button onClick={() => setActiveTab('location')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'location' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
+            <button type="button" onClick={() => setActiveTab('location')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'location' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
               Date & Location
             </button>
-            <button onClick={() => setActiveTab('registration')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'registration' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
+            <button type="button" onClick={() => setActiveTab('registration')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'registration' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
               Registration
             </button>
-            <button onClick={() => setActiveTab('team')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'team' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
+            <button type="button" onClick={() => setActiveTab('team')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'team' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
               Event Team
             </button>
-            <button onClick={() => setActiveTab('publish')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'publish' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
+            <button type="button" onClick={() => setActiveTab('publish')} className={`px-4 py-2.5 text-left text-[14px] font-medium rounded-md transition-colors ${activeTab === 'publish' ? 'bg-surface border border-border shadow-sm text-foreground' : 'text-foreground-secondary hover:bg-surface-secondary'}`}>
               Publishing
             </button>
           </nav>
@@ -59,32 +161,35 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
               
               <div className="space-y-4">
                 <div>
-                  <label className="text-[13px] font-medium block mb-1.5">Event Name</label>
-                  <Input placeholder="e.g. CSEA Orientation 2026" />
+                  <label className="text-[13px] font-medium block mb-1.5">Event Name <span className="text-error">*</span></label>
+                  <Input required value={formData.title} onChange={e => handleChange('title', e.target.value)} placeholder="e.g. CSEA Orientation 2026" />
+                </div>
+                <div>
+                  <label className="text-[13px] font-medium block mb-1.5">Slug <span className="text-error">*</span></label>
+                  <Input required value={formData.slug} onChange={e => handleChange('slug', e.target.value)} placeholder="e.g. csea-orientation-2026" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Event Type</label>
-                  <Select>
-                    <option>Orientation</option>
-                    <option>Workshop</option>
-                    <option>Seminar</option>
-                    <option>Competition</option>
-                    <option>Networking</option>
+                  <Select value={formData.eventType} onChange={e => handleChange('eventType', e.target.value)}>
+                    <option value="Orientation">Orientation</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Competition">Competition</option>
+                    <option value="Networking">Networking</option>
+                    <option value="Talk">Talk</option>
                   </Select>
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Short Description</label>
-                  <Textarea placeholder="A brief summary for cards and lists (Max 120 chars)" />
+                  <Textarea value={formData.shortDescription} onChange={e => handleChange('shortDescription', e.target.value)} placeholder="A brief summary for cards and lists (Max 120 chars)" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Full Description</label>
-                  <Textarea placeholder="Detailed event description" className="min-h-[150px]" />
+                  <Textarea value={formData.fullDescription} onChange={e => handleChange('fullDescription', e.target.value)} placeholder="Detailed event description" className="min-h-[150px]" />
                 </div>
                 <div>
-                  <label className="text-[13px] font-medium block mb-1.5">Event Banner / Poster</label>
-                  <div className="flex items-center justify-center p-8 border-2 border-dashed border-border rounded-lg text-foreground-muted hover:bg-surface-secondary cursor-pointer transition-colors">
-                    Upload Banner Image
-                  </div>
+                  <label className="text-[13px] font-medium block mb-1.5">Cover Image URL</label>
+                  <Input type="url" value={formData.coverImage} onChange={e => handleChange('coverImage', e.target.value)} placeholder="https://..." />
                 </div>
               </div>
             </div>
@@ -96,20 +201,12 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
               
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-[13px] font-medium block mb-1.5">Start Date</label>
-                  <Input type="date" />
+                  <label className="text-[13px] font-medium block mb-1.5">Start Date & Time <span className="text-error">*</span></label>
+                  <Input required type="datetime-local" value={formData.startDate} onChange={e => handleChange('startDate', e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-[13px] font-medium block mb-1.5">Start Time</label>
-                  <Input type="time" />
-                </div>
-                <div>
-                  <label className="text-[13px] font-medium block mb-1.5">End Date</label>
-                  <Input type="date" />
-                </div>
-                <div>
-                  <label className="text-[13px] font-medium block mb-1.5">End Time</label>
-                  <Input type="time" />
+                  <label className="text-[13px] font-medium block mb-1.5">End Date & Time <span className="text-error">*</span></label>
+                  <Input required type="datetime-local" value={formData.endDate} onChange={e => handleChange('endDate', e.target.value)} />
                 </div>
               </div>
 
@@ -118,19 +215,19 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
               <div className="space-y-4">
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Format</label>
-                  <Select>
-                    <option>Offline</option>
-                    <option>Online</option>
-                    <option>Hybrid</option>
+                  <Select value={formData.format} onChange={e => handleChange('format', e.target.value)}>
+                    <option value="OFFLINE">Offline</option>
+                    <option value="ONLINE">Online</option>
+                    <option value="HYBRID">Hybrid</option>
                   </Select>
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Venue</label>
-                  <Input placeholder="e.g. Main Auditorium" />
+                  <Input value={formData.venue} onChange={e => handleChange('venue', e.target.value)} placeholder="e.g. Main Auditorium" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Meeting URL (if applicable)</label>
-                  <Input placeholder="https://" />
+                  <Input type="url" value={formData.meetingUrl} onChange={e => handleChange('meetingUrl', e.target.value)} placeholder="https://" />
                 </div>
               </div>
             </div>
@@ -147,43 +244,20 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
                 </div>
                 <input 
                   type="checkbox" 
-                  checked={registrationEnabled}
-                  onChange={(e) => setRegistrationEnabled(e.target.checked)}
+                  checked={formData.registrationEnabled}
+                  onChange={(e) => handleChange('registrationEnabled', e.target.checked)}
                   className="w-4 h-4 text-accent" 
                 />
               </div>
 
-              {registrationEnabled && (
+              {formData.registrationEnabled && (
                 <div className="space-y-4 animate-in fade-in duration-300">
                   <div>
                     <label className="text-[13px] font-medium block mb-1.5">
                       Registration Form URL <span className="text-error">*</span>
                     </label>
-                    <Input placeholder="https://forms.google.com/..." required />
+                    <Input type="url" value={formData.registrationUrl} onChange={e => handleChange('registrationUrl', e.target.value)} placeholder="https://forms.google.com/..." required={formData.registrationEnabled} />
                     <p className="text-[12px] text-foreground-muted mt-1.5">Enter the external link (e.g. Google Forms) where students will register.</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[13px] font-medium block mb-1.5">Registration Button Text</label>
-                      <Input defaultValue="Register Now" />
-                    </div>
-                    <div>
-                      <label className="text-[13px] font-medium block mb-1.5">Registration Deadline</label>
-                      <Input type="datetime-local" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[13px] font-medium block mb-1.5">Registration Status</label>
-                    <Select>
-                      <option>Open</option>
-                      <option>Closed</option>
-                    </Select>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <Button variant="outline" size="sm" type="button">Test Registration Link</Button>
                   </div>
                 </div>
               )}
@@ -197,19 +271,19 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
               <div className="space-y-4">
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Faculty Coordinator</label>
-                  <Input placeholder="Name of faculty" />
+                  <Input value={formData.facultyCoordinator} onChange={e => handleChange('facultyCoordinator', e.target.value)} placeholder="Name of faculty" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Student Coordinator</label>
-                  <Input placeholder="Name of student lead" />
+                  <Input value={formData.studentCoordinator} onChange={e => handleChange('studentCoordinator', e.target.value)} placeholder="Name of student lead" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Contact Email</label>
-                  <Input placeholder="support@event.com" />
+                  <Input type="email" value={formData.contactEmail} onChange={e => handleChange('contactEmail', e.target.value)} placeholder="support@event.com" />
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Contact Phone (Optional)</label>
-                  <Input placeholder="+91" />
+                  <Input value={formData.contactPhone} onChange={e => handleChange('contactPhone', e.target.value)} placeholder="+91" />
                 </div>
               </div>
             </div>
@@ -222,19 +296,18 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
               <div className="space-y-4">
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Event Status</label>
-                  <Select>
-                    <option>Draft</option>
-                    <option>Registration Open</option>
-                    <option>Upcoming</option>
-                    <option>Completed</option>
-                    <option>Cancelled</option>
+                  <Select value={formData.status} onChange={e => handleChange('status', e.target.value)}>
+                    <option value="DRAFT">Draft</option>
+                    <option value="PUBLISHED">Published</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="CANCELLED">Cancelled</option>
                   </Select>
                 </div>
                 <div>
                   <label className="text-[13px] font-medium block mb-1.5">Visibility</label>
-                  <Select>
-                    <option>Public (Visible to everyone)</option>
-                    <option>Private (Unlisted, link only)</option>
+                  <Select value={formData.visibility} onChange={e => handleChange('visibility', e.target.value)}>
+                    <option value="PUBLIC">Public (Visible to everyone)</option>
+                    <option value="PRIVATE">Private (Unlisted, link only)</option>
                   </Select>
                 </div>
               </div>
@@ -243,6 +316,6 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
 
         </div>
       </div>
-    </div>
+    </form>
   );
 }
