@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './index.css';
 import { 
   LayoutDashboard, FileText, Calendar as CalendarIcon, Code2, 
-  Image as ImageIcon, Users, Briefcase, Shield, Settings as SettingsIcon,
+  Image as ImageIcon, Users, Shield, Settings as SettingsIcon,
   Search, Bell, Plus, Menu, X, ChevronRight 
 } from 'lucide-react';
 
@@ -16,11 +16,11 @@ import { EventAttendees } from './pages/Events/EventAttendees';
 import { EventDetail } from './pages/Events/EventDetail';
 import { ProjectList } from './pages/Projects/ProjectList';
 import { ProjectForm } from './pages/Projects/ProjectForm';
-import { ApplicationList } from './pages/Applications/ApplicationList';
+import { ProjectDetail } from './pages/Projects/ProjectDetail';
 import { GalleryList } from './pages/Galleries/GalleryList';
 import { GalleryUpload } from './pages/Galleries/GalleryUpload';
 import { GalleryDetail } from './pages/Galleries/GalleryDetail';
-import { ProjectDetail } from './pages/Projects/ProjectDetail';
+
 import { UsersList } from './pages/Users/UsersList';
 import { Settings } from './pages/Settings/Settings';
 import { AuditLog } from './pages/Settings/AuditLog';
@@ -115,7 +115,7 @@ function App() {
         if (action === 'create' || action === 'edit') return <ProjectForm navigate={navigate} id={id} />;
         if (action === 'detail') return <ProjectDetail navigate={navigate} id={id} />;
         return <ProjectList navigate={navigate} />;
-      case 'applications': return <ApplicationList />;
+
       case 'galleries':
         if (action === 'upload') return <GalleryUpload navigate={navigate} />;
         if (action === 'detail') return <GalleryDetail navigate={navigate} id={id} />;
@@ -208,9 +208,6 @@ function App() {
             <NavItem id="events" icon={CalendarIcon} label="Events" />
             <NavItem id="projects" icon={Code2} label="Projects" />
             <NavItem id="galleries" icon={ImageIcon} label="Galleries" />
-          </SidebarSection>
-          <SidebarSection label="Operations">
-            <NavItem id="applications" icon={Briefcase} label="Applications" />
             <NavItem id="users" icon={Users} label="Users & Roles" />
           </SidebarSection>
           <SidebarSection label="System">

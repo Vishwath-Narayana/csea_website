@@ -6,7 +6,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
-  role: text("role").notNull().default("EDITOR"), // SUPER_ADMIN, ADMIN, EDITOR
+  role: text("role").notNull().default("EDITOR"), // SUPER_ADMIN, FACULTY_ADMIN, ADMIN, EDITOR, VIEWER
   avatarUrl: text("avatar_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

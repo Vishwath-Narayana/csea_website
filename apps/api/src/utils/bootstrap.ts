@@ -31,8 +31,11 @@ export async function bootstrapAdmin() {
 
     console.log(`Bootstrapping Super Admin user ${email}...`);
     
+    // Cast auth to any to bypass typescript deep type instantiation check
+    const authAny = auth as any;
+    
     // Create User via Better Auth API directly to ensure password is hashed correctly
-    const result = await auth.api.signUpEmail({
+    const result = await authAny.api.signUpEmail({
       body: {
         email,
         password,

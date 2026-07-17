@@ -22,7 +22,7 @@ export const Login = () => {
       if (error) {
         setError(error.message || 'Login failed');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

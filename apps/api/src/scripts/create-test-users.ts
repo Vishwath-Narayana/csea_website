@@ -19,7 +19,8 @@ async function createTestUsers() {
       console.log(`Cleaned up existing user ${email}`);
     }
     
-    const res = await auth.api.signUpEmail({
+    const authAny = auth as any;
+    const res = await authAny.api.signUpEmail({
       body: {
         email,
         password,

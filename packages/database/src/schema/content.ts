@@ -85,6 +85,7 @@ export const projects = pgTable("projects", {
 
   repositoryUrl: text("repository_url"),
   demoUrl: text("demo_url"),
+  applicationUrl: text("application_url"), // External Google Form or similar for project applications
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -109,32 +110,6 @@ export const projectRoles = pgTable("project_roles", {
   projectIdIdx: index("project_roles_project_id_idx").on(table.projectId),
 }));
 
-// ─── PROJECT APPLICATIONS ───────────────────────────────────────────────────
-
-export const projectApplications = pgTable("project_applications", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }).notNull(),
-  projectRoleId: uuid("project_role_id").references(() => projectRoles.id, { onDelete: "set null" }),
-
-  applicantName: text("applicant_name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone"),
-  rollNumber: text("roll_number"),
-  year: text("year"),
-
-  statement: text("statement"), // motivation / cover letter
-  portfolioUrl: text("portfolio_url"),
-  githubUrl: text("github_url"),
-  resumeUrl: text("resume_url"),
-
-  status: text("status").notNull().default("PENDING"), // PENDING, UNDER_REVIEW, SHORTLISTED, ACCEPTED, REJECTED
-
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}, (table) => ({
-  projectIdIdx: index("project_applications_project_id_idx").on(table.projectId),
-  statusIdx: index("project_applications_status_idx").on(table.status),
-}));
 
 // ─── GALLERIES ──────────────────────────────────────────────────────────────
 
