@@ -1,8 +1,8 @@
+// Trigger watcher reload
 import { auth } from "@csea/auth";
 import { db } from "@csea/database";
-import { users, accounts } from "@csea/database/src/schema/auth";
+import { users } from "@csea/database/src/schema/auth";
 import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
 
 export async function bootstrapAdmin() {
   const email = process.env.SUPER_ADMIN_EMAIL;
@@ -31,25 +31,25 @@ export async function bootstrapAdmin() {
 
     console.log(`Bootstrapping Super Admin user ${email}...`);
     
-    // Create User via Drizzle directly
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [newUser] = await db.insert(users).values({
-      email,
-      name: "Super Admin",
-      role: "SUPER_ADMIN",
-      emailVerified: true,
-    }).returning();
-    
-    // Create Account for credentials
-    await db.insert(accounts).values({
-      id: crypto.randomUUID(),
-      userId: newUser.id,
-      accountId: email,
-      providerId: "credential",
-      password: hashedPassword,
+    // Create User via Better Auth API directly to ensure password is hashed correctly
+    const result = await auth.api.signUpEmail({
+      body: {
+        email,
+        password,
+        name: "Super Admin",
+      },
     });
-    
-    console.log(`Successfully bootstrapped Super Admin user ${email}`);
+
+    if (result && result.user) {
+      // Promote to SUPER_ADMIN and set emailVerified to true
+      await db.update(users)
+        .set({ role: "SUPER_ADMIN", emailVerified: true })
+        .where(eq(users.id, result.user.id));
+      
+      console.log(`Successfully bootstrapped Super Admin user ${email}`);
+    } else {
+      console.error("Failed to bootstrap: no user returned from signUpEmail.");
+    }
   } catch (error) {
     console.error("Failed to bootstrap Super Admin:", error);
   }

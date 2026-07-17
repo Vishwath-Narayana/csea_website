@@ -23,6 +23,18 @@ fastify.register(authPlugin);
 fastify.register(eventsRoutes, { prefix: '/api/v1/events' });
 fastify.register(projectsRoutes, { prefix: '/api/v1/projects' });
 
+fastify.register(async (instance) => {
+  instance.get("/api/v1/admin/test", { onRequest: [instance.requireAuth] }, async (request, reply) => {
+    return { status: "authenticated", user: request.user };
+  });
+
+  instance.get("/api/v1/admin/role-test", { 
+    onRequest: [instance.requireAuth, instance.requireRole(["SUPER_ADMIN", "ADMIN"])] 
+  }, async (request, reply) => {
+    return { status: "authorized", role: request.user.role };
+  });
+});
+
 const start = async () => {
   try {
     await bootstrapAdmin();

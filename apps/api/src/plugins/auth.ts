@@ -16,10 +16,43 @@ declare module "fastify" {
 }
 
 const authPluginAsync: FastifyPluginAsync = async (fastify) => {
+  // Disable body consumption for auth routes so Better Auth raw stream reader works
+  fastify.addContentTypeParser("application/json", (req, payload, done) => {
+    done(null, payload);
+  });
+  
+  fastify.addContentTypeParser("text/plain", (req, payload, done) => {
+    done(null, payload);
+  });
+
   const handler = toNodeHandler(auth);
 
   fastify.all("/api/auth/*", async (request, reply) => {
+    // Manually handle CORS because we hijack the response lifecycle (reply.sent = true)
+    const origin = request.headers.origin;
+    const trustedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+    
+    if (origin && trustedOrigins.includes(origin)) {
+      reply.raw.setHeader("Access-Control-Allow-Origin", origin);
+      reply.raw.setHeader("Access-Control-Allow-Credentials", "true");
+      reply.raw.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+      reply.raw.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie");
+    }
+
+    if (request.method === "OPTIONS") {
+      reply.raw.statusCode = 204;
+      reply.raw.end();
+      reply.sent = true;
+      return;
+    }
+
+    // Block public registration endpoints to secure CSEA Control Panel
+    if (request.raw.url?.includes("/sign-up/email") || request.raw.url?.includes("/signup")) {
+      reply.status(403).send({ error: "Public registration is disabled." });
+      return;
+    }
     await handler(request.raw, reply.raw);
+    reply.sent = true;
   });
 
   fastify.decorate("requireAuth", async function (request: FastifyRequest, reply: FastifyReply) {
