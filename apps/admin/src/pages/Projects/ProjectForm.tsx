@@ -3,7 +3,7 @@ import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, Trash2, Plus, Code2, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Code2, Loader2 } from 'lucide-react';
 import { api } from '../../utils/api';
 
 export function ProjectForm({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
@@ -11,6 +11,7 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isSaving, setIsSaving] = useState(false);
   const [roles, setRoles] = useState<any[]>([]);
+  const [error, setError] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -70,6 +71,7 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setError('');
     try {
       const payload = {
         ...formData,
@@ -82,9 +84,17 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
         await api.post(`/control/projects`, payload);
       }
       navigate('projects');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to save project. Check console for details.');
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === 'VALIDATION_ERROR' && err.details) {
+        const fieldErrors = Object.entries(err.details)
+          .filter(([key]) => key !== '_errors')
+          .map(([key, value]: [string, any]) => `${key}: ${value._errors.join(', ')}`)
+          .join('; ');
+        setError(`Validation Error - ${fieldErrors || err.message}`);
+      } else {
+        setError(err?.message || 'Failed to save project. Please check the fields and try again.');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -114,6 +124,15 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
           </>
         }
       />
+
+      {error && (
+        <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 animate-in fade-in slide-in-from-top-2">
+          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20">
+            <span className="text-xs font-bold">!</span>
+          </div>
+          <p>{error}</p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-8">
         

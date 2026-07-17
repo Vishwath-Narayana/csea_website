@@ -6,19 +6,20 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --force",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.0.9",
+    "@astrojs/node": "^11.0.2",
     "@astrojs/react": "^4.1.0",
     "@astrojs/tailwind": "^5.1.0",
+    "@csea/ui": "workspace:*",
+    "astro": "^7.0.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "tailwindcss": "^3.4.0",
-    "@csea/ui": "workspace:*"
+    "tailwindcss": "^3.4.0"
   },
   "devDependencies": {
     "@csea/config": "workspace:*"

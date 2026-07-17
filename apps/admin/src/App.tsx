@@ -362,7 +362,6 @@ function App() {
               <kbd className="hidden sm:inline-block rounded border border-border bg-surface-secondary px-1.5 py-0.5 text-[10px] font-mono text-foreground-muted">ESC</kbd>
             </div>
             <div className="max-h-[300px] overflow-y-auto p-2">
-              {/* Mock Results */}
               <div className="px-3 py-2 text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Navigation</div>
               <button className="w-full text-left px-3 py-2.5 rounded-lg text-[14px] hover:bg-surface-secondary flex items-center justify-between" onClick={() => navigate('dashboard')}>
                 <span>Dashboard</span>

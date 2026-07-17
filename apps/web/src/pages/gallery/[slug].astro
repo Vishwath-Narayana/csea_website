@@ -1,14 +1,32 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'hackathon' } },
-  ];
+const { slug } = Astro.params;
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+
+let gallery = null;
+try {
+  const res = await fetch(`${API_URL}/api/v1/galleries/${slug}`);
+  if (res.ok) {
+    const data = await res.json();
+    gallery = data.data;
+  }
+} catch (e) {
+  console.error("Failed to fetch gallery details", e);
 }
+
+if (!gallery) {
+  return Astro.redirect('/404');
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 ---
 
-<Layout title="Autumn Hackathon 2026 Photos | Gallery | CSEA">
+<Layout title={`${gallery.title} | Gallery | CSEA`}>
   
   <div class="bg-canvas bg-grid-blueprint min-h-screen relative pt-28 pb-32">
     <div class="absolute inset-0 pointer-events-none select-none opacity-10">
@@ -24,96 +42,53 @@ export function getStaticPaths() {
         <div class="inline-flex items-center justify-center gap-3.5 mb-4 text-[12px] font-mono text-foreground-muted uppercase">
           <a href="/gallery" class="hover:text-accent transition-colors no-underline">Gallery</a>
           <span>/</span>
-          <span class="text-accent font-semibold">2026-2027</span>
+          <span class="text-accent font-semibold">Album</span>
         </div>
-        <h1 class="text-display-md mb-4 text-balance text-foreground leading-tight">Autumn Hackathon 2026</h1>
+        <h1 class="text-display-md mb-4 text-balance text-foreground leading-tight">{gallery.title}</h1>
         <p class="text-body text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
-          A visual report capturing the 24-hour coding sprint inside the Innovation Lab.
+          {gallery.description || 'A visual report of this event.'}
         </p>
         <div class="text-[12px] text-foreground-muted font-mono mt-6 flex items-center justify-center gap-4">
-          <span>DATE // SEP 10, 2026</span>
+          <span>DATE // {gallery.eventDate ? formatDate(gallery.eventDate) : formatDate(gallery.createdAt)}</span>
           <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
-          <span>ENTRIES // 342 IMAGES</span>
+          <span>ENTRIES // {gallery.photos?.length || 0} IMAGES</span>
         </div>
       </header>
 
       <!-- Advanced Mosaic Grid Layout -->
       <div class="reveal" style="transition-delay: 100ms;">
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[150px] sm:auto-rows-[250px] lg:auto-rows-[300px]">
-          
-          <!-- Large Feature photo -->
-          <div class="col-span-2 row-span-2 border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-4 font-mono text-[9px] text-foreground-secondary bg-gradient-to-tr from-accent/10 to-accent-blue/5 border border-accent/5">
-              <span class="text-[8px] uppercase">// Coords: STAGE_02_INNOVATION</span>
-              <span class="text-center font-bold text-xs uppercase text-foreground leading-snug">Team Working Sprint // Hero Media</span>
-              <span class="text-right text-[8px] uppercase">CAM_01_LENS</span>
-            </div>
+        {(!gallery.photos || gallery.photos.length === 0) ? (
+          <div class="text-center py-20 text-foreground-secondary">
+            <p>No photos available in this album yet.</p>
           </div>
+        ) : (
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[150px] sm:auto-rows-[250px] lg:auto-rows-[300px]">
+            {gallery.photos.map((photo: any, idx: number) => {
+              // Create some layout variation based on index
+              let itemClass = "border border-border rounded-lg overflow-hidden bg-surface shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300";
+              if (idx === 0) itemClass += " col-span-2 row-span-2 p-2";
+              else if (idx % 5 === 0) itemClass += " col-span-2 p-2";
+              else if (idx % 7 === 0) itemClass += " row-span-2 p-2";
+              else itemClass += " p-2";
 
-          <!-- Standard Photo -->
-          <div class="border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5">
-              <span>// DEPT_STAGE</span>
-              <span class="text-center font-semibold text-[11px] text-foreground uppercase">Hardware setup</span>
-              <span>CAM_02</span>
-            </div>
+              return (
+                <div class={itemClass}>
+                  <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-surface-secondary border border-border relative overflow-hidden">
+                    {photo.url ? (
+                      <img src={photo.url} alt={photo.fileName || 'Gallery photo'} class="absolute inset-0 w-full h-full object-cover z-0 opacity-80 group-hover:opacity-100 transition-opacity" />
+                    ) : (
+                      <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5 -z-10"></div>
+                    )}
+                    <div class="relative z-10 flex justify-between">
+                      <span>// CAM_{String(idx + 1).padStart(2, '0')}</span>
+                      {!photo.url && <span class="text-center font-semibold text-[11px] text-foreground uppercase">{photo.fileName}</span>}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-
-          <!-- Standard Photo -->
-          <div class="border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5">
-              <span>// LABS_BOARDS</span>
-              <span class="text-center font-semibold text-[11px] text-foreground uppercase">Whiteboard drafts</span>
-              <span>CAM_03</span>
-            </div>
-          </div>
-
-          <!-- Wide Photo -->
-          <div class="col-span-2 border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-tr from-accent/10 to-accent-blue/5 border border-accent/5">
-              <span>// COORDS: LABS_BLOCK_2</span>
-              <span class="text-center font-semibold text-[12px] text-foreground uppercase">Mentoring evaluations</span>
-              <span>CAM_04</span>
-            </div>
-          </div>
-
-          <!-- Tall Photo -->
-          <div class="row-span-2 border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5">
-              <span>// MONITOR_SCREEN</span>
-              <span class="text-center font-semibold text-[11px] text-foreground uppercase leading-tight py-12">Code review screen</span>
-              <span>CAM_05</span>
-            </div>
-          </div>
-
-          <!-- Standard Photo -->
-          <div class="border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5">
-              <span>// SNACK_BREAK</span>
-              <span class="text-center font-semibold text-[11px] text-foreground uppercase">Snack bar</span>
-              <span>CAM_06</span>
-            </div>
-          </div>
-
-          <!-- Standard Photo -->
-          <div class="border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-br from-accent/5 to-accent-blue/10 border border-accent/5">
-              <span>// AWARD_STAGE</span>
-              <span class="text-center font-semibold text-[11px] text-foreground uppercase">Closing ceremony</span>
-              <span>CAM_07</span>
-            </div>
-          </div>
-
-          <!-- Wide Photo -->
-          <div class="col-span-2 border border-border rounded-lg overflow-hidden bg-surface p-2 shadow-soft hover:shadow-medium group cursor-pointer transition-all duration-300">
-            <div class="img-placeholder w-full h-full rounded transition-transform duration-700 group-hover:scale-[1.01] flex flex-col justify-between p-3 font-mono text-[8px] text-foreground-secondary bg-gradient-to-tr from-accent/10 to-accent-blue/5 border border-accent/5">
-              <span>// COORDS: MAIN_HALL</span>
-              <span class="text-center font-semibold text-[12px] text-foreground uppercase">Final presentations grid</span>
-              <span>CAM_08</span>
-            </div>
-          </div>
-
-        </div>
+        )}
       </div>
 
     </div>

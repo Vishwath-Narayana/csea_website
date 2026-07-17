@@ -10,7 +10,6 @@ import { api } from '../../utils/api';
 export function Settings() {
   const [activeTab, setActiveTab] = useState('general');
   const [isMaintenanceModalOpen, setMaintenanceModalOpen] = useState(false);
-  const [isResetModalOpen, setResetModalOpen] = useState(false);
   const [settings, setSettings] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -131,14 +130,6 @@ export function Settings() {
               <span className="text-[14px] font-medium">Enable Maintenance Mode</span>
             </label>
           </section>
-          
-          <section className="bg-error/5 rounded-xl border border-error/20 p-6">
-            <h3 className="text-[16px] font-semibold text-error mb-4">Factory Reset</h3>
-            <p className="text-[13px] text-error/80 mb-4">
-              Clear all database tables and reset the platform to a pristine state. This action is irreversible.
-            </p>
-            <Button variant="danger" onClick={() => setResetModalOpen(true)}>Reset System</Button>
-          </section>
         </div>
       )}
 
@@ -152,19 +143,6 @@ export function Settings() {
           : "Are you sure? Non-admin users will see a maintenance screen and will not be able to access the platform."}
         isDestructive={!settings.maintenanceMode}
         confirmLabel={settings.maintenanceMode ? "Disable Mode" : "Enable Mode"}
-      />
-
-      <ConfirmationDialog 
-        isOpen={isResetModalOpen}
-        onClose={() => setResetModalOpen(false)}
-        onConfirm={() => {
-          setResetModalOpen(false);
-          alert("Factory Reset initiated (Mock).");
-        }}
-        title="Confirm Factory Reset"
-        description="Are you absolutely sure? This will wipe all data across the platform and cannot be undone."
-        isDestructive={true}
-        confirmLabel="I understand, Reset System"
       />
     </div>
   );

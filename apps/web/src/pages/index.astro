@@ -1,22 +1,81 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+
+// Fetch Events
+let events = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/events?limit=3`);
+  if (res.ok) {
+    const data = await res.json();
+    events = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch events", e);
+}
+const nextEvent = events.length > 0 ? events[0] : null;
+
+// Fetch Projects
+let projects = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/projects?limit=2`);
+  if (res.ok) {
+    const data = await res.json();
+    projects = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch projects", e);
+}
+
+// Fetch Journal Posts
+let posts = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/journal?limit=3`);
+  if (res.ok) {
+    const data = await res.json();
+    posts = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch journal posts", e);
+}
+
+// Fetch Galleries
+let galleries = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/galleries?limit=2`);
+  if (res.ok) {
+    const data = await res.json();
+    galleries = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch galleries", e);
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 ---
 
 <Layout title="Computer Science & Engineering Association" hasBanner={true}>
   
   <!-- 1. LIVE ANNOUNCEMENT STRIP -->
-  <div class="bg-accent text-white py-3 overflow-hidden border-b border-accent-hover relative z-20 mt-[-64px]">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 flex items-center justify-between text-xs font-mono tracking-wider">
-      <div class="flex items-center gap-3 animate-pulse">
-        <span class="inline-block w-2 h-2 rounded-full bg-white"></span>
-        <span class="font-bold">NEXT EVENT //</span>
-        <span>CSEA Orientation 2026 &middot; August 15, 2026</span>
+  {nextEvent && (
+    <div class="bg-accent text-white py-3 overflow-hidden border-b border-accent-hover relative z-20 mt-[-64px]">
+      <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 flex items-center justify-between text-xs font-mono tracking-wider">
+        <div class="flex items-center gap-3 animate-pulse">
+          <span class="inline-block w-2 h-2 rounded-full bg-white"></span>
+          <span class="font-bold">NEXT EVENT //</span>
+          <span class="truncate">{nextEvent.title} &middot; {formatDate(nextEvent.startDate)}</span>
+        </div>
+        <a href={`/events/${nextEvent.slug}`} class="hover:underline flex items-center gap-1 font-bold whitespace-nowrap ml-4">
+          VIEW DETAILS <span class="text-sm leading-none">&rarr;</span>
+        </a>
       </div>
-      <a href="/events/orientation-26" class="hover:underline flex items-center gap-1 font-bold">
-        REGISTER NOW <span class="text-sm leading-none">&rarr;</span>
-      </a>
     </div>
-  </div>
+  )}
 
   <!-- 2. HERO SECTION -->
   <section class="relative pt-32 pb-24 lg:pt-40 lg:pb-36 bg-canvas flex items-center overflow-hidden min-h-[85vh]">
@@ -390,74 +449,62 @@ import Layout from '../layouts/Layout.astro';
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
         <!-- Large Featured Event Card (7 Columns) -->
-        <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[420px] shadow-soft group hover:border-accent/40 transition-colors duration-300 reveal">
-          <div>
-            <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-6 font-mono">
-              <span>AUG 15, 2026 // 09:00 AM</span>
-              <span class="badge badge-accent bg-accent-muted text-accent font-semibold">Featured Orientation</span>
-            </div>
-            
-            <!-- Graphic inside event card -->
-            <div class="w-full aspect-[21/9] rounded-md bg-canvas border border-border flex items-center justify-center font-mono text-[11px] text-foreground-muted mb-8 select-none p-4">
-              <svg class="w-12 h-12 text-accent opacity-20 mr-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              <div>
-                <span class="text-foreground font-bold">EVENT_SPACE // MAIN_AUDITORIUM</span><br/>
-                <span class="text-[10px]">COORDS: 17.9712 N, 79.5318 E</span>
+        {events[0] ? (
+          <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[420px] shadow-soft group hover:border-accent/40 transition-colors duration-300 reveal">
+            <div>
+              <div class="flex justify-between items-center text-[12px] text-foreground-muted mb-6 font-mono">
+                <span class="uppercase">{formatDate(events[0].startDate)}</span>
+                <span class="badge badge-accent bg-accent-muted text-accent font-semibold">Featured Event</span>
               </div>
-            </div>
+              
+              <!-- Graphic inside event card -->
+              <div class="w-full aspect-[21/9] rounded-md bg-canvas border border-border flex items-center justify-center font-mono text-[11px] text-foreground-muted mb-8 select-none p-4">
+                <svg class="w-12 h-12 text-accent opacity-20 mr-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <div>
+                  <span class="text-foreground font-bold">EVENT_SPACE // {events[0].venue ? events[0].venue.toUpperCase() : 'TBA'}</span><br/>
+                  <span class="text-[10px]">FORMAT: {events[0].format}</span>
+                </div>
+              </div>
 
-            <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
-              CSEA Orientation 2026
-            </h3>
-            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-8 max-w-[580px]">
-              Meet the faculty advisors and student executive board to explore CSEA's roadmap for the upcoming academic year. Mandatory for all new CS students.
-            </p>
+              <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
+                {events[0].title}
+              </h3>
+              <p class="text-body-sm text-foreground-secondary leading-relaxed mb-8 max-w-[580px]">
+                {events[0].shortDescription || 'No description provided.'}
+              </p>
+            </div>
+            <div class="pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4 mt-auto">
+              <span class="text-xs font-mono text-foreground-secondary uppercase">VENUE / {events[0].venue || 'TBA'}</span>
+              <a href={`/events/${events[0].slug}`} class="btn btn-outline text-xs px-5 py-2.5">
+                View Event details &rarr;
+              </a>
+            </div>
           </div>
-          <div class="pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4 mt-auto">
-            <span class="text-xs font-mono text-foreground-secondary">VENUE / AUDITORIUM CAMPUS</span>
-            <a href="/events/orientation-26" class="btn btn-outline text-xs px-5 py-2.5">
-              Registration Pass &rarr;
-            </a>
+        ) : (
+          <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-6 lg:p-8 flex items-center justify-center min-h-[420px] shadow-soft reveal text-foreground-secondary">
+            No featured events currently scheduled.
           </div>
-        </div>
+        )}
 
         <!-- Stacked Secondary Events (5 Columns) -->
         <div class="lg:col-span-5 flex flex-col gap-6 reveal" style="transition-delay: 100ms;">
-          
-          <!-- Event item 2 -->
-          <div class="bg-surface border border-border rounded-lg p-6 hover:border-accent/25 transition-all duration-300 group">
-            <div class="flex justify-between items-center text-[11px] text-foreground-muted mb-3 font-mono">
-              <span>AUG 22, 2026 // SEMINAR HALL</span>
-              <span class="text-accent font-semibold uppercase">SPECS DISPATCH</span>
+          {events.slice(1).map((event: any) => (
+            <div class="bg-surface border border-border rounded-lg p-6 hover:border-accent/25 transition-all duration-300 group">
+              <div class="flex justify-between items-center text-[11px] text-foreground-muted mb-3 font-mono">
+                <span class="uppercase">{formatDate(event.startDate)} // {event.venue || 'TBA'}</span>
+                <span class="text-accent font-semibold uppercase">{event.eventType || 'Event'}</span>
+              </div>
+              <h4 class="font-sans font-semibold text-[19px] text-foreground group-hover:text-accent transition-colors leading-snug">
+                {event.title}
+              </h4>
+              <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2.5 line-clamp-2">
+                {event.shortDescription || 'No description provided.'}
+              </p>
+              <a href={`/events/${event.slug}`} class="text-[13px] font-semibold text-accent hover:underline no-underline mt-4 inline-block">
+                View event specifications &rarr;
+              </a>
             </div>
-            <h4 class="font-sans font-semibold text-[19px] text-foreground group-hover:text-accent transition-colors leading-snug">
-              Tech Talk: Distributed Systems
-            </h4>
-            <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2.5">
-              Panel talks regarding database sharding, caching architectures, and serverless operations.
-            </p>
-            <a href="/events/tech-talk-1" class="text-[13px] font-semibold text-accent hover:underline no-underline mt-4 inline-block">
-              View event specifications &rarr;
-            </a>
-          </div>
-
-          <!-- Event item 3 -->
-          <div class="bg-surface border border-border rounded-lg p-6 hover:border-accent/25 transition-all duration-300 group">
-            <div class="flex justify-between items-center text-[11px] text-foreground-muted mb-3 font-mono">
-              <span>SEP 10, 2026 // INNOVATION LAB</span>
-              <span class="text-accent font-semibold uppercase">24HR BUILDING SPRINT</span>
-            </div>
-            <h4 class="font-sans font-semibold text-[19px] text-foreground group-hover:text-accent transition-colors leading-snug">
-              Autumn Hackathon 2026
-            </h4>
-            <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2.5">
-              24-hour building sprint focused on writing local utility modules and lab systems.
-            </p>
-            <a href="/events/hackathon" class="text-[13px] font-semibold text-accent hover:underline no-underline mt-4 inline-block">
-              View event specifications &rarr;
-            </a>
-          </div>
-
+          ))}
         </div>
 
       </div>
@@ -482,73 +529,44 @@ import Layout from '../layouts/Layout.astro';
       <!-- 2-Column Grid Projects (Linear/Composio inspired) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 reveal">
         
-        <!-- Project 1 -->
-        <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[360px] hover:border-accent/40 transition-colors duration-300">
-          <div>
-            <div class="flex justify-between items-center text-[11px] text-dark-foreground-muted mb-6 font-mono">
-              <span class="badge badge-accent bg-accent-muted text-accent font-semibold">ACTIVE SYSTEM</span>
-              <span>DEPLOYED &middot; LIVE</span>
+        {projects.length === 0 ? (
+          <div class="col-span-1 lg:col-span-2 text-center py-10 text-dark-foreground-muted">
+            <p>No projects available.</p>
+          </div>
+        ) : projects.map((project: any) => (
+          <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[360px] hover:border-accent/40 transition-colors duration-300">
+            <div>
+              <div class="flex justify-between items-center text-[11px] text-dark-foreground-muted mb-6 font-mono">
+                {project.status === 'RECRUITING' && <span class="badge badge-accent bg-accent-muted text-accent font-semibold">RECRUITING</span>}
+                {project.status === 'ACTIVE' && <span class="badge bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] rounded-md font-semibold uppercase">ACTIVE BUILDING</span>}
+                {project.status === 'COMPLETED' && <span class="badge badge-muted bg-dark-surface-2 text-dark-foreground font-semibold">SHIPPED</span>}
+                <span>{project.timeline || 'TBA'}</span>
+              </div>
+              
+              <h3 class="text-[24px] font-semibold text-dark-foreground mb-3">{project.title}</h3>
+              <p class="text-body-sm text-dark-foreground-muted leading-relaxed mb-8 max-w-[500px]">
+                {project.shortDescription || 'No description provided.'}
+              </p>
+              
+              <!-- Code stack spec -->
+              {project.techStack && project.techStack.length > 0 && (
+                <div class="grid grid-cols-2 gap-4 border-y border-dark-border py-4 mb-6 text-[12px] font-mono">
+                  <div class="col-span-2">
+                    <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Tech Stack</span>
+                    <span class="text-dark-foreground">{project.techStack.join(' · ')}</span>
+                  </div>
+                </div>
+              )}
             </div>
             
-            <h3 class="text-[24px] font-semibold text-dark-foreground mb-3">CSEA Digital Platform</h3>
-            <p class="text-body-sm text-dark-foreground-muted leading-relaxed mb-8 max-w-[500px]">
-              Engineering the official portal dashboards, event attendance registries, and technical publishing pipelines.
-            </p>
-            
-            <!-- Code stack spec -->
-            <div class="grid grid-cols-2 gap-4 border-y border-dark-border py-4 mb-6 text-[12px] font-mono">
-              <div>
-                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Environment</span>
-                <span class="text-dark-foreground">Astro &middot; React &middot; Tailwind</span>
-              </div>
-              <div>
-                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Data & API</span>
-                <span class="text-dark-foreground">Node.js &middot; Fastify &middot; Postgres</span>
-              </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-xs text-accent">LEAD // {project.projectLead || 'TBA'}</span>
+              <a href={`/projects/${project.slug}`} class="text-[13px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
+                View technical architecture &rarr;
+              </a>
             </div>
           </div>
-          
-          <div class="flex items-center justify-between pt-2">
-            <span class="font-mono text-xs text-accent">TEAM // CSEA DIGITAL</span>
-            <a href="/projects/platform" class="text-[13px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
-              View technical architecture &rarr;
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 2 -->
-        <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 flex flex-col justify-between min-h-[360px] hover:border-accent/40 transition-colors duration-300">
-          <div>
-            <div class="flex justify-between items-center text-[11px] text-dark-foreground-muted mb-6 font-mono">
-              <span class="badge bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] rounded-md font-semibold uppercase">INTEGRATING</span>
-              <span>TESTING STAGE</span>
-            </div>
-            
-            <h3 class="text-[24px] font-semibold text-dark-foreground mb-3">Automated Attendance System</h3>
-            <p class="text-body-sm text-dark-foreground-muted leading-relaxed mb-8 max-w-[500px]">
-              Integrating RFID scanners and local Raspberry Pi caching registers for departmental lab operations and logins.
-            </p>
-            
-            <!-- Code stack spec -->
-            <div class="grid grid-cols-2 gap-4 border-y border-dark-border py-4 mb-6 text-[12px] font-mono">
-              <div>
-                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Architecture</span>
-                <span class="text-dark-foreground">Raspberry Pi &middot; MQTT</span>
-              </div>
-              <div>
-                <span class="text-dark-foreground-muted block mb-1 uppercase text-[10px]">Backend Stack</span>
-                <span class="text-dark-foreground">Go &middot; SQLite &middot; Docker</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="flex items-center justify-between pt-2">
-            <span class="font-mono text-xs text-accent">TEAM // HARDWARE LAB</span>
-            <a href="/projects/attendance-system" class="text-[13px] font-semibold text-accent hover:underline no-underline inline-flex items-center gap-1">
-              View technical architecture &rarr;
-            </a>
-          </div>
-        </div>
+        ))}
 
       </div>
 
@@ -580,73 +598,65 @@ import Layout from '../layouts/Layout.astro';
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         
         <!-- Left: Featured Article (7 Columns) -->
-        <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-5 shadow-soft group hover:border-accent/30 transition-colors duration-300 reveal">
-          <a href="/journal/tech-stack" class="no-underline text-foreground block">
-            <!-- 16:9 visual cover frame (Editorial illustration instead of blank) -->
-            <div class="w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-secondary border border-border mb-6 flex flex-col justify-between p-6 font-mono text-[11px] text-foreground-muted select-none">
-              <div class="flex justify-between items-start">
-                <span>RE_DISPATCH // ARCH_PLATFORM</span>
-                <span>VER: 4.1</span>
+        {posts[0] ? (
+          <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-5 shadow-soft group hover:border-accent/30 transition-colors duration-300 reveal">
+            <a href={`/journal/${posts[0].slug}`} class="no-underline text-foreground block">
+              <!-- 16:9 visual cover frame (Editorial illustration instead of blank) -->
+              <div class="w-full aspect-[16/9] rounded-md overflow-hidden bg-surface-secondary border border-border mb-6 flex flex-col justify-between p-6 font-mono text-[11px] text-foreground-muted select-none">
+                <div class="flex justify-between items-start">
+                  <span>RE_DISPATCH // {posts[0].category ? posts[0].category.toUpperCase() : 'GENERAL'}</span>
+                  <span>VER: 1.0</span>
+                </div>
+                <div class="flex items-center justify-center">
+                  <svg class="w-12 h-12 text-accent opacity-25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                </div>
+                <div class="text-[9px] text-accent truncate">
+                  {posts[0].title.toUpperCase()} &middot; DEPLOYED
+                </div>
               </div>
-              <div class="flex items-center justify-center">
-                <svg class="w-12 h-12 text-accent opacity-25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              
+              <div class="flex items-center gap-3.5 text-[11px] text-foreground-muted font-mono mb-3.5">
+                <span class="text-accent font-bold uppercase tracking-wider">{posts[0].category || 'General'}</span>
+                <span>{formatDate(posts[0].publishedAt || posts[0].createdAt)}</span>
               </div>
-              <div class="text-[9px] text-accent">
-                DASHBOARD_CACHING_LOGS &middot; DEPLOYED
+              
+              <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
+                {posts[0].title}
+              </h3>
+              
+              <p class="text-body-sm text-foreground-secondary leading-relaxed mb-6 line-clamp-3">
+                {posts[0].excerpt || 'Read more about this topic...'}
+              </p>
+              
+              <div class="flex items-center gap-3 pt-6 border-t border-border mt-4">
+                <span class="text-[13px] font-bold text-foreground font-mono uppercase">AUTHOR / {posts[0].authorName || 'CSEA Team'}</span>
               </div>
-            </div>
-            
-            <div class="flex items-center gap-3.5 text-[11px] text-foreground-muted font-mono mb-3.5">
-              <span class="text-accent font-bold uppercase tracking-wider">TECHNICAL DISPATCH</span>
-              <span>Aug 12, 2026 &middot; 8 min read</span>
-            </div>
-            
-            <h3 class="text-display-md text-foreground group-hover:text-accent transition-colors mb-4">
-              Architecting the New CSEA Platform
-            </h3>
-            
-            <p class="text-body-sm text-foreground-secondary leading-relaxed mb-6">
-              A detailed overview of database caching structures, Astro Static site generation, build bundles, and REST interface logic selected to rewrite our public and student portal networks.
-            </p>
-            
-            <div class="flex items-center gap-3 pt-6 border-t border-border mt-4">
-              <span class="text-[13px] font-bold text-foreground font-mono">AUTHORS / TECHNICAL PLATFORM TEAM</span>
-            </div>
-          </a>
-        </div>
+            </a>
+          </div>
+        ) : (
+          <div class="lg:col-span-7 bg-surface border border-border rounded-lg p-5 shadow-soft reveal text-center py-20 text-foreground-secondary">
+            No journal posts published yet.
+          </div>
+        )}
 
         <!-- Right: Supporting Articles (5 Columns) -->
         <div class="lg:col-span-5 flex flex-col gap-6 reveal" style="transition-delay: 100ms;">
           <div class="text-[10px] font-mono font-bold tracking-widest text-foreground-muted uppercase border-b border-border pb-3">// Technical Archive</div>
           
           <div class="flex flex-col gap-8">
-            
-            <!-- Article 2 -->
-            <div class="group pb-6 border-b border-border last:border-none">
-              <a href="/journal/orientation" class="no-underline block">
-                <div class="text-[11px] text-foreground-muted mb-2 font-mono">Aug 05, 2026 &middot; Announcements</div>
-                <h4 class="font-sans font-semibold text-[18px] text-foreground group-hover:text-accent transition-colors leading-snug">
-                  Registration Open for Orientation '26
-                </h4>
-                <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2">
-                  Securing entry passes and checking agendas for our department meet.
-                </p>
-              </a>
-            </div>
-
-            <!-- Article 3 -->
-            <div class="group pb-6 border-b border-border last:border-none">
-              <a href="/journal/hackathon" class="no-underline block">
-                <div class="text-[11px] text-foreground-muted mb-2 font-mono">Jul 28, 2026 &middot; Reports</div>
-                <h4 class="font-sans font-semibold text-[18px] text-foreground group-hover:text-accent transition-colors leading-snug">
-                  Lessons from the Summer Hackathon
-                </h4>
-                <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2">
-                  Analyzing student prototypes, deployment speeds, and tech alignments.
-                </p>
-              </a>
-            </div>
-
+            {posts.slice(1).map((post: any) => (
+              <div class="group pb-6 border-b border-border last:border-none">
+                <a href={`/journal/${post.slug}`} class="no-underline block">
+                  <div class="text-[11px] text-foreground-muted mb-2 font-mono">{formatDate(post.publishedAt || post.createdAt)} &middot; {post.category || 'General'}</div>
+                  <h4 class="font-sans font-semibold text-[18px] text-foreground group-hover:text-accent transition-colors leading-snug">
+                    {post.title}
+                  </h4>
+                  <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2 line-clamp-2">
+                    {post.excerpt || 'Read more...'}
+                  </p>
+                </a>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -672,46 +682,55 @@ import Layout from '../layouts/Layout.astro';
       <!-- Asymmetric Collage: 8 columns / 4 columns (Representing real photography mockups) -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch reveal">
         
-        <!-- Large landscape visual cover (8 Columns) -->
-        <a href="/gallery/hackathon" class="lg:col-span-8 group relative rounded-lg overflow-hidden aspect-[16/10] border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
-          <div class="w-full h-full rounded bg-gradient-to-tr from-accent/20 to-accent-blue/10 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
-            <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
-              <span>ALBUM // SUMMER_HACKATHON_2026</span>
-              <span>342 IMAGES</span>
-            </div>
-            <div class="flex justify-center py-6">
-              <svg class="w-16 h-16 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-            </div>
-            <div class="font-mono text-[9px] text-foreground-secondary">
-              COM_COORDS: STAGE_INNOVATION_LAB // KITSW
-            </div>
+        {galleries.length === 0 ? (
+          <div class="lg:col-span-12 bg-surface border border-border rounded-lg p-5 shadow-soft reveal text-center py-20 text-foreground-secondary">
+            No galleries published yet.
           </div>
-          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
-            <h3 class="font-sans font-bold text-[18px]">Summer Hackathon 2026</h3>
-            <p class="text-[12px] text-white/80">342 Photos &middot; July 2026</p>
-          </div>
-        </a>
+        ) : (
+          <>
+            {galleries[0] && (
+              <a href={`/gallery/${galleries[0].slug}`} class="lg:col-span-8 group relative rounded-lg overflow-hidden aspect-[16/10] border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
+                <div class="w-full h-full rounded bg-gradient-to-tr from-accent/20 to-accent-blue/10 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+                  <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
+                    <span>ALBUM // {galleries[0].slug.toUpperCase()}</span>
+                    <span>NEW</span>
+                  </div>
+                  <div class="flex justify-center py-6">
+                    <svg class="w-16 h-16 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </div>
+                  <div class="font-mono text-[9px] text-foreground-secondary">
+                    COM_COORDS: {galleries[0].eventDate ? formatDate(galleries[0].eventDate) : formatDate(galleries[0].createdAt)}
+                  </div>
+                </div>
+                <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
+                  <h3 class="font-sans font-bold text-[18px]">{galleries[0].title}</h3>
+                  <p class="text-[12px] text-white/80">{formatDate(galleries[0].eventDate || galleries[0].createdAt)}</p>
+                </div>
+              </a>
+            )}
 
-        <!-- Square/Vertical visual cover (4 Columns) -->
-        <a href="/gallery/hackathon" class="lg:col-span-4 group relative rounded-lg overflow-hidden aspect-square lg:aspect-auto border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
-          <div class="w-full h-full rounded bg-gradient-to-br from-accent-blue/10 to-accent/20 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
-            <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
-              <span>ALBUM // DEPT_ORIENTATION</span>
-              <span>120 IMAGES</span>
-            </div>
-            <div class="flex justify-center py-6">
-              <svg class="w-12 h-12 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-            </div>
-            <div class="font-mono text-[9px] text-foreground-secondary">
-              COM_COORDS: KITSW_AUDITORIUM
-            </div>
-          </div>
-          <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
-            <h3 class="font-sans font-bold text-[18px]">CSEA Orientation</h3>
-            <p class="text-[12px] text-white/80">120 Photos &middot; August 2026</p>
-          </div>
-        </a>
-
+            {galleries[1] && (
+              <a href={`/gallery/${galleries[1].slug}`} class="lg:col-span-4 group relative rounded-lg overflow-hidden aspect-square lg:aspect-auto border border-border shadow-soft no-underline flex items-center justify-center bg-surface p-4">
+                <div class="w-full h-full rounded bg-gradient-to-br from-accent-blue/10 to-accent/20 flex flex-col justify-between p-6 select-none transition-transform duration-500 ease-out group-hover:scale-[1.01]">
+                  <div class="flex justify-between items-start font-mono text-[10px] text-foreground-secondary">
+                    <span>ALBUM // {galleries[1].slug.toUpperCase()}</span>
+                    <span>NEW</span>
+                  </div>
+                  <div class="flex justify-center py-6">
+                    <svg class="w-12 h-12 text-accent opacity-30 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </div>
+                  <div class="font-mono text-[9px] text-foreground-secondary">
+                    COM_COORDS: {galleries[1].eventDate ? formatDate(galleries[1].eventDate) : formatDate(galleries[1].createdAt)}
+                  </div>
+                </div>
+                <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-foreground/80 to-transparent text-white">
+                  <h3 class="font-sans font-bold text-[18px]">{galleries[1].title}</h3>
+                  <p class="text-[12px] text-white/80">{formatDate(galleries[1].eventDate || galleries[1].createdAt)}</p>
+                </div>
+              </a>
+            )}
+          </>
+        )}
       </div>
     </div>
   </section>

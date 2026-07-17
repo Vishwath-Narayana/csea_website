@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, CheckCircle2, Shield, Loader2, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Loader2, Image as ImageIcon } from 'lucide-react';
 import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
 import { api } from '../../utils/api';
 

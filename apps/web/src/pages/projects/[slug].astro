@@ -1,16 +1,44 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'platform' } },
-    { params: { slug: 'attendance-system' } },
-    { params: { slug: 'alumni-portal' } },
-  ];
+const { slug } = Astro.params;
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+
+let project = null;
+try {
+  const res = await fetch(`${API_URL}/api/v1/projects/${slug}`);
+  if (res.ok) {
+    const data = await res.json();
+    project = data.data;
+  }
+} catch (e) {
+  console.error("Failed to fetch project details", e);
 }
+
+if (!project) {
+  return Astro.redirect('/404');
+}
+
+const getStatusBadgeClass = (status: string) => {
+  switch(status) {
+    case 'RECRUITING': return 'badge-accent shadow-sm';
+    case 'ACTIVE': return 'badge-success shadow-sm';
+    case 'COMPLETED': return 'badge-muted shadow-sm';
+    default: return 'badge-muted shadow-sm';
+  }
+};
+
+const getStatusLabel = (status: string) => {
+  switch(status) {
+    case 'RECRUITING': return 'Recruiting';
+    case 'ACTIVE': return 'Active Building';
+    case 'COMPLETED': return 'Shipped & Legacy';
+    default: return status;
+  }
+};
 ---
 
-<Layout title="CSEA Digital Platform Specs | CSEA">
+<Layout title={`${project.title} | CSEA`}>
   
   <div class="dark-env bg-canvas bg-grid-blueprint-dark min-h-screen text-foreground pt-28 pb-32 relative">
     <div class="absolute inset-0 pointer-events-none select-none opacity-20">
@@ -24,20 +52,24 @@ export function getStaticPaths() {
       <div class="flex items-center gap-3.5 mb-6 text-[12px] font-mono text-dark-foreground-muted uppercase">
         <a href="/projects" class="hover:text-accent transition-colors no-underline">Projects</a>
         <span>/</span>
-        <span class="text-accent font-semibold">RECRUITING</span>
+        <span class={`font-semibold ${project.status === 'RECRUITING' ? 'text-accent' : 'text-dark-foreground-muted'}`}>
+          {getStatusLabel(project.status)}
+        </span>
       </div>
       
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
         <div class="lg:col-span-8">
-          <h1 class="text-display-lg mb-6 leading-tight text-foreground">CSEA Digital Platform</h1>
+          <h1 class="text-display-lg mb-6 leading-tight text-foreground">{project.title}</h1>
           <p class="text-body-lg text-foreground-secondary max-w-2xl leading-relaxed">
-            Building the core digital backbone for the association. A unified platform for event management, journal publishing, and student portal access.
+            {project.shortDescription || 'No description provided.'}
           </p>
         </div>
         <div class="lg:col-span-4 lg:text-right">
-          <a href="#apply" class="btn btn-primary bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-lg font-semibold w-full sm:w-auto shadow-medium no-underline block text-center">
-            Apply to Join Squad &darr;
-          </a>
+          {project.applicationUrl && (
+            <a href={project.applicationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-lg font-semibold w-full sm:w-auto shadow-medium no-underline block text-center">
+              Apply to Join Squad &darr;
+            </a>
+          )}
         </div>
       </div>
     </header>
@@ -47,116 +79,93 @@ export function getStaticPaths() {
       <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 py-8 gap-8">
           <div>
-            <div class="text-[10px] font-mono text-dark-foreground-muted tracking-wider uppercase mb-1.5">BUILD DURATION</div>
-            <div class="text-[14px] font-bold text-foreground">Aug 2026 - Dec 2026</div>
-          </div>
-          <div>
-            <div class="text-[10px] font-mono text-dark-foreground-muted tracking-wider uppercase mb-1.5">SQUAD ALLOCATION</div>
-            <div class="text-[14px] font-bold text-foreground">6 Engineers</div>
+            <div class="text-[10px] font-mono text-dark-foreground-muted tracking-wider uppercase mb-1.5">TIMELINE</div>
+            <div class="text-[14px] font-bold text-foreground">{project.timeline || 'TBA'}</div>
           </div>
           <div>
             <div class="text-[10px] font-mono text-dark-foreground-muted tracking-wider uppercase mb-1.5">TECH ARCHITECTURE</div>
-            <div class="text-[14px] font-bold text-foreground">Astro, React, Fastify</div>
+            <div class="text-[14px] font-bold text-foreground">{project.techStack?.join(', ') || 'N/A'}</div>
           </div>
           <div>
             <div class="text-[10px] font-mono text-dark-foreground-muted tracking-wider uppercase mb-1.5">ENGINEERING LEAD</div>
             <div class="text-[14px] font-bold text-foreground flex items-center gap-2">
-              <span class="w-6 h-6 rounded bg-accent/10 border border-accent/30 flex items-center justify-center text-[9px] font-bold text-accent">OC</span>
-              Core Committee
+              <span class="w-6 h-6 rounded bg-accent/10 border border-accent/30 flex items-center justify-center text-[9px] font-bold text-accent">L</span>
+              {project.projectLead || 'Core Committee'}
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Editorial Layout details and Sidebar Application form -->
+    <!-- Editorial Layout details -->
     <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 mt-20 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
       
-      <!-- Left Column: Scope & Mission details (7 Columns) -->
+      <!-- Left Column: Scope & Mission details -->
       <div class="lg:col-span-7 text-body text-foreground-secondary leading-relaxed flex flex-col gap-8 reveal" style="transition-delay: 100ms;">
         <div>
-          <h2 class="text-display-md text-foreground mb-4">The Mission</h2>
-          <p class="mb-4">
-            The Computer Science & Engineering Association requires a digital backbone. Currently, event registrations happen on scattered Google Forms, projects lack a unified discovery platform, and our technical publishing has no home.
-          </p>
-          <p>
-            This project aims to build the official digital platform for CSEA. It's not just a website; it's a full-stack application with a public marketing presence, an administrative control center (CSEA Control) built specifically for the core committee, and a high-performance public API.
-          </p>
-        </div>
-
-        <div class="border-t border-dark-border pt-6">
-          <h3 class="text-h3 text-foreground mb-4">System Scope</h3>
-          <ul class="flex flex-col gap-4 list-none p-0">
-            <li class="flex gap-4">
-              <div class="mt-2.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
-              <div>
-                <strong class="text-foreground">Interactive Frontend:</strong> Develop responsive, accessible UI components using Astro and React, following a strict design system.
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <div class="mt-2.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
-              <div>
-                <strong class="text-foreground">Secure Backend:</strong> Implement REST APIs with Fastify to handle event registrations, gallery uploads, and role-based authentication.
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <div class="mt-2.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent"></div>
-              <div>
-                <strong class="text-foreground">Data Architecture:</strong> Design PostgreSQL schemas using Drizzle ORM for robust data integrity.
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="border-t border-dark-border pt-6">
-          <h3 class="text-h3 text-foreground mb-4">Skill Outcomes</h3>
-          <div class="flex flex-wrap gap-2.5">
-            <span class="px-3.5 py-2 rounded-md border border-dark-border bg-dark-surface text-[12.5px] font-medium text-dark-foreground">Monorepos (Turborepo)</span>
-            <span class="px-3.5 py-2 rounded-md border border-dark-border bg-dark-surface text-[12.5px] font-medium text-dark-foreground">TypeScript Strictest</span>
-            <span class="px-3.5 py-2 rounded-md border border-dark-border bg-dark-surface text-[12.5px] font-medium text-dark-foreground">Drizzle ORM SQL Engines</span>
-            <span class="px-3.5 py-2 rounded-md border border-dark-border bg-dark-surface text-[12.5px] font-medium text-dark-foreground">Authentication Systems</span>
+          <h2 class="text-display-md text-foreground mb-4">Project Details</h2>
+          <div class="prose prose-invert max-w-none">
+            {project.fullDescription ? project.fullDescription.split('\n').map((p: string) => (
+              <p class="mb-4">{p}</p>
+            )) : <p>No detailed description available.</p>}
           </div>
         </div>
+
+        {project.techStack && project.techStack.length > 0 && (
+          <div class="border-t border-dark-border pt-6">
+            <h3 class="text-h3 text-foreground mb-4">Tech Stack</h3>
+            <div class="flex flex-wrap gap-2.5">
+              {project.techStack.map((tech: string) => (
+                <span class="px-3.5 py-2 rounded-md border border-dark-border bg-dark-surface text-[12.5px] font-medium text-dark-foreground">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <!-- Right Column: Sidebar Position Details & Applications (5 Columns) -->
+      <!-- Right Column: Sidebar Position Details & Applications -->
       <div id="apply" class="lg:col-span-5 reveal" style="transition-delay: 150ms;">
         <div class="bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-8 sticky top-24 shadow-medium flex flex-col gap-8">
           <div>
-            <h3 class="text-h3 text-foreground leading-none mb-2">Open Positions</h3>
-            <p class="text-[13px] text-dark-foreground-muted">Read qualifications before submitting applications.</p>
+            <h3 class="text-h3 text-foreground leading-none mb-2">Links & Resources</h3>
           </div>
 
           <div class="flex flex-col gap-6 divide-y divide-dark-border">
             
-            <!-- Role 1 -->
-            <div class="pt-6 first:pt-0">
-              <div class="flex justify-between items-center mb-2">
-                <h4 class="font-bold text-foreground text-[15px]">Frontend Developer</h4>
-                <span class="text-[11px] font-mono text-accent font-semibold uppercase">3 Openings</span>
+            {project.applicationUrl && (
+              <div class="pt-6 first:pt-0">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="font-bold text-foreground text-[15px]">Join the Team</h4>
+                </div>
+                <a href={project.applicationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline border-dark-border hover:bg-dark-surface-2 w-full text-center text-[12.5px] py-2.5 block no-underline text-dark-foreground">
+                  Apply via External Link ↗
+                </a>
               </div>
-              <p class="text-[13px] text-dark-foreground-muted leading-relaxed mb-4">
-                Coding responsive layouts, client interactions, state components, and styling integrations.
-              </p>
-              <a href="#" class="btn btn-outline border-dark-border hover:bg-dark-surface-2 w-full text-center text-[12.5px] py-2.5 block no-underline text-dark-foreground">
-                Apply via Google Form ↗
-              </a>
-            </div>
-
-            <!-- Role 2 -->
-            <div class="pt-6">
-              <div class="flex justify-between items-center mb-2">
-                <h4 class="font-bold text-foreground text-[15px]">Backend Developer</h4>
-                <span class="text-[11px] font-mono text-accent font-semibold uppercase">1 Opening</span>
+            )}
+            
+            {project.repositoryUrl && (
+              <div class="pt-6 first:pt-0">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="font-bold text-foreground text-[15px]">Repository</h4>
+                </div>
+                <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline border-dark-border hover:bg-dark-surface-2 w-full text-center text-[12.5px] py-2.5 block no-underline text-dark-foreground">
+                  View Source Code ↗
+                </a>
               </div>
-              <p class="text-[13px] text-dark-foreground-muted leading-relaxed mb-4">
-                Drafting REST endpoints, routing plugins, database queries, and unit test suites.
-              </p>
-              <a href="#" class="btn btn-outline border-dark-border hover:bg-dark-surface-2 w-full text-center text-[12.5px] py-2.5 block no-underline text-dark-foreground">
-                Apply via Google Form ↗
-              </a>
-            </div>
+            )}
 
+            {project.demoUrl && (
+              <div class="pt-6 first:pt-0">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="font-bold text-foreground text-[15px]">Live Demo</h4>
+                </div>
+                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline border-dark-border hover:bg-dark-surface-2 w-full text-center text-[12.5px] py-2.5 block no-underline text-dark-foreground">
+                  View Demo ↗
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

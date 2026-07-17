@@ -252,7 +252,7 @@ export function UsersList() {
       >
         <div className="space-y-4 py-4">
           <p className="text-[13px] text-foreground-secondary mb-4">
-            Invite a new member to the admin platform.
+            Add a new member to the admin platform directly. Their account will be created immediately.
           </p>
           <div>
             <label className="text-[13px] font-medium block mb-1.5">Email Address</label>

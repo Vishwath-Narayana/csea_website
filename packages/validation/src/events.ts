@@ -17,8 +17,8 @@ const eventBaseSchema = z.object({
 
   registrationEnabled: z.boolean().default(false),
   registrationUrl: z.string().url().optional().or(z.literal("")),
-  registrationOpenAt: z.coerce.date().optional(),
-  registrationCloseAt: z.coerce.date().optional(),
+  registrationOpenAt: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
+  registrationCloseAt: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
 
   facultyCoordinator: z.string().max(100).optional(),
   studentCoordinator: z.string().max(100).optional(),

@@ -57,7 +57,7 @@ export const controlGalleriesRoutes: FastifyPluginAsync = async (fastify) => {
     const [newGallery] = await db.insert(galleries).values({
       ...body,
       eventDate
-    }).returning();
+    } as any).returning();
 
     await logAudit({
       request,

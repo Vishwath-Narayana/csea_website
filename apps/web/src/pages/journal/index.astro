@@ -1,5 +1,23 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+let posts = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/journal`);
+  if (res.ok) {
+    const data = await res.json();
+    posts = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch journal posts", e);
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 ---
 
 <Layout title="The Technical Journal | CSEA">
@@ -34,103 +52,77 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <!-- Asymmetric Featured Grid Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 reveal" style="transition-delay: 100ms;">
-        
-        <!-- Large Left Featured Article Card -->
-        <a href="/journal/tech-stack" class="lg:col-span-7 group no-underline text-foreground block">
-          <div class="bg-surface border border-border rounded-lg p-4 shadow-soft hover:shadow-medium hover:border-accent/40 transition-all duration-300">
-            <!-- Styled SVG editorial graphic -->
-            <div class="w-full aspect-[16/10] rounded-md overflow-hidden bg-surface-secondary border border-border mb-6 relative select-none font-mono text-[10px] text-foreground-secondary flex flex-col justify-between p-6">
-              <div class="flex justify-between items-start">
-                <span>RE_DISPATCH // PLATFORM_STACK</span>
-                <span>SYS_INIT</span>
-              </div>
-              <div class="flex justify-center relative group-hover:scale-105 transition-transform duration-700">
-                <svg class="w-20 h-20 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="3" y1="9" x2="21" y2="9"></line>
-                  <line x1="9" y1="21" x2="9" y2="9"></line>
-                </svg>
-              </div>
-              <div class="text-[9px] text-accent/80 font-bold">
-                ASTRO &middot; REACT &middot; FASTIFY &middot; POSTGRES
-              </div>
-            </div>
-            
-            <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-3.5 font-mono">
-              <span class="text-accent font-semibold uppercase tracking-wider">Technical</span>
-              <span>Aug 12, 2026</span>
-              <span>4 min read</span>
-            </div>
-            
-            <h2 class="text-display-md group-hover:text-accent transition-colors leading-tight mb-4 text-foreground">
-              Architecting the New CSEA Platform
-            </h2>
-            
-            <p class="text-body text-foreground-secondary leading-relaxed mb-6">
-              A deep dive into why we chose an Astro frontend, Fastify backend, and PostgreSQL database to power the next generation of our technical community infrastructure.
-            </p>
-            
-            <div class="flex items-center gap-3 border-t border-border pt-4 mt-6">
-              <div class="w-7 h-7 rounded-md bg-accent/5 border border-accent/20 flex items-center justify-center text-[10px] font-bold text-accent select-none">TA</div>
-              <span class="text-[13.5px] font-bold text-foreground">Technical Architecture Team</span>
+      <div class="reveal" style="transition-delay: 100ms;">
+        {posts.length === 0 ? (
+          <div class="text-center py-20 text-foreground-secondary">
+            <p>No journal posts published yet.</p>
+          </div>
+        ) : (
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+            <!-- Large Left Featured Article Card -->
+            {posts[0] && (
+              <a href={`/journal/${posts[0].slug}`} class="lg:col-span-7 group no-underline text-foreground block">
+                <div class="bg-surface border border-border rounded-lg p-4 shadow-soft hover:shadow-medium hover:border-accent/40 transition-all duration-300">
+                  <div class="w-full aspect-[16/10] rounded-md overflow-hidden bg-surface-secondary border border-border mb-6 relative select-none font-mono text-[10px] text-foreground-secondary flex flex-col justify-between p-6">
+                    <div class="flex justify-between items-start">
+                      <span>RE_DISPATCH // {posts[0].category ? posts[0].category.toUpperCase() : 'GENERAL'}</span>
+                      <span>SYS_INIT</span>
+                    </div>
+                    <div class="flex justify-center relative group-hover:scale-105 transition-transform duration-700">
+                      <svg class="w-20 h-20 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                      </svg>
+                    </div>
+                    <div class="text-[9px] text-accent/80 font-bold uppercase truncate">
+                      {posts[0].title}
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-3.5 font-mono">
+                    <span class="text-accent font-semibold uppercase tracking-wider">{posts[0].category || 'General'}</span>
+                    <span>{formatDate(posts[0].publishedAt || posts[0].createdAt)}</span>
+                  </div>
+                  
+                  <h2 class="text-display-md group-hover:text-accent transition-colors leading-tight mb-4 text-foreground">
+                    {posts[0].title}
+                  </h2>
+                  
+                  <p class="text-body text-foreground-secondary leading-relaxed mb-6 line-clamp-3">
+                    {posts[0].excerpt || 'Read more about this topic...'}
+                  </p>
+                  
+                  <div class="flex items-center gap-3 border-t border-border pt-4 mt-6">
+                    <div class="w-7 h-7 rounded-md bg-accent/5 border border-accent/20 flex items-center justify-center text-[10px] font-bold text-accent select-none">
+                      {posts[0].authorName ? posts[0].authorName.substring(0, 2).toUpperCase() : 'CSEA'}
+                    </div>
+                    <span class="text-[13.5px] font-bold text-foreground">{posts[0].authorName || 'CSEA Team'}</span>
+                  </div>
+                </div>
+              </a>
+            )}
+
+            <!-- Right Side: Secondary Grid of Dispatches -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+              {posts.slice(1).map((post: any) => (
+                <a href={`/journal/${post.slug}`} class="group no-underline text-foreground bg-surface border border-border hover:border-accent/40 rounded-lg p-6 shadow-soft transition-all duration-300">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="badge bg-accent-muted text-accent font-semibold rounded-md border border-accent/15">{post.category || 'General'}</span>
+                    <span class="text-[11.5px] font-mono text-foreground-muted">{formatDate(post.publishedAt || post.createdAt)}</span>
+                  </div>
+                  <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">{post.title}</h3>
+                  <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4 line-clamp-2">
+                    {post.excerpt || 'Read full article...'}
+                  </p>
+                  <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
+                    <span class="text-[12px] font-medium text-foreground">{post.authorName || 'CSEA Team'}</span>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
-        </a>
-
-        <!-- Right Side: Secondary Grid of Dispatches -->
-        <div class="lg:col-span-5 flex flex-col gap-6">
-          
-          <!-- Dispatch 2 -->
-          <a href="/journal/orientation" class="group no-underline text-foreground bg-surface border border-border hover:border-accent/40 rounded-lg p-6 shadow-soft transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-              <span class="badge bg-accent-muted text-accent font-semibold rounded-md border border-accent/15">Announcements</span>
-              <span class="text-[11.5px] font-mono text-foreground-muted">Aug 05</span>
-            </div>
-            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Registration Open for Orientation '26</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
-              Secure your spot for the opening ceremony of the academic year. Meet the committee and discover our roadmap.
-            </p>
-            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
-              <span class="text-[12px] font-medium text-foreground">Executive Board</span>
-              <span class="text-[11px] font-mono text-foreground-muted">2 min read</span>
-            </div>
-          </a>
-
-          <!-- Dispatch 3 -->
-          <a href="/journal/hackathon" class="group no-underline text-foreground bg-surface border border-border hover:border-accent/40 rounded-lg p-6 shadow-soft transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-              <span class="badge bg-accent-muted text-accent font-semibold rounded-md border border-accent/15">Reports</span>
-              <span class="text-[11.5px] font-mono text-foreground-muted">Jul 28</span>
-            </div>
-            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Lessons from the Summer Hackathon</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
-              What we learned organizing a 48-hour continuous building session, tech stack reviews, and winning prototype submissions.
-            </p>
-            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
-              <span class="text-[12px] font-medium text-foreground">Tech Ops Team</span>
-              <span class="text-[11px] font-mono text-foreground-muted">6 min read</span>
-            </div>
-          </a>
-
-          <!-- Dispatch 4 -->
-          <a href="#" class="group no-underline text-foreground bg-surface border border-border hover:border-accent/40 rounded-lg p-6 shadow-soft transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-              <span class="badge bg-accent-muted text-accent font-semibold rounded-md border border-accent/15">Community</span>
-              <span class="text-[11.5px] font-mono text-foreground-muted">Jul 10</span>
-            </div>
-            <h3 class="text-h3 mb-2 group-hover:text-accent transition-colors leading-snug">Connecting with the Class of 2024</h3>
-            <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4">
-              Insights from our recent alumni panel on breaking into big tech and open-source contributions.
-            </p>
-            <div class="flex items-center justify-between border-t border-border pt-4 mt-auto">
-              <span class="text-[12px] font-medium text-foreground">PR Division</span>
-              <span class="text-[11px] font-mono text-foreground-muted">5 min read</span>
-            </div>
-          </a>
-
-        </div>
-
+        )}
       </div>
 
     </div>

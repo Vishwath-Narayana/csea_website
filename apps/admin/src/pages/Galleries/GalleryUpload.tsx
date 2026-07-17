@@ -8,6 +8,7 @@ import { api } from '../../utils/api';
 
 export function GalleryUpload({ navigate }: { navigate: (view: string) => void }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -43,6 +44,7 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
 
   const handleSave = async () => {
     setIsSaving(true);
+    setError('');
     try {
       // 1. Create Gallery
       const payload = { ...formData, eventDate: formData.eventDate || undefined };
@@ -58,9 +60,17 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
       }
 
       navigate('galleries');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to save gallery.');
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === 'VALIDATION_ERROR' && err.details) {
+        const fieldErrors = Object.entries(err.details)
+          .filter(([key]) => key !== '_errors')
+          .map(([key, value]: [string, any]) => `${key}: ${value._errors.join(', ')}`)
+          .join('; ');
+        setError(`Validation Error - ${fieldErrors || err.message}`);
+      } else {
+        setError(err?.message || 'Failed to save gallery. Please check the fields and try again.');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -87,6 +97,15 @@ export function GalleryUpload({ navigate }: { navigate: (view: string) => void }
             </>
           }
         />
+
+        {error && (
+          <div className="mt-4 flex items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 animate-in fade-in slide-in-from-top-2">
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20">
+              <span className="text-xs font-bold">!</span>
+            </div>
+            <p>{error}</p>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-8">

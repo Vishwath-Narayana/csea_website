@@ -10,12 +10,14 @@
   "dependencies": {
     "@csea/auth": "workspace:*",
     "@csea/database": "workspace:*",
+    "@csea/validation": "workspace:*",
     "@fastify/cors": "^9.0.1",
     "bcryptjs": "^3.0.3",
     "better-auth": "^0.8.2",
     "drizzle-orm": "^0.29.3",
     "fastify": "^4.26.2",
-    "fastify-plugin": "^6.0.0"
+    "fastify-plugin": "^6.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@csea/config": "workspace:*",

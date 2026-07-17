@@ -6,10 +6,7 @@ import { createEventSchema, updateEventSchema } from '@csea/validation';
 import { logAudit } from '../../utils/audit';
 
 export const controlEventsRoutes: FastifyPluginAsync = async (fastify) => {
-  // Apply auth hooks to all routes in this plugin
   fastify.addHook('onRequest', fastify.requireAuth);
-  // Optional: Restrict to specific roles. The prompt said editor/admin for some things.
-  // For now, we'll let requireRole handle specific actions.
 
   fastify.get('/', { onRequest: [fastify.requireRole(["SUPER_ADMIN", "ADMIN", "EDITOR"])] }, async (request, reply) => {
     const { page, limit, offset } = parsePaginationArgs(request.query);
@@ -44,12 +41,11 @@ export const controlEventsRoutes: FastifyPluginAsync = async (fastify) => {
     
     const [newEvent] = await db.insert(events).values({
       ...body,
-      // Handle the case where someone might pass empty strings instead of null
       coverImage: body.coverImage || null,
       meetingUrl: body.meetingUrl || null,
       registrationUrl: body.registrationUrl || null,
       contactEmail: body.contactEmail || null,
-    }).returning();
+    } as any).returning();
 
     await logAudit({
       request,
@@ -74,7 +70,7 @@ export const controlEventsRoutes: FastifyPluginAsync = async (fastify) => {
         registrationUrl: body.registrationUrl === "" ? null : body.registrationUrl,
         contactEmail: body.contactEmail === "" ? null : body.contactEmail,
         updatedAt: new Date(),
-      })
+      } as any)
       .where(eq(events.id, id))
       .returning();
 

@@ -50,10 +50,10 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
     
     const [newPost] = await db.insert(journalPosts).values({
       ...body,
-      authorId,
+      authorId: request.user!.id,
       publishedAt,
       coverImage: body.coverImage || null,
-    }).returning();
+    } as any).returning();
 
     await logAudit({
       request,

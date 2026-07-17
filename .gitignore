@@ -11,3 +11,9 @@ dist/
 
 # Design guide assets
 design-guide/
+
+# Agent/Tool-specific ignored folders
+graphify-out/
+.conductor/
+.claude/
+

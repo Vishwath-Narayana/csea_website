@@ -1,5 +1,26 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+let projects = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/projects`);
+  if (res.ok) {
+    const data = await res.json();
+    projects = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch projects", e);
+}
+
+const getStatusBadgeClass = (status: string) => {
+  switch(status) {
+    case 'RECRUITING': return 'badge-accent shadow-sm';
+    case 'ACTIVE': return 'badge-success shadow-sm';
+    case 'COMPLETED': return 'badge-muted shadow-sm';
+    default: return 'badge-muted shadow-sm';
+  }
+};
 ---
 
 <Layout title="Systems & Open Source Projects | CSEA">
@@ -34,111 +55,68 @@ import Layout from '../../layouts/Layout.astro';
 
       <!-- Projects Grid Layout -->
       <div class="grid grid-cols-1 gap-8 reveal" style="transition-delay: 100ms;">
-        
-        <!-- Project 1 (Recruiting) -->
-        <a href="/projects/platform" class="group no-underline bg-dark-surface border border-dark-border hover:border-accent/40 hover:-translate-y-[2px] hover:shadow-medium rounded-lg p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 shadow-soft">
-          <!-- Spotlight hover effect -->
-          <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-          <div class="flex-1 z-10">
-            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-dark-foreground-muted uppercase">
-              <span class="badge badge-accent shadow-sm">Recruiting</span>
-              <span class="flex items-center gap-1.5">// Web Systems</span>
-            </div>
-            
-            <h2 class="text-display-md text-foreground mb-4 group-hover:text-accent transition-colors leading-tight">
-              CSEA Digital Platform
-            </h2>
-            
-            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
-              Building the core digital backbone for the association. Features a public Astro web engine, custom administrative console, Fastify REST APIs, and PostgreSQL database migrations.
-            </p>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-dark-border mt-4">
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">TECH STACK</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">Astro, React, Fastify, PG</div>
-              </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">SQUAD SIZE</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">6 Engineers</div>
-              </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">OPEN ROLES</div>
-                <div class="text-[13.5px] font-medium text-accent font-bold">3 Frontend, 1 Backend</div>
-              </div>
-            </div>
+        {projects.length === 0 ? (
+          <div class="text-center py-20 text-foreground-secondary">
+            <p>No projects available at the moment.</p>
           </div>
+        ) : projects.map((project: any) => {
+          const isShipped = project.status === 'COMPLETED';
           
-          <div class="flex-shrink-0 z-10 w-full lg:w-auto mt-6 lg:mt-0">
-            <span class="btn bg-dark-surface-2 text-dark-foreground border border-dark-border hover:bg-dark-surface-3 w-full lg:w-auto font-semibold px-8 py-3.5 rounded-lg shadow-medium text-center block">
-              View Roles &rarr;
-            </span>
-          </div>
-        </a>
+          return (
+            <a href={`/projects/${project.slug}`} class={`group no-underline bg-dark-surface border border-dark-border hover:border-accent/40 hover:-translate-y-[2px] hover:shadow-medium rounded-lg p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 shadow-soft ${isShipped ? 'opacity-60 hover:opacity-100 hover:border-dark-border-strong' : ''}`}>
+              <!-- Spotlight hover effect -->
+              {!isShipped && (
+                <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+              )}
 
-        <!-- Project 2 (Active Building) -->
-        <a href="/projects/attendance-system" class="group no-underline bg-dark-surface border border-dark-border hover:border-accent/40 hover:-translate-y-[2px] hover:shadow-medium rounded-lg p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 shadow-soft">
-          <div class="flex-1 z-10">
-            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-dark-foreground-muted uppercase">
-              <span class="badge badge-success shadow-sm">Active Building</span>
-              <span class="flex items-center gap-1.5">// Embedded Gateways</span>
-            </div>
-            
-            <h2 class="text-display-md text-foreground mb-4 group-hover:text-accent transition-colors leading-tight">
-              Automated Attendance System
-            </h2>
-            
-            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
-              An RFID and biometric integrated attendance logging system for department labs. Direct interface to localized SQLite registers and campus synchronization hooks.
-            </p>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-dark-border mt-4">
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">TECH STACK</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">Python, Raspberry Pi, Go</div>
+              <div class="flex-1 z-10">
+                <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-dark-foreground-muted uppercase">
+                  <span class={`badge ${getStatusBadgeClass(project.status)}`}>
+                    {project.status === 'RECRUITING' ? 'Recruiting' : project.status === 'ACTIVE' ? 'Active Building' : 'Shipped & Legacy'}
+                  </span>
+                  <span class="flex items-center gap-1.5">// Project</span>
+                </div>
+                
+                <h2 class="text-display-md text-foreground mb-4 group-hover:text-accent transition-colors leading-tight">
+                  {project.title}
+                </h2>
+                
+                <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
+                  {project.shortDescription || project.fullDescription || 'No description provided.'}
+                </p>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-dark-border mt-4">
+                  {project.techStack && project.techStack.length > 0 && (
+                    <div>
+                      <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">TECH STACK</div>
+                      <div class="text-[13.5px] font-medium text-dark-foreground">{project.techStack.join(', ')}</div>
+                    </div>
+                  )}
+                  {project.projectLead && (
+                    <div>
+                      <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">LEAD</div>
+                      <div class="text-[13.5px] font-medium text-dark-foreground">{project.projectLead}</div>
+                    </div>
+                  )}
+                  {project.timeline && (
+                    <div>
+                      <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">TIMELINE</div>
+                      <div class="text-[13.5px] font-medium text-dark-foreground">{project.timeline}</div>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">SQUAD SIZE</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">4 Hardware Devs</div>
-              </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">DEV_STAGE</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">Beta testing gateway</div>
-              </div>
-            </div>
-          </div>
-        </a>
-
-        <!-- Project 3 (Shipped) -->
-        <a href="/projects/alumni-portal" class="group no-underline bg-dark-surface border border-dark-border rounded-lg p-6 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden transition-all duration-300 opacity-60 hover:opacity-100 hover:border-dark-border-strong hover:-translate-y-[2px] hover:shadow-medium shadow-soft">
-          <div class="flex-1 z-10">
-            <div class="flex flex-wrap items-center gap-3.5 mb-4 text-[11px] font-mono text-dark-foreground-muted uppercase">
-              <span class="badge badge-muted shadow-sm">Shipped & Legacy</span>
-              <span class="flex items-center gap-1.5">// Networking</span>
-            </div>
-            
-            <h2 class="text-display-md text-foreground mb-4 leading-tight">
-              Alumni Network Portal
-            </h2>
-            
-            <p class="text-body-sm text-foreground-secondary max-w-3xl mb-8 leading-relaxed">
-              A directory and networking platform connecting current students with KITSW CSE alumni across the globe. Built, verified, and shipped to core alumni server.
-            </p>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-dark-border mt-4">
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">SHIPPED DATE</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">May 2025</div>
-              </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase text-dark-foreground-muted mb-1.5">LIFETIME USERS</div>
-                <div class="text-[13.5px] font-medium text-dark-foreground">800+ Members</div>
-              </div>
-            </div>
-          </div>
-        </a>
-
+              
+              {project.status === 'RECRUITING' && (
+                <div class="flex-shrink-0 z-10 w-full lg:w-auto mt-6 lg:mt-0">
+                  <span class="btn bg-dark-surface-2 text-dark-foreground border border-dark-border hover:bg-dark-surface-3 w-full lg:w-auto font-semibold px-8 py-3.5 rounded-lg shadow-medium text-center block">
+                    View Roles &rarr;
+                  </span>
+                </div>
+              )}
+            </a>
+          );
+        })}
       </div>
 
     </div>

@@ -45,7 +45,7 @@ export const controlProjectsRoutes: FastifyPluginAsync = async (fastify) => {
       repositoryUrl: body.repositoryUrl || null,
       demoUrl: body.demoUrl || null,
       applicationUrl: body.applicationUrl || null,
-    }).returning();
+    } as any).returning();
 
     await logAudit({
       request,

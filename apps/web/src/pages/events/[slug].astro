@@ -1,16 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'orientation-26' } },
-    { params: { slug: 'tech-talk-1' } },
-    { params: { slug: 'hackathon' } },
-  ];
+const { slug } = Astro.params;
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+
+let event = null;
+try {
+  const res = await fetch(`${API_URL}/api/v1/events/${slug}`);
+  if (res.ok) {
+    const data = await res.json();
+    event = data.data;
+  }
+} catch (e) {
+  console.error("Failed to fetch event details", e);
 }
+
+if (!event) {
+  return Astro.redirect('/404');
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+};
+
+const formatTime = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+};
+
+const isRegistrationOpen = !!event.registrationUrl;
 ---
 
-<Layout title="CSEA Orientation 2026 | CSEA">
+<Layout title={`${event.title} | CSEA`}>
   
   <!-- Hero Section -->
   <section class="pt-28 pb-16 bg-canvas bg-grid-blueprint border-b border-border relative overflow-hidden">
@@ -25,45 +49,43 @@ export function getStaticPaths() {
       <!-- Event Hero Details (Left Column - 7 Columns) -->
       <div class="lg:col-span-7 reveal">
         <div class="flex items-center gap-3.5 mb-6">
-          <span class="badge badge-accent bg-accent-muted text-accent font-semibold">Registration Open</span>
-          <span class="text-[12px] font-mono text-accent font-bold tracking-wider">// 15 AUG 2026</span>
+          {isRegistrationOpen && (
+            <span class="badge badge-accent bg-accent-muted text-accent font-semibold">Registration Open</span>
+          )}
+          <span class="text-[12px] font-mono text-accent font-bold tracking-wider">// {formatDate(event.startDate)}</span>
         </div>
         
-        <h1 class="text-display-md mb-6 leading-tight text-foreground">CSEA Orientation 2026</h1>
+        <h1 class="text-display-md mb-6 leading-tight text-foreground">{event.title}</h1>
         <p class="text-body-lg text-foreground-secondary mb-8 max-w-xl leading-relaxed">
-          Join us to discover how the association operates, the projects we are launching, and how you can become a core contributor this academic year. Mandatory for all new CS students.
+          {event.description}
         </p>
         
         <!-- Quick Specs Table -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 border border-border py-6 mb-8 bg-surface px-6 rounded-lg">
           <div>
             <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Date</div>
-            <div class="text-[14px] font-bold text-foreground">Aug 15, 2026</div>
+            <div class="text-[14px] font-bold text-foreground">{formatDate(event.startDate)}</div>
           </div>
           <div>
             <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Time</div>
-            <div class="text-[14px] font-bold text-foreground">09:00 AM</div>
+            <div class="text-[14px] font-bold text-foreground">{formatTime(event.startDate)}</div>
           </div>
           <div>
             <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Venue</div>
-            <div class="text-[14px] font-bold text-foreground">Main Aud.</div>
+            <div class="text-[14px] font-bold text-foreground">{event.location || 'TBA'}</div>
           </div>
           <div>
             <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Capacity</div>
-            <div class="text-[14px] font-bold text-foreground">400 Seats</div>
+            <div class="text-[14px] font-bold text-foreground">{event.capacity ? `${event.capacity} Seats` : 'N/A'}</div>
           </div>
         </div>
 
         <div class="flex flex-wrap items-center gap-4">
-          <a href="#register" class="btn btn-primary text-center px-8 py-3.5 shadow-soft">
-            Register Now →
-          </a>
-          <button 
-            class="btn btn-outline text-center px-8 py-3.5 hover:bg-surface-secondary"
-            onclick="alert('Event added to calendar!');"
-          >
-            Add to Calendar
-          </button>
+          {isRegistrationOpen && (
+            <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary text-center px-8 py-3.5 shadow-soft">
+              Register Now →
+            </a>
+          )}
         </div>
       </div>
 
@@ -73,14 +95,14 @@ export function getStaticPaths() {
           <!-- Stylized blueprints -->
           <div class="w-full h-full rounded bg-gradient-to-br from-accent/15 to-accent-blue/15 flex flex-col justify-between p-6 select-none font-mono text-[10px] text-foreground-secondary border border-accent/10">
             <div class="flex justify-between">
-              <span>SYS_SPACE // MAIN_AUDITORIUM</span>
+              <span>SYS_SPACE // {event.location ? event.location.replace(/\s+/g, '_').toUpperCase() : 'TBA'}</span>
               <span>COORDS // KITSW_CAMPUS</span>
             </div>
             <div class="flex justify-center">
               <svg class="w-16 h-16 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             </div>
             <div class="text-[9px] text-accent/80 font-bold uppercase">
-              Orientation Session Cover Graphic
+              {event.title} Graphic
             </div>
           </div>
         </div>
@@ -97,34 +119,10 @@ export function getStaticPaths() {
       <div class="lg:col-span-8 text-body text-foreground-secondary leading-relaxed flex flex-col gap-8 reveal">
         <div>
           <h2 class="text-display-md text-foreground mb-4">About this event</h2>
-          <p class="mb-4">
-            The annual CSEA orientation is the official kickoff for the new academic year. This event is designed to introduce new students to the Computer Science & Engineering Association, our core committee, and the various technical initiatives running on campus.
-          </p>
-          <p>
-            We will be discussing upcoming projects, how to apply for the technical teams, and previewing the hackathon schedule for the semester.
-          </p>
-        </div>
-
-        <div>
-          <h3 class="text-h3 text-foreground mb-4">Schedule of Events</h3>
-          
-          <div class="flex flex-col border border-border rounded-lg bg-surface overflow-hidden">
-            <div class="flex items-center gap-6 p-5 border-b border-border bg-surface-secondary/35">
-              <div class="font-mono text-[13.5px] text-accent font-semibold w-24">09:00 AM</div>
-              <div class="text-[14.5px] text-foreground font-medium">Doors Open & Registration Seating</div>
-            </div>
-            <div class="flex items-center gap-6 p-5 border-b border-border bg-surface-secondary/35">
-              <div class="font-mono text-[13.5px] text-accent font-semibold w-24">09:30 AM</div>
-              <div class="text-[14.5px] text-foreground font-medium">Keynote Address: CSEA Vision for 2026</div>
-            </div>
-            <div class="flex items-center gap-6 p-5 border-b border-border bg-surface-secondary/35">
-              <div class="font-mono text-[13.5px] text-accent font-semibold w-24">10:30 AM</div>
-              <div class="text-[14.5px] text-foreground font-medium">Systems Development Presentations & Showcases</div>
-            </div>
-            <div class="flex items-center gap-6 p-5 bg-surface-secondary/35">
-              <div class="font-mono text-[13.5px] text-accent font-semibold w-24">11:30 AM</div>
-              <div class="text-[14.5px] text-foreground font-medium">Q&A panel, networking and tea session</div>
-            </div>
+          <div class="prose prose-invert max-w-none text-foreground-secondary">
+            {event.description ? event.description.split('\n').map((paragraph: string) => (
+              <p class="mb-4">{paragraph}</p>
+            )) : <p>No description available.</p>}
           </div>
         </div>
       </div>
@@ -139,37 +137,14 @@ export function getStaticPaths() {
           <div class="flex flex-col gap-4 text-[13.5px] mb-6">
             <div class="flex justify-between items-center pb-2.5 border-b border-border">
               <span class="text-foreground-secondary">Status</span>
-              <span class="font-semibold text-success">Open & Active</span>
-            </div>
-            <div class="flex justify-between items-center pb-2.5 border-b border-border">
-              <span class="text-foreground-secondary">Deadline</span>
-              <span class="font-mono text-foreground font-medium">Aug 14, 11:59 PM</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-foreground-secondary">Eligibility</span>
-              <span class="font-semibold text-foreground">All CS Students</span>
+              <span class={`font-semibold ${isRegistrationOpen ? 'text-success' : 'text-foreground-muted'}`}>
+                {isRegistrationOpen ? 'Open & Active' : 'Closed / TBA'}
+              </span>
             </div>
           </div>
           
-          <div class="w-full bg-canvas border border-border rounded-full h-2 mb-2.5 overflow-hidden">
-            <div class="bg-accent h-full rounded-full" style="width: 37%"></div>
-          </div>
           <div class="text-[11px] text-foreground-muted flex justify-between font-mono">
-            <span>148 REGISTERED</span>
-            <span>400 CAPACITY</span>
-          </div>
-        </div>
-
-        <!-- Organizer Card -->
-        <div class="bg-surface border border-border rounded-lg p-6 lg:p-8">
-          <h3 class="text-[15.5px] font-bold text-foreground mb-4">Organizer</h3>
-          
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-accent/5 border border-accent/20 flex items-center justify-center font-display font-semibold text-accent select-none">OC</div>
-            <div>
-              <div class="text-[14px] font-bold text-foreground leading-tight">Orientation Board</div>
-              <div class="text-[11.5px] text-foreground-muted">CSEA Executive Committee</div>
-            </div>
+            <span>{event.capacity ? `${event.capacity} CAPACITY` : 'NO CAPACITY LIMIT'}</span>
           </div>
         </div>
 

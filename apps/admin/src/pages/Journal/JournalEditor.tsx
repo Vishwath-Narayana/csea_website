@@ -12,6 +12,7 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
   const [showSettings, setShowSettings] = useState(true);
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -84,6 +85,7 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
 
   const handleSave = async (forceStatus?: string) => {
     setIsSaving(true);
+    setError('');
     try {
       const payload = { ...formData };
       if (forceStatus) {
@@ -101,9 +103,17 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
       }
       setHasChanges(false);
       navigate('journal');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to save article.');
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === 'VALIDATION_ERROR' && err.details) {
+        const fieldErrors = Object.entries(err.details)
+          .filter(([key]) => key !== '_errors')
+          .map(([key, value]: [string, any]) => `${key}: ${value._errors.join(', ')}`)
+          .join('; ');
+        setError(`Validation Error - ${fieldErrors || err.message}`);
+      } else {
+        setError(err?.message || 'Failed to save article. Please check the fields and try again.');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -137,6 +147,15 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
             </>
           }
         />
+        
+        {error && (
+          <div className="mt-4 flex items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 animate-in fade-in slide-in-from-top-2">
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20">
+              <span className="text-xs font-bold">!</span>
+            </div>
+            <p>{error}</p>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 gap-6 min-h-0">

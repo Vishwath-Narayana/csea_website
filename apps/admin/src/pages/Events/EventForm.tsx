@@ -12,6 +12,7 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
   
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -84,6 +85,20 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setError('');
+
+    // Pre-validate dates to prevent RangeError: Invalid time value
+    if (!formData.startDate || isNaN(new Date(formData.startDate).getTime())) {
+      setError('Please enter a valid Start Date and Time.');
+      setIsSaving(false);
+      return;
+    }
+    if (!formData.endDate || isNaN(new Date(formData.endDate).getTime())) {
+      setError('Please enter a valid End Date and Time.');
+      setIsSaving(false);
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
@@ -97,9 +112,17 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
         await api.post(`/control/events`, payload);
       }
       navigate('events');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to save event. Check console for details.');
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === 'VALIDATION_ERROR' && err.details) {
+        const fieldErrors = Object.entries(err.details)
+          .filter(([key]) => key !== '_errors')
+          .map(([key, value]: [string, any]) => `${key}: ${value._errors.join(', ')}`)
+          .join('; ');
+        setError(`Validation Error - ${fieldErrors || err.message}`);
+      } else {
+        setError(err?.message || 'Failed to save event. Please check the fields and try again.');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -128,6 +151,15 @@ export function EventForm({ navigate, id }: { navigate: (view: string) => void, 
           </>
         }
       />
+
+      {error && (
+        <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 animate-in fade-in slide-in-from-top-2">
+          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20">
+            <span className="text-xs font-bold">!</span>
+          </div>
+          <p>{error}</p>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-8">
         

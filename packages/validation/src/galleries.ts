@@ -5,7 +5,7 @@ export const createGallerySchema = z.object({
   slug: z.string().min(1).max(200).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with hyphens"),
   description: z.string().max(500).optional(),
   relatedEventId: z.string().uuid().optional(),
-  eventDate: z.coerce.date().optional(),
+  eventDate: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
   visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),
 });
 

@@ -1,5 +1,29 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
+let events = [];
+try {
+  const res = await fetch(`${API_URL}/api/v1/events`);
+  if (res.ok) {
+    const data = await res.json();
+    events = data.data || [];
+  }
+} catch (e) {
+  console.error("Failed to fetch events", e);
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+};
+
+const formatTime = (dateStr: string) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+};
 ---
 
 <Layout title="Upcoming Events & Timeline | CSEA">
@@ -42,131 +66,99 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
         <div class="flex flex-col gap-16">
-          
-          <!-- Card 1: Featured Orientation (Active) -->
-          <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
+          {events.length === 0 ? (
+            <div class="text-center py-20 text-foreground-secondary">
+              <p>No events available at the moment.</p>
+            </div>
+          ) : events.map((event: any, index: number) => {
+            const isFeatured = index === 0;
             
-            <!-- Timeline Node Badge -->
-            <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-8">
-              <div class="relative z-10 w-4 h-4 rounded-full bg-accent border-4 border-canvas shadow-soft flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></div>
-              </div>
-            </div>
-
-            <div class="flex-1 bg-surface border border-border rounded-lg overflow-hidden shadow-medium hover:border-accent/40 hover:shadow-strong transition-all duration-300">
-              <div class="grid grid-cols-1 lg:grid-cols-12">
-                
-                <!-- Left media section -->
-                <div class="lg:col-span-5 aspect-video lg:aspect-auto relative bg-surface-secondary border-r border-border p-5 flex items-center justify-center select-none font-mono text-[11px] text-foreground-secondary">
-                  <div class="w-full h-full rounded border border-dashed border-border-strong/40 flex flex-col justify-between p-5">
-                    <span>COORDS // MAIN_AUDITORIUM</span>
-                    <div class="flex justify-center">
-                      <svg class="w-12 h-12 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                    </div>
-                    <span>CAPACITY: 400 SEATS</span>
-                  </div>
-                  <div class="absolute top-4 left-4 badge badge-accent bg-accent-muted text-accent font-semibold shadow-soft">Registration Open</div>
-                </div>
-                
-                <!-- Right details -->
-                <div class="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-center">
-                  <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-4 font-mono">
-                    <span class="text-accent font-bold">15 AUG 2026</span>
-                    <span>09:00 AM</span>
-                    <span>KITSW Main Auditorium</span>
-                  </div>
-                  <h2 class="text-h2 mb-4 group-hover:text-accent transition-colors leading-tight">
-                    CSEA Orientation 2026
-                  </h2>
-                  <p class="text-body-sm text-foreground-secondary mb-6 leading-relaxed">
-                    Join us to discover how the association operates, the projects we are launching, and how you can become a core contributor this academic year. Mandatory for all new CS students.
-                  </p>
-                  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border mt-2">
-                    <span class="text-[13px] text-success font-semibold flex items-center gap-2">
-                      <span class="w-2 h-2 rounded-full bg-success"></span>
-                      148 Registered (37% Cap)
-                    </span>
-                    <a href="/events/orientation-26" class="btn btn-primary text-[13px] px-6 py-2.5">
-                      Get Pass &rarr;
-                    </a>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Card 2: Tech Talk -->
-          <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
-            
-            <!-- Timeline Node Badge -->
-            <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-6">
-              <div class="z-10 w-3 h-3 rounded-full bg-surface border-2 border-border-strong/80 shadow-soft group-hover:bg-accent/50 transition-colors"></div>
-            </div>
-
-            <div class="flex-1 bg-surface/50 border border-border rounded-lg p-6 lg:p-8 hover:border-accent/35 hover:bg-surface hover:shadow-soft transition-all duration-300">
-              <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                <div>
-                  <div class="flex items-center gap-3 mb-3">
-                    <span class="badge badge-muted border border-border-strong text-[10px]">Upcoming</span>
-                    <div class="flex items-center gap-2 text-[12px] font-mono text-foreground-muted">
-                      <span class="text-foreground font-semibold">22 AUG 2026</span>
-                      <span>&middot; Seminar Hall</span>
+            if (isFeatured) {
+              return (
+                <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
+                  <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-8">
+                    <div class="relative z-10 w-4 h-4 rounded-full bg-accent border-4 border-canvas shadow-soft flex items-center justify-center">
+                      <div class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></div>
                     </div>
                   </div>
-                  <h3 class="text-h3 text-foreground group-hover:text-accent transition-colors leading-snug">
-                    Tech Talk: Distributed Systems
-                  </h3>
-                  <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2 max-w-2xl">
-                    An introduction to building scalable backend systems, featuring a guest lecture from our alumni network.
-                  </p>
-                </div>
-                <div class="flex-shrink-0 mt-4 md:mt-0">
-                  <a href="/events/tech-talk-1" class="btn btn-outline text-[12.5px] px-5 py-2.5 w-full md:w-auto">
-                    Event Details
-                  </a>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Card 3: Hackathon -->
-          <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
-            
-            <!-- Timeline Node Badge -->
-            <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-6">
-              <div class="z-10 w-3 h-3 rounded-full bg-surface border-2 border-border-strong/80 shadow-soft group-hover:bg-accent/50 transition-colors"></div>
-            </div>
-
-            <div class="flex-1 bg-surface/50 border border-border rounded-lg p-6 lg:p-8 hover:border-accent/35 hover:bg-surface hover:shadow-soft transition-all duration-300">
-              <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                <div>
-                  <div class="flex items-center gap-3 mb-3">
-                    <span class="badge badge-muted border border-border-strong text-[10px]">Upcoming</span>
-                    <div class="flex items-center gap-2 text-[12px] font-mono text-foreground-muted">
-                      <span class="text-foreground font-semibold">10 SEP 2026</span>
-                      <span>&middot; Innovation Lab</span>
+                  <div class="flex-1 bg-surface border border-border rounded-lg overflow-hidden shadow-medium hover:border-accent/40 hover:shadow-strong transition-all duration-300">
+                    <div class="grid grid-cols-1 lg:grid-cols-12">
+                      <div class="lg:col-span-5 aspect-video lg:aspect-auto relative bg-surface-secondary border-r border-border p-5 flex items-center justify-center select-none font-mono text-[11px] text-foreground-secondary">
+                        <div class="w-full h-full rounded border border-dashed border-border-strong/40 flex flex-col justify-between p-5">
+                          <span>LOCATION // {event.location || 'TBA'}</span>
+                          <div class="flex justify-center">
+                            <svg class="w-12 h-12 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                          </div>
+                          <span>CAPACITY: {event.capacity || 'N/A'} SEATS</span>
+                        </div>
+                        {event.registrationUrl && (
+                          <div class="absolute top-4 left-4 badge badge-accent bg-accent-muted text-accent font-semibold shadow-soft">Registration Open</div>
+                        )}
+                      </div>
+                      <div class="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-center">
+                        <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-4 font-mono">
+                          <span class="text-accent font-bold">{formatDate(event.startDate)}</span>
+                          <span>{formatTime(event.startDate)}</span>
+                          <span>{event.location || 'TBA'}</span>
+                        </div>
+                        <h2 class="text-h2 mb-4 group-hover:text-accent transition-colors leading-tight">
+                          {event.title}
+                        </h2>
+                        <p class="text-body-sm text-foreground-secondary mb-6 leading-relaxed line-clamp-3">
+                          {event.description}
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border mt-2">
+                          <span class="text-[13px] text-success font-semibold flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-success"></span>
+                            Available Now
+                          </span>
+                          <a href={`/events/${event.slug}`} class="btn btn-primary text-[13px] px-6 py-2.5">
+                            Get Pass &rarr;
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <h3 class="text-h3 text-foreground group-hover:text-accent transition-colors leading-snug">
-                    Autumn Hackathon 2026
-                  </h3>
-                  <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2 max-w-2xl">
-                    A 24-hour coding sprint focused on building internal tools for the campus. Food and drinks provided.
-                  </p>
                 </div>
-                <div class="flex-shrink-0 mt-4 md:mt-0">
-                  <a href="/events/hackathon" class="btn btn-outline text-[12.5px] px-5 py-2.5 w-full md:w-auto">
-                    Event Details
-                  </a>
+              );
+            }
+            
+            return (
+              <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
+                <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-6">
+                  <div class="z-10 w-3 h-3 rounded-full bg-surface border-2 border-border-strong/80 shadow-soft group-hover:bg-accent/50 transition-colors"></div>
+                </div>
+                <div class="flex-1 bg-surface/50 border border-border rounded-lg p-6 lg:p-8 hover:border-accent/35 hover:bg-surface hover:shadow-soft transition-all duration-300">
+                  <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div>
+                      <div class="flex items-center gap-3 mb-3">
+                        {event.registrationUrl ? (
+                          <span class="badge badge-accent bg-accent-muted text-accent font-semibold shadow-soft text-[10px]">Registration Open</span>
+                        ) : (
+                          <span class="badge badge-muted border border-border-strong text-[10px]">Upcoming</span>
+                        )}
+                        <div class="flex items-center gap-2 text-[12px] font-mono text-foreground-muted">
+                          <span class="text-foreground font-semibold">{formatDate(event.startDate)}</span>
+                          <span>&middot; {event.location || 'TBA'}</span>
+                        </div>
+                      </div>
+                      <h3 class="text-h3 text-foreground group-hover:text-accent transition-colors leading-snug">
+                        {event.title}
+                      </h3>
+                      <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2 max-w-2xl line-clamp-2">
+                        {event.description}
+                      </p>
+                    </div>
+                    <div class="flex-shrink-0 mt-4 md:mt-0">
+                      <a href={`/events/${event.slug}`} class="btn btn-outline text-[12.5px] px-5 py-2.5 w-full md:w-auto">
+                        Event Details
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-          </div>
-
+            );
+          })}
         </div>
       </div>
 

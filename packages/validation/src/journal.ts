@@ -10,7 +10,7 @@ export const createJournalPostSchema = z.object({
   category: z.string().max(50).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),
-  publishedAt: z.coerce.date().optional(),
+  publishedAt: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
 });
 
 export const updateJournalPostSchema = createJournalPostSchema.partial().omit({ slug: true });
