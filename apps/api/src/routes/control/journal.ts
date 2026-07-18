@@ -58,6 +58,7 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
       authorId: request.user!.id,
       publishedAt,
       coverImage: body.coverImage || null,
+      googleDriveUrl: body.googleDriveUrl || null,
     } as any).returning();
 
     await logAudit({
@@ -93,6 +94,7 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
         ...(sanitizedContent !== undefined && { content: sanitizedContent }),
         ...publishedAtUpdate,
         coverImage: body.coverImage === "" ? null : body.coverImage,
+        googleDriveUrl: body.googleDriveUrl === "" ? null : body.googleDriveUrl,
         updatedAt: new Date(),
       })
       .where(eq(journalPosts.id, id))
