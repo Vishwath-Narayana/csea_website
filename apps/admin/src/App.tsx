@@ -9,7 +9,6 @@ import {
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { JournalList } from './pages/Journal/JournalList';
 import { JournalEditor } from './pages/Journal/JournalEditor';
-import { JournalDetail } from './pages/Journal/JournalDetail';
 import { EventList } from './pages/Events/EventList';
 import { EventForm } from './pages/Events/EventForm';
 import { EventAttendees } from './pages/Events/EventAttendees';
@@ -104,7 +103,6 @@ function App() {
       case 'dashboard': return <Dashboard />;
       case 'journal':
         if (action === 'create' || action === 'edit') return <JournalEditor navigate={navigate} id={id} />;
-        if (action === 'detail') return <JournalDetail navigate={navigate} id={id} />;
         return <JournalList navigate={navigate} />;
       case 'events':
         if (action === 'create' || action === 'edit') return <EventForm navigate={navigate} id={id} />;

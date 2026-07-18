@@ -3,6 +3,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import { StatusBadge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { DropdownMenu, DropdownMenuItem } from '../../components/ui/DropdownMenu';
+import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
 import { FilterBar } from '../../components/ui/FilterBar';
 import { Pagination } from '../../components/ui/Pagination';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -16,6 +17,9 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchArticles();
@@ -24,7 +28,6 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
   const fetchArticles = async () => {
     setIsLoading(true);
     try {
-      // In a real app, we'd pass search and filters to the API query params
       const response = await api.get<any>(`/control/journal?page=${currentPage}&limit=10`);
       setArticles(response.data);
       setTotalPages(response.meta?.totalPages || 1);
@@ -35,17 +38,26 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this article?')) return;
+  const handleDeleteClick = (id: string) => {
+    setDeleteTarget(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
-      await api.delete(`/control/journal/${id}`);
+      await api.delete(`/control/journal/${deleteTarget}`);
+      setDeleteDialogOpen(false);
+      setDeleteTarget(null);
       fetchArticles();
     } catch (error) {
       console.error('Failed to delete article:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  // Client side filtering for demo purposes since we don't have search params on the backend yet
   const filteredArticles = articles.filter(a => {
     if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
     if (statusFilter && a.status !== statusFilter) return false;
@@ -54,19 +66,19 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
 
   return (
     <div className="mx-auto max-w-content">
-      <PageHeader 
+      <PageHeader
         title="Journal"
-        description="Manage publications, technical articles, and editorial content."
+        description="Manage journal entries and reports."
         actions={
           <Button onClick={() => navigate('journal/create')}>
             <Plus size={16} className="mr-2" />
-            New Article
+            New Entry
           </Button>
         }
       />
 
-      <FilterBar 
-        searchPlaceholder="Search articles..."
+      <FilterBar
+        searchPlaceholder="Search entries..."
         filters={[
           {
             id: 'status',
@@ -83,16 +95,16 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
           if (id === 'status') setStatusFilter(val);
         }}
       />
-      
+
       <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm mb-4">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[40%]">Article Title</TableHead>
+              <TableHead className="w-[40%]">Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right pr-4">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -105,7 +117,7 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
             ) : filteredArticles.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-12 text-foreground-muted">
-                  No articles found matching your criteria.
+                  No entries found.
                 </TableCell>
               </TableRow>
             ) : (
@@ -115,18 +127,19 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
                   <TableCell className="text-foreground-secondary">{article.category || 'N/A'}</TableCell>
                   <TableCell><StatusBadge status={article.status} /></TableCell>
                   <TableCell className="text-foreground-secondary">
-                    {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : 'Unpublished'}
+                    {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : '—'}
                   </TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu 
-                      trigger={<Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>}
-                      align="right"
-                    >
-                      <DropdownMenuItem onClick={() => navigate(`journal/${article.id}`)}>Preview Article</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(`journal/${article.id}/edit`)}>Edit Content</DropdownMenuItem>
-                      <div className="h-px bg-border my-1 mx-1"></div>
-                      <DropdownMenuItem destructive onClick={() => handleDelete(article.id)}>Delete</DropdownMenuItem>
-                    </DropdownMenu>
+                    <div className="flex justify-end">
+                      <DropdownMenu
+                        trigger={<Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>}
+                        align="right"
+                      >
+                        <DropdownMenuItem onClick={() => navigate(`journal/${article.id}/edit`)}>Edit</DropdownMenuItem>
+                        <div className="h-px bg-border my-1 mx-1"></div>
+                        <DropdownMenuItem destructive onClick={() => handleDeleteClick(article.id)}>Delete</DropdownMenuItem>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -135,10 +148,25 @@ export function JournalList({ navigate }: { navigate: (view: string) => void }) 
         </Table>
       </div>
 
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+      />
+
+      <ConfirmationDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => {
+          setDeleteDialogOpen(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Journal Entry"
+        description="This action cannot be undone. The entry will be permanently deleted."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        isDestructive={true}
+        isLoading={isDeleting}
       />
     </div>
   );
