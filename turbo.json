@@ -5,6 +5,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".astro/**", ".next/**"]
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
