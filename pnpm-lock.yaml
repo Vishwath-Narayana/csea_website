@@ -121,6 +121,13 @@ importers:
         version: 5.9.3
 
   apps/e2e:
+    dependencies:
+      '@csea/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      drizzle-orm:
+        specifier: ^0.29.3
+        version: 0.29.5(@types/react@19.2.17)(kysely@0.27.6)(postgres@3.4.9)(react@19.2.7)
     devDependencies:
       '@playwright/test':
         specifier: ^1.42.0
