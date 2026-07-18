@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: csea
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.0.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        timeout-minutes: 10
+
+      - name: Run verify
+        run: pnpm verify
+        timeout-minutes: 5
+
+      - name: Apply database migrations
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/csea
+        run: pnpm --filter @csea/database exec drizzle-kit push:pg
+        timeout-minutes: 2
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @csea/e2e exec playwright install --with-deps
+        timeout-minutes: 10
+
+      - name: Run E2E tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/csea
+          SUPER_ADMIN_EMAIL: admin@csea.kitsw.ac.in
+          SUPER_ADMIN_PASSWORD: Password123
+          BETTER_AUTH_URL: http://localhost:3001
+          E2E_API_ORIGIN: http://localhost:3001
+          E2E_ADMIN_BASE_URL: http://localhost:5173
+          E2E_PUBLIC_WEB_BASE_URL: http://localhost:4321
+          VITE_API_URL: http://localhost:3001/api/v1
+          PUBLIC_API_URL: http://localhost:3001
+        run: pnpm --filter @csea/e2e test
+        timeout-minutes: 20
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/e2e/playwright-report/
+          retention-days: 30
