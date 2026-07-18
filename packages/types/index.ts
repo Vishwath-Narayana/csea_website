@@ -118,6 +118,7 @@ export interface JournalPost {
   visibility: string;
   publishedAt: Date | null;
   archivedAt: Date | null;
+  googleDriveUrl: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -131,6 +132,7 @@ export interface Gallery {
   description: string | null;
   relatedEventId: string | null;
   eventDate: Date | null;
+  googleDriveFolderUrl: string | null;
   visibility: string;
   createdAt: Date;
   updatedAt: Date;
