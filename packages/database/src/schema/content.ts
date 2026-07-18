@@ -16,6 +16,7 @@ export const journalPosts = pgTable("journal_posts", {
   visibility: text("visibility").notNull().default("PUBLIC"), // PUBLIC, PRIVATE
   publishedAt: timestamp("published_at"),
   archivedAt: timestamp("archived_at"),
+  googleDriveUrl: text("google_drive_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => ({
@@ -121,6 +122,7 @@ export const galleries = pgTable("galleries", {
   description: text("description"),
   relatedEventId: uuid("related_event_id").references(() => events.id, { onDelete: "set null" }),
   eventDate: timestamp("event_date"),
+  googleDriveFolderUrl: text("google_drive_folder_url"),
   visibility: text("visibility").notNull().default("PUBLIC"), // PUBLIC, PRIVATE
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
