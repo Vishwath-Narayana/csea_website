@@ -20,6 +20,7 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
     fullDescription: '',
     coverImage: '',
     status: 'DRAFT',
+    visibility: 'PUBLIC',
     projectLead: '',
     timeline: '',
     techStack: '',
@@ -43,6 +44,7 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
         fullDescription: proj.fullDescription || '',
         coverImage: proj.coverImage || '',
         status: proj.status || 'DRAFT',
+        visibility: proj.visibility || 'PUBLIC',
         projectLead: proj.projectLead || '',
         timeline: proj.timeline || '',
         techStack: proj.techStack ? proj.techStack.join(', ') : '',
@@ -162,7 +164,7 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div>
                 <label className="text-[13px] font-medium block mb-1.5">Project Status</label>
                 <Select value={formData.status} onChange={e => handleChange('status', e.target.value)}>
@@ -171,6 +173,13 @@ export function ProjectForm({ navigate, id }: { navigate: (view: string) => void
                   <option value="ACTIVE">Active Development</option>
                   <option value="COMPLETED">Completed</option>
                   <option value="ARCHIVED">Archived</option>
+                </Select>
+              </div>
+              <div>
+                <label className="text-[13px] font-medium block mb-1.5">Visibility</label>
+                <Select value={formData.visibility} onChange={e => handleChange('visibility', e.target.value)}>
+                  <option value="PUBLIC">Public</option>
+                  <option value="PRIVATE">Private</option>
                 </Select>
               </div>
               <div>

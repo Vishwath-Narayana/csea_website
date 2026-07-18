@@ -4,6 +4,7 @@ import { eq, desc, sql } from 'drizzle-orm';
 import { parsePaginationArgs, getPaginationMeta } from '../../utils/pagination';
 import { createJournalPostSchema, updateJournalPostSchema } from '@csea/validation';
 import { logAudit } from '../../utils/audit';
+import { sanitizeHtml } from '../../utils/html-sanitizer';
 
 export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('onRequest', fastify.requireAuth);
@@ -38,7 +39,10 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
 
   fastify.post('/', { onRequest: [fastify.requireRole(["SUPER_ADMIN", "ADMIN", "EDITOR"])] }, async (request, reply) => {
     const body = createJournalPostSchema.parse(request.body);
-    
+
+    // Sanitize content server-side
+    const sanitizedContent = body.content ? sanitizeHtml(body.content) : '';
+
     // Automatically set authorId to the current user if not provided
     const authorId = body.authorId || (request as any).user.id;
 
@@ -47,9 +51,10 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
     if (body.status === 'PUBLISHED' && !publishedAt) {
       publishedAt = new Date();
     }
-    
+
     const [newPost] = await db.insert(journalPosts).values({
       ...body,
+      content: sanitizedContent,
       authorId: request.user!.id,
       publishedAt,
       coverImage: body.coverImage || null,
@@ -70,6 +75,9 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
     const { id } = request.params as { id: string };
     const body = updateJournalPostSchema.parse(request.body);
 
+    // Sanitize content server-side
+    const sanitizedContent = body.content ? sanitizeHtml(body.content) : undefined;
+
     // If changing to PUBLISHED, set publishedAt if not already set
     let publishedAtUpdate = {};
     if (body.status === 'PUBLISHED') {
@@ -82,6 +90,7 @@ export const controlJournalRoutes: FastifyPluginAsync = async (fastify) => {
     const [updatedPost] = await db.update(journalPosts)
       .set({
         ...body,
+        ...(sanitizedContent !== undefined && { content: sanitizedContent }),
         ...publishedAtUpdate,
         coverImage: body.coverImage === "" ? null : body.coverImage,
         updatedAt: new Date(),

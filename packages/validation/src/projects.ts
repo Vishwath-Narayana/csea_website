@@ -10,6 +10,7 @@ export const createProjectSchema = z.object({
   coverImage: z.string().url().optional().or(z.literal("")),
 
   status: z.enum(["DRAFT", "RECRUITING", "ACTIVE", "COMPLETED", "ARCHIVED"]).default("DRAFT"),
+  visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),
   projectLead: z.string().max(100).optional(),
   timeline: z.string().max(100).optional(),
   techStack: z.array(z.string()).optional(),

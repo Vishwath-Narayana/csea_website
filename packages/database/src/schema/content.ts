@@ -79,6 +79,7 @@ export const projects = pgTable("projects", {
   coverImage: text("cover_image"),
 
   status: text("status").notNull().default("DRAFT"), // DRAFT, RECRUITING, ACTIVE, COMPLETED, ARCHIVED
+  visibility: text("visibility").notNull().default("PUBLIC"), // PUBLIC, PRIVATE
   projectLead: text("project_lead"),
   timeline: text("timeline"),
   techStack: text("tech_stack").array(),

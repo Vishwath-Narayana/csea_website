@@ -1,10 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import Underline from '@tiptap/extension-underline';
 import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ArrowLeft, Image as ImageIcon, Settings, Type, Bold, Italic, Underline, Link, List, Quote, Code, Minus, Loader2 } from 'lucide-react';
+import { ArrowLeft, Settings, Loader2 } from 'lucide-react';
 import { api } from '../../utils/api';
+import { sanitizeHtml } from '../../utils/html-sanitizer';
+import { JournalToolbar } from './JournalToolbar';
 
 export function JournalEditor({ navigate, id }: { navigate: (view: string) => void, id?: string }) {
   const isEditing = !!id;
@@ -13,7 +20,6 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -27,6 +33,24 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
     publishedAt: ''
   });
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link.configure({
+        openOnClick: false,
+      }),
+      Image.configure({
+        allowBase64: false,
+      }),
+      Underline,
+    ],
+    content: formData.content,
+    onUpdate: ({ editor }) => {
+      setHasChanges(true);
+      setFormData(prev => ({ ...prev, content: editor.getHTML() }));
+    },
+  });
+
   useEffect(() => {
     if (isEditing) fetchPost();
   }, [id]);
@@ -35,19 +59,20 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
     try {
       const res = await api.get<any>(`/control/journal/${id}`);
       const post = res.data;
+      const sanitizedContent = sanitizeHtml(post.content || '');
       setFormData({
         title: post.title || '',
         slug: post.slug || '',
         excerpt: post.excerpt || '',
-        content: post.content || '',
+        content: sanitizedContent,
         coverImage: post.coverImage || '',
         category: post.category || 'Technology',
         status: post.status || 'DRAFT',
         visibility: post.visibility || 'PUBLIC',
         publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 16) : ''
       });
-      if (contentRef.current) {
-        contentRef.current.innerHTML = post.content || '';
+      if (editor) {
+        editor.commands.setContent(sanitizedContent);
       }
     } catch (error) {
       console.error(error);
@@ -78,16 +103,14 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
     });
   };
 
-  const handleContentInput = (e: React.FormEvent<HTMLDivElement>) => {
-    setHasChanges(true);
-    setFormData(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
-  };
-
   const handleSave = async (forceStatus?: string) => {
     setIsSaving(true);
     setError('');
     try {
       const payload = { ...formData };
+      // Sanitize content before sending to API
+      payload.content = sanitizeHtml(payload.content);
+
       if (forceStatus) {
         payload.status = forceStatus;
       }
@@ -161,40 +184,20 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
       <div className="flex flex-1 gap-6 min-h-0">
         {/* Editor Area */}
         <div className="flex-1 flex flex-col bg-surface rounded-xl border border-border overflow-hidden shadow-sm">
-          {/* Mock Toolbar */}
-          <div className="shrink-0 flex items-center gap-1 border-b border-border p-2 overflow-x-auto bg-surface-secondary/50">
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Type size={14} /></Button>
-            <div className="w-px h-4 bg-border mx-1"></div>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Bold size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Italic size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Underline size={14} /></Button>
-            <div className="w-px h-4 bg-border mx-1"></div>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Link size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><List size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Quote size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Code size={14} /></Button>
-            <div className="w-px h-4 bg-border mx-1"></div>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><ImageIcon size={14} /></Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8"><Minus size={14} /></Button>
-          </div>
-          
+          <JournalToolbar editor={editor} />
+
           <div className="flex-1 overflow-y-auto p-8 sm:p-12">
             <div className="max-w-editorial mx-auto">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={formData.title}
-                placeholder="Article Title" 
+                placeholder="Article Title"
                 className="w-full bg-transparent text-[40px] font-bold tracking-tight text-foreground placeholder:text-foreground-muted/50 focus:outline-none mb-6"
                 onChange={(e) => handleChange('title', e.target.value)}
               />
-              <div 
-                ref={contentRef}
-                className="w-full min-h-[500px] text-[16px] leading-relaxed text-foreground focus:outline-none"
-                contentEditable
-                suppressContentEditableWarning
-                onInput={handleContentInput}
-                data-placeholder="Start writing..."
-              />
+              <div className="prose prose-invert max-w-none text-foreground text-[16px] leading-relaxed focus:outline-none">
+                <EditorContent editor={editor} className="min-h-[500px] w-full" />
+              </div>
             </div>
           </div>
         </div>
