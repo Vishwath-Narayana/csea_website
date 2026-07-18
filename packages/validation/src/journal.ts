@@ -11,6 +11,7 @@ export const createJournalPostSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),
   publishedAt: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
+  googleDriveUrl: z.string().url().optional().or(z.literal("")),
 });
 
 export const updateJournalPostSchema = createJournalPostSchema.partial().omit({ slug: true });

@@ -6,6 +6,7 @@ export const createGallerySchema = z.object({
   description: z.string().max(500).optional(),
   relatedEventId: z.string().uuid().optional(),
   eventDate: z.preprocess((val) => (val === "" || val === null ? undefined : val), z.coerce.date().optional()),
+  googleDriveFolderUrl: z.string().url().optional().or(z.literal("")),
   visibility: z.enum(["PUBLIC", "PRIVATE"]).default("PUBLIC"),
 });
 
