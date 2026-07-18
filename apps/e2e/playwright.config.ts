@@ -1,17 +1,27 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
+import {
+  ADMIN_BASE_URL,
+  API_HEALTH_URL,
+  API_ORIGIN,
+  DATABASE_URL,
+  PUBLIC_WEB_BASE_URL,
+  SUPER_ADMIN_EMAIL,
+  SUPER_ADMIN_PASSWORD,
+} from './tests/support/urls';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:4321', // Astro dev server
+    baseURL: PUBLIC_WEB_BASE_URL,
     trace: 'on-first-retry',
   },
+  timeout: 60000,
   projects: [
     {
       name: 'chromium',
@@ -22,23 +32,38 @@ export default defineConfig({
     {
       command: 'pnpm dev',
       cwd: path.resolve(__dirname, '../api'),
-      url: 'http://localhost:3001/api/v1/health',
+      url: API_HEALTH_URL,
       timeout: 60_000,
       reuseExistingServer: true,
       env: {
         ...(process.env as Record<string, string>),
-        DATABASE_URL: process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/csea',
-        BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3001',
-        SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL ?? 'admin@csea.kitsw.ac.in',
-        SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD ?? 'Password123',
+        DATABASE_URL,
+        BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ?? API_ORIGIN,
+        SUPER_ADMIN_EMAIL,
+        SUPER_ADMIN_PASSWORD,
       },
     },
     {
-      command: 'pnpm dev',
+      command: 'pnpm dev --host 0.0.0.0 --port 5173',
       cwd: path.resolve(__dirname, '../admin'),
-      url: 'http://localhost:5173',
+      url: ADMIN_BASE_URL,
       timeout: 30_000,
       reuseExistingServer: true,
+      env: {
+        ...(process.env as Record<string, string>),
+        VITE_API_URL: `${API_ORIGIN}/api/v1`,
+      },
+    },
+    {
+      command: 'pnpm dev --host 0.0.0.0 --port 4321',
+      cwd: path.resolve(__dirname, '../web'),
+      url: PUBLIC_WEB_BASE_URL,
+      timeout: 30_000,
+      reuseExistingServer: true,
+      env: {
+        ...(process.env as Record<string, string>),
+        PUBLIC_API_URL: API_ORIGIN,
+      },
     },
   ],
 });
