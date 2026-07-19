@@ -8,7 +8,7 @@ const articleSlug = makeE2eSlug('journal', 'public-published');
 const articleTitle = makeE2eTitle('Journal', 'Public Published');
 const updatedArticleTitle = makeE2eTitle('Journal', 'Updated Public Published');
 const articleExcerpt = 'E2E test article excerpt for preview cards';
-const articleContent = 'E2E test article content with full details about the topic';
+const driveUrl = 'https://drive.google.com/file/d/1e2e_journal_test_report/view';
 
 test.describe.serial('Journal: Admin to public verification', () => {
   test.beforeAll(async () => {
@@ -20,8 +20,7 @@ test.describe.serial('Journal: Admin to public verification', () => {
   });
 
   test('creates, publishes, updates, hides, and deletes a journal article across the stack', async ({ page }) => {
-    // Use API to create the article (bypass admin UI button clicking issues)
-    // First, authenticate
+    // Authenticate
     await gotoAndWaitForInitialSession(page, ADMIN_BASE_URL);
     await signInAsSuperAdmin(page);
 
@@ -29,19 +28,17 @@ test.describe.serial('Journal: Admin to public verification', () => {
     const cookies = await page.context().cookies();
     const cookieHeader = cookies.map(c => `${c.name}=${c.value}`).join('; ');
 
-    // Create article via API
+    // ── Create article via API ────────────────────────────────────────────────
     const createResponse = await page.request.post(`${API_BASE_URL}/control/journal`, {
-      headers: {
-        'Cookie': cookieHeader,
-      },
+      headers: { 'Cookie': cookieHeader },
       data: {
         title: articleTitle,
         slug: articleSlug,
         excerpt: articleExcerpt,
-        content: articleContent,
         category: 'Technology',
         status: 'PUBLISHED',
         visibility: 'PUBLIC',
+        googleDriveUrl: driveUrl,
       },
     });
 
@@ -54,9 +51,10 @@ test.describe.serial('Journal: Admin to public verification', () => {
       status: 'PUBLISHED',
       visibility: 'PUBLIC',
       excerpt: articleExcerpt,
+      googleDriveUrl: driveUrl,
     });
 
-    // Verify through control API
+    // ── Verify via control API ────────────────────────────────────────────────
     const controlResponse = await page.request.get(`${API_BASE_URL}/control/journal/${createdArticle.id}`);
     expect(controlResponse.ok()).toBeTruthy();
     expect((await controlResponse.json()).data).toMatchObject({
@@ -65,40 +63,49 @@ test.describe.serial('Journal: Admin to public verification', () => {
       slug: articleSlug,
       status: 'PUBLISHED',
       visibility: 'PUBLIC',
+      googleDriveUrl: driveUrl,
     });
 
-    // Verify in database
+    // ── Verify in database ────────────────────────────────────────────────────
     await expect.poll(async () => {
       const article = await findJournalBySlug(articleSlug);
       return article?.title;
     }).toBe(articleTitle);
 
-    // Verify through public API (public API doesn't return status/visibility fields)
+    // ── Verify via public API — googleDriveUrl must be present ────────────────
     const publicApiResponse = await page.request.get(`${API_BASE_URL}/journal/${articleSlug}`);
     expect(publicApiResponse.ok()).toBeTruthy();
-    expect((await publicApiResponse.json()).data).toMatchObject({
+    const publicData = (await publicApiResponse.json()).data;
+    expect(publicData).toMatchObject({
       title: articleTitle,
       slug: articleSlug,
       excerpt: articleExcerpt,
     });
+    expect(publicData.googleDriveUrl).toBe(driveUrl);
 
-    // Verify on public journal listing page
+    // ── Verify on public journal listing page ─────────────────────────────────
     await page.goto(`${PUBLIC_WEB_BASE_URL}/journal`);
     await expect(page.getByRole('heading', { name: articleTitle })).toBeVisible();
-
-    // Verify on public detail page
-    await page.goto(`${PUBLIC_WEB_BASE_URL}/journal/${articleSlug}`);
-    await expect(page.getByRole('heading', { name: articleTitle, level: 1 })).toBeVisible();
     await expect(page.getByText(articleExcerpt)).toBeVisible();
 
-    // Test update flow
+    // ── Verify "View Report" link points to the Drive URL and opens in new tab ─
+    const viewReportLink = page.locator(`a[href="${driveUrl}"]`).first();
+    await expect(viewReportLink).toBeVisible();
+    await expect(viewReportLink).toHaveAttribute('target', '_blank');
+    await expect(viewReportLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    // ── Update flow via admin UI ──────────────────────────────────────────────
     await page.goto(ADMIN_BASE_URL);
     await page.locator('nav').getByText('Journal', { exact: true }).click();
-    await page.locator('tr', { hasText: articleTitle }).getByRole('button').click();
-    await page.getByText('Edit Content').click();
-    await expect(page.getByRole('heading', { name: 'Edit Article' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Journal' })).toBeVisible();
 
-    await page.locator('input[placeholder="Article Title"]').fill(updatedArticleTitle);
+    // Open the row dropdown and click Edit
+    await page.locator('tr', { hasText: articleTitle }).getByRole('button').click();
+    await page.getByText('Edit').click();
+    await expect(page.getByRole('heading', { name: 'Edit Journal Entry' })).toBeVisible();
+
+    // Update the title
+    await page.locator('input[placeholder="Journal entry title"]').fill(updatedArticleTitle);
 
     const updateResponsePromise = page.waitForResponse(
       response =>
@@ -106,7 +113,7 @@ test.describe.serial('Journal: Admin to public verification', () => {
         response.request().method() === 'PATCH'
     );
 
-    await page.getByRole('button', { name: 'Update Article' }).click();
+    await page.getByRole('button', { name: 'Publish' }).click();
     const updateResponse = await updateResponsePromise;
     expect(updateResponse.ok()).toBeTruthy();
     expect((await updateResponse.json()).data).toMatchObject({
@@ -123,31 +130,31 @@ test.describe.serial('Journal: Admin to public verification', () => {
       return article?.title;
     }).toBe(updatedArticleTitle);
 
-    // Verify update on public detail page
-    await page.goto(`${PUBLIC_WEB_BASE_URL}/journal/${articleSlug}`);
-    await expect(page.getByRole('heading', { name: updatedArticleTitle, level: 1 })).toBeVisible();
+    // Verify updated title appears on public listing
+    await page.goto(`${PUBLIC_WEB_BASE_URL}/journal`);
+    await expect(page.getByRole('heading', { name: updatedArticleTitle })).toBeVisible();
 
-    // Test visibility boundary: make article PRIVATE
+    // ── Visibility boundary: PRIVATE → hidden from public ─────────────────────
     const hideResponse = await page.request.patch(`${API_BASE_URL}/control/journal/${createdArticle.id}`, {
       data: { visibility: 'PRIVATE' },
     });
     expect(hideResponse.ok()).toBeTruthy();
 
-    // Verify it's marked private in database
+    // Verify PRIVATE in database
     await expect.poll(async () => {
       const article = await findJournalBySlug(articleSlug);
       return article?.visibility;
     }).toBe('PRIVATE');
 
-    // Verify it's removed from public API
+    // Verify 404 from public API
     const hiddenPublicApiResponse = await page.request.get(`${API_BASE_URL}/journal/${articleSlug}`);
     expect(hiddenPublicApiResponse.status()).toBe(404);
 
-    // Verify it's removed from public listing
+    // Verify not on public listing
     await page.goto(`${PUBLIC_WEB_BASE_URL}/journal`);
     await expect(page.getByText(updatedArticleTitle)).toHaveCount(0);
 
-    // Test delete
+    // ── Delete ────────────────────────────────────────────────────────────────
     const deleteResponse = await page.request.delete(`${API_BASE_URL}/control/journal/${createdArticle.id}`);
     expect(deleteResponse.status()).toBe(204);
 

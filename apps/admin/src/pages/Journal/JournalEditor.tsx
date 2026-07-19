@@ -17,7 +17,6 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
     title: '',
     slug: '',
     excerpt: '',
-    coverImage: '',
     googleDriveUrl: '',
     category: 'Technology',
     status: 'DRAFT',
@@ -36,7 +35,6 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
         title: post.title || '',
         slug: post.slug || '',
         excerpt: post.excerpt || '',
-        coverImage: post.coverImage || '',
         googleDriveUrl: post.googleDriveUrl || '',
         category: post.category || 'Technology',
         status: post.status || 'DRAFT',
@@ -175,17 +173,6 @@ export function JournalEditor({ navigate, id }: { navigate: (view: string) => vo
               <option value="Tutorials">Tutorials</option>
               <option value="Announcements">Announcements</option>
             </Select>
-          </div>
-
-          {/* Cover Image */}
-          <div>
-            <label className="text-[13px] font-medium block mb-2">Cover Image URL</label>
-            <Input
-              type="url"
-              value={formData.coverImage}
-              onChange={(e) => handleChange('coverImage', e.target.value)}
-              placeholder="https://..."
-            />
           </div>
 
           {/* Google Drive URL */}

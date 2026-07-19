@@ -22,7 +22,8 @@ export const publicJournalRoutes: FastifyPluginAsync = async (fastify) => {
       category: journalPosts.category,
       publishedAt: journalPosts.publishedAt,
       authorId: journalPosts.authorId,
-      authorName: users.name
+      authorName: users.name,
+      googleDriveUrl: journalPosts.googleDriveUrl,
     }).from(journalPosts)
       .leftJoin(users, eq(journalPosts.authorId, users.id))
       .where(conditions)
@@ -53,7 +54,8 @@ export const publicJournalRoutes: FastifyPluginAsync = async (fastify) => {
       category: journalPosts.category,
       publishedAt: journalPosts.publishedAt,
       authorId: journalPosts.authorId,
-      authorName: users.name
+      authorName: users.name,
+      googleDriveUrl: journalPosts.googleDriveUrl,
     }).from(journalPosts)
       .leftJoin(users, eq(journalPosts.authorId, users.id))
       .where(
