@@ -31,7 +31,7 @@ const formatTime = (dateStr: string) => {
   return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 };
 
-const isRegistrationOpen = !!event.registrationUrl;
+const isRegistrationOpen = event.registrationEnabled && !!event.registrationUrl;
 ---
 
 <Layout title={`${event.title} | CSEA`}>
@@ -57,7 +57,7 @@ const isRegistrationOpen = !!event.registrationUrl;
         
         <h1 class="text-display-md mb-6 leading-tight text-foreground">{event.title}</h1>
         <p class="text-body-lg text-foreground-secondary mb-8 max-w-xl leading-relaxed">
-          {event.description}
+          {event.shortDescription}
         </p>
         
         <!-- Quick Specs Table -->
@@ -72,11 +72,7 @@ const isRegistrationOpen = !!event.registrationUrl;
           </div>
           <div>
             <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Venue</div>
-            <div class="text-[14px] font-bold text-foreground">{event.location || 'TBA'}</div>
-          </div>
-          <div>
-            <div class="text-[10px] font-mono tracking-wider uppercase text-foreground-muted mb-1.5">Capacity</div>
-            <div class="text-[14px] font-bold text-foreground">{event.capacity ? `${event.capacity} Seats` : 'N/A'}</div>
+            <div class="text-[14px] font-bold text-foreground">{event.venue || 'TBA'}</div>
           </div>
         </div>
 
@@ -95,7 +91,7 @@ const isRegistrationOpen = !!event.registrationUrl;
           <!-- Stylized blueprints -->
           <div class="w-full h-full rounded bg-gradient-to-br from-accent/15 to-accent-blue/15 flex flex-col justify-between p-6 select-none font-mono text-[10px] text-foreground-secondary border border-accent/10">
             <div class="flex justify-between">
-              <span>SYS_SPACE // {event.location ? event.location.replace(/\s+/g, '_').toUpperCase() : 'TBA'}</span>
+              <span>SYS_SPACE // {event.venue ? event.venue.replace(/\s+/g, '_').toUpperCase() : 'TBA'}</span>
               <span>COORDS // KITSW_CAMPUS</span>
             </div>
             <div class="flex justify-center">
@@ -120,7 +116,7 @@ const isRegistrationOpen = !!event.registrationUrl;
         <div>
           <h2 class="text-display-md text-foreground mb-4">About this event</h2>
           <div class="prose prose-invert max-w-none text-foreground-secondary">
-            {event.description ? event.description.split('\n').map((paragraph: string) => (
+            {event.shortDescription ? event.shortDescription.split('\n').map((paragraph: string) => (
               <p class="mb-4">{paragraph}</p>
             )) : <p>No description available.</p>}
           </div>
@@ -144,7 +140,7 @@ const isRegistrationOpen = !!event.registrationUrl;
           </div>
           
           <div class="text-[11px] text-foreground-muted flex justify-between font-mono">
-            <span>{event.capacity ? `${event.capacity} CAPACITY` : 'NO CAPACITY LIMIT'}</span>
+            <span>{event.venue ? event.venue.toUpperCase() : 'VENUE TBA'}</span>
           </div>
         </div>
 

@@ -2,15 +2,27 @@
 import Layout from '../../layouts/Layout.astro';
 
 const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
-let events = [];
+const filter = Astro.url.searchParams.get('filter') || 'all';
+const now = new Date();
+
+let allEvents: any[] = [];
 try {
   const res = await fetch(`${API_URL}/api/v1/events`);
   if (res.ok) {
     const data = await res.json();
-    events = data.data || [];
+    allEvents = data.data || [];
   }
 } catch (e) {
   console.error("Failed to fetch events", e);
+}
+
+let filteredEvents = allEvents;
+if (filter === 'upcoming') {
+  filteredEvents = allEvents.filter((e: any) => new Date(e.startDate) > now);
+} else if (filter === 'registration-open') {
+  filteredEvents = allEvents.filter((e: any) => e.registrationEnabled && e.registrationUrl);
+} else if (filter === 'past') {
+  filteredEvents = allEvents.filter((e: any) => new Date(e.endDate) < now);
 }
 
 const formatDate = (dateStr: string) => {
@@ -19,24 +31,21 @@ const formatDate = (dateStr: string) => {
   return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 };
 
-const formatTime = (dateStr: string) => {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-};
+const activeClass = 'text-[13px] font-semibold text-white bg-accent px-4 py-2 rounded-md whitespace-nowrap shadow-soft no-underline';
+const inactiveClass = 'text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface border border-border px-4 py-2 rounded-md whitespace-nowrap transition-colors no-underline';
 ---
 
 <Layout title="Upcoming Events & Timeline | CSEA">
-  
+
   <div class="bg-canvas bg-grid-blueprint min-h-screen relative pt-28 pb-32">
     <div class="absolute inset-0 pointer-events-none select-none opacity-10">
       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <line x1="0" y1="20" x2="100" y2="80" stroke="var(--accent)" stroke-width="0.3" />
       </svg>
     </div>
-    
+
     <div class="max-w-[1400px] mx-auto px-5 md:px-6 lg:px-8 relative z-10">
-      
+
       <!-- Header -->
       <div class="mb-20 reveal">
         <div class="text-[11px] font-mono text-accent font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
@@ -48,118 +57,74 @@ const formatTime = (dateStr: string) => {
         </p>
       </div>
 
-      <!-- Timeline filters -->
-      <div class="flex items-center gap-3 border-b border-border pb-6 mb-20 overflow-x-auto hide-scrollbar reveal" style="transition-delay: 50ms;">
+      <!-- Filter buttons -->
+      <div class="flex items-center gap-3 border-b border-border pb-6 mb-16 overflow-x-auto hide-scrollbar reveal" style="transition-delay: 50ms;">
         <span class="text-[11px] font-mono text-foreground-muted tracking-wider uppercase mr-4 whitespace-nowrap">// CHRONOLOGY</span>
-        <a href="#" class="text-[13px] font-semibold text-white bg-accent px-4 py-2 rounded-md whitespace-nowrap shadow-soft no-underline">All Events</a>
-        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface border border-border px-4 py-2 rounded-md whitespace-nowrap transition-colors no-underline">Upcoming</a>
-        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface border border-border px-4 py-2 rounded-md whitespace-nowrap transition-colors no-underline">Registration Open</a>
-        <a href="#" class="text-[13px] font-medium text-foreground-secondary hover:text-foreground bg-surface border border-border px-4 py-2 rounded-md whitespace-nowrap transition-colors no-underline">Past Archives</a>
+        <a href="/events" class={filter === 'all' ? activeClass : inactiveClass}>All Events</a>
+        <a href="/events?filter=upcoming" class={filter === 'upcoming' ? activeClass : inactiveClass}>Upcoming</a>
+        <a href="/events?filter=registration-open" class={filter === 'registration-open' ? activeClass : inactiveClass}>Registration Open</a>
+        <a href="/events?filter=past" class={filter === 'past' ? activeClass : inactiveClass}>Past Archives</a>
       </div>
 
-      <!-- Timeline Path Container -->
-      <div class="relative reveal" style="transition-delay: 100ms;">
-        
-        <!-- CSEA Thread Timeline Line -->
-        <div class="absolute left-6 lg:left-12 top-4 bottom-0 w-[2px] bg-accent/20 hidden sm:block">
-          <div class="absolute top-0 w-full h-32 bg-gradient-to-b from-accent to-transparent"></div>
-        </div>
+      <!-- Event Cards -->
+      <div class="reveal" style="transition-delay: 100ms;">
+        {filteredEvents.length === 0 ? (
+          <div class="text-center py-20 text-foreground-secondary">
+            <p>No events available for this filter.</p>
+          </div>
+        ) : (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEvents.map((event: any) => (
+              <div class="group bg-surface border border-border hover:border-accent/40 rounded-lg overflow-hidden shadow-soft hover:shadow-medium transition-all duration-300 flex flex-col">
+                <div class="flex-1 flex flex-col p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    {event.eventType ? (
+                      <span class="text-[11px] font-mono text-accent font-bold tracking-wider uppercase">{event.eventType}</span>
+                    ) : <span />}
+                    <span class="text-[12px] text-foreground-muted ml-auto">{formatDate(event.startDate)}</span>
+                  </div>
 
-        <div class="flex flex-col gap-16">
-          {events.length === 0 ? (
-            <div class="text-center py-20 text-foreground-secondary">
-              <p>No events available at the moment.</p>
-            </div>
-          ) : events.map((event: any, index: number) => {
-            const isFeatured = index === 0;
-            
-            if (isFeatured) {
-              return (
-                <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
-                  <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-8">
-                    <div class="relative z-10 w-4 h-4 rounded-full bg-accent border-4 border-canvas shadow-soft flex items-center justify-center">
-                      <div class="absolute inset-0 rounded-full bg-accent animate-ping opacity-60"></div>
-                    </div>
-                  </div>
-                  <div class="flex-1 bg-surface border border-border rounded-lg overflow-hidden shadow-medium hover:border-accent/40 hover:shadow-strong transition-all duration-300">
-                    <div class="grid grid-cols-1 lg:grid-cols-12">
-                      <div class="lg:col-span-5 aspect-video lg:aspect-auto relative bg-surface-secondary border-r border-border p-5 flex items-center justify-center select-none font-mono text-[11px] text-foreground-secondary">
-                        <div class="w-full h-full rounded border border-dashed border-border-strong/40 flex flex-col justify-between p-5">
-                          <span>LOCATION // {event.location || 'TBA'}</span>
-                          <div class="flex justify-center">
-                            <svg class="w-12 h-12 text-accent opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                          </div>
-                          <span>CAPACITY: {event.capacity || 'N/A'} SEATS</span>
-                        </div>
-                        {event.registrationUrl && (
-                          <div class="absolute top-4 left-4 badge badge-accent bg-accent-muted text-accent font-semibold shadow-soft">Registration Open</div>
-                        )}
-                      </div>
-                      <div class="lg:col-span-7 p-6 lg:p-10 flex flex-col justify-center">
-                        <div class="flex items-center gap-4 text-[12px] text-foreground-muted mb-4 font-mono">
-                          <span class="text-accent font-bold">{formatDate(event.startDate)}</span>
-                          <span>{formatTime(event.startDate)}</span>
-                          <span>{event.location || 'TBA'}</span>
-                        </div>
-                        <h2 class="text-h2 mb-4 group-hover:text-accent transition-colors leading-tight">
-                          {event.title}
-                        </h2>
-                        <p class="text-body-sm text-foreground-secondary mb-6 leading-relaxed line-clamp-3">
-                          {event.description}
-                        </p>
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border mt-2">
-                          <span class="text-[13px] text-success font-semibold flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-success"></span>
-                            Available Now
-                          </span>
-                          <a href={`/events/${event.slug}`} class="btn btn-primary text-[13px] px-6 py-2.5">
-                            Get Pass &rarr;
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            
-            return (
-              <div class="relative flex flex-col sm:flex-row gap-8 lg:gap-16 group">
-                <div class="hidden sm:flex flex-shrink-0 w-12 lg:w-24 justify-center pt-6">
-                  <div class="z-10 w-3 h-3 rounded-full bg-surface border-2 border-border-strong/80 shadow-soft group-hover:bg-accent/50 transition-colors"></div>
-                </div>
-                <div class="flex-1 bg-surface/50 border border-border rounded-lg p-6 lg:p-8 hover:border-accent/35 hover:bg-surface hover:shadow-soft transition-all duration-300">
-                  <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                    <div>
-                      <div class="flex items-center gap-3 mb-3">
-                        {event.registrationUrl ? (
-                          <span class="badge badge-accent bg-accent-muted text-accent font-semibold shadow-soft text-[10px]">Registration Open</span>
-                        ) : (
-                          <span class="badge badge-muted border border-border-strong text-[10px]">Upcoming</span>
-                        )}
-                        <div class="flex items-center gap-2 text-[12px] font-mono text-foreground-muted">
-                          <span class="text-foreground font-semibold">{formatDate(event.startDate)}</span>
-                          <span>&middot; {event.location || 'TBA'}</span>
-                        </div>
-                      </div>
-                      <h3 class="text-h3 text-foreground group-hover:text-accent transition-colors leading-snug">
-                        {event.title}
-                      </h3>
-                      <p class="text-body-sm text-foreground-secondary leading-relaxed mt-2 max-w-2xl line-clamp-2">
-                        {event.description}
-                      </p>
-                    </div>
-                    <div class="flex-shrink-0 mt-4 md:mt-0">
-                      <a href={`/events/${event.slug}`} class="btn btn-outline text-[12.5px] px-5 py-2.5 w-full md:w-auto">
-                        Event Details
+                  <h3 class="text-h3 mb-2 leading-snug line-clamp-2">
+                    {event.title}
+                  </h3>
+
+                  {event.shortDescription && (
+                    <p class="text-[13.5px] text-foreground-secondary leading-relaxed mb-4 flex-1 line-clamp-3">
+                      {event.shortDescription}
+                    </p>
+                  )}
+
+                  {event.venue && (
+                    <p class="text-[12px] text-foreground-muted mb-4 flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      {event.venue}
+                    </p>
+                  )}
+
+                  <div class="border-t border-border pt-4 mt-auto">
+                    {(event.registrationEnabled && event.registrationUrl) ? (
+                      <a
+                        href={event.registrationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center text-[12px] font-medium text-foreground group-hover:text-accent hover:text-accent transition-colors no-underline"
+                      >
+                        Register Now →
                       </a>
-                    </div>
+                    ) : (
+                      <a
+                        href={`/events/${event.slug}`}
+                        class="inline-flex items-center text-[12px] font-medium text-foreground-muted hover:text-foreground transition-colors no-underline"
+                      >
+                        View Details →
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
     </div>
